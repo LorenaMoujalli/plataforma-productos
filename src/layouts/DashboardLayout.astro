@@ -1,0 +1,166 @@
+---
+import Header from '../components/Header.astro';
+
+interface Props {
+	title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<!doctype html>
+<html lang="es">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="description" content="Agente de voz IA" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+		<title>{title}</title>
+	</head>
+	<body>
+		<Header />
+		<div class="app-container">
+			<main class="main-content">
+				<slot />
+				<footer class="main-footer">
+					<p>&copy; 2026. Todos los derechos reservados</p>
+					
+				</footer>
+			</main>
+		</div>
+	
+	</body>
+</html>
+
+<style is:global>
+	:root {
+		--primary: #2563eb;
+		--primary-hover: #1d4ed8;
+		--bg-color: #f8fafc;
+		--text-color: #0f172a;
+		--card-bg: #ffffff;
+	}
+	
+	* {
+		box-sizing: border-box;
+		margin: 0;
+		padding: 0;
+	}
+
+	html {
+		font-family: 'Outfit', sans-serif;
+		background-color: #f8fafc; 
+		color: var(--text-color);
+		overflow-x: hidden;
+		width: 100%;
+	}
+
+	body {
+		min-height: 100vh;
+		overflow-x: hidden;
+		width: 100%;
+	}
+	
+	.app-container {
+		display: flex;
+		flex-direction: column;
+		min-height: calc(100vh - 70px);
+		width: 100%;
+		overflow-x: hidden;
+	}
+
+	.main-content {
+		flex: 1;
+		padding: 2.5rem 5rem;
+		display: flex;
+		flex-direction: column;
+		overflow-y: auto;
+		min-width: 0;
+	}
+
+	.main-footer {
+		margin-top: auto;
+		padding-top: 3rem;
+		padding-bottom: 1rem;
+		text-align: center;
+		color: #666;
+		font-size: 0.9rem;
+	}
+
+	.footer-links {
+		display: flex;
+		justify-content: center;
+		gap: 0.5rem;
+		margin-top: 0.5rem;
+	}
+
+	.separator {
+		color: #ccc;
+	}
+
+	.footer-links a {
+		text-decoration: none;
+		color: #888;
+	}
+	
+	/* Utility for cards */
+	.card {
+		background: white;
+		border-radius: 20px;
+		padding: 1.5rem;
+		box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+	}
+	
+	button {
+		cursor: pointer;
+		font-family: inherit;
+	}
+
+	/* ========================================
+	   RESPONSIVE MEDIA QUERIES
+	   ======================================== */
+
+	/* Tablet and below */
+	@media (max-width: 1023px) {
+		.main-content {
+			padding: 1.5rem 2rem;
+		}
+	}
+
+	/* Mobile */
+	@media (max-width: 767px) {
+		.app-container {
+			flex-direction: column;
+		}
+
+		.main-content {
+			padding: 1rem;
+			height: auto;
+			min-height: 100vh;
+		}
+
+		.main-footer {
+			padding-top: 2rem;
+			font-size: 0.8rem;
+		}
+
+		.footer-links {
+			flex-direction: column;
+			gap: 0.3rem;
+		}
+
+		.separator {
+			display: none;
+		}
+	}
+
+	/* Mobile small */
+	@media (max-width: 480px) {
+		.main-content {
+			padding: 0.75rem;
+		}
+	}
+</style>
