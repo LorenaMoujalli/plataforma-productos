@@ -1,5 +1,6 @@
 ---
 import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
 
 interface Props {
 	title: string;
@@ -25,13 +26,9 @@ const { title } = Astro.props;
 		<div class="app-container">
 			<main class="main-content">
 				<slot />
-				<footer class="main-footer">
-					<p>&copy; 2026. Todos los derechos reservados</p>
-					
-				</footer>
 			</main>
 		</div>
-	
+		<Footer />
 	</body>
 </html>
 
@@ -39,7 +36,7 @@ const { title } = Astro.props;
 	:root {
 		--primary: #2563eb;
 		--primary-hover: #1d4ed8;
-		--bg-color: #f8fafc;
+		--bg-color: #ffffff;
 		--text-color: #0f172a;
 		--card-bg: #ffffff;
 	}
@@ -52,7 +49,7 @@ const { title } = Astro.props;
 
 	html {
 		font-family: 'Outfit', sans-serif;
-		background-color: #f8fafc; 
+		background-color: #ffffff; 
 		color: var(--text-color);
 		overflow-x: hidden;
 		width: 100%;
@@ -60,6 +57,8 @@ const { title } = Astro.props;
 
 	body {
 		min-height: 100vh;
+		display: flex;
+		flex-direction: column;
 		overflow-x: hidden;
 		width: 100%;
 	}
@@ -67,7 +66,7 @@ const { title } = Astro.props;
 	.app-container {
 		display: flex;
 		flex-direction: column;
-		min-height: calc(100vh - 70px);
+		flex: 1;
 		width: 100%;
 		overflow-x: hidden;
 	}
@@ -81,31 +80,6 @@ const { title } = Astro.props;
 		min-width: 0;
 	}
 
-	.main-footer {
-		margin-top: auto;
-		padding-top: 3rem;
-		padding-bottom: 1rem;
-		text-align: center;
-		color: #666;
-		font-size: 0.9rem;
-	}
-
-	.footer-links {
-		display: flex;
-		justify-content: center;
-		gap: 0.5rem;
-		margin-top: 0.5rem;
-	}
-
-	.separator {
-		color: #ccc;
-	}
-
-	.footer-links a {
-		text-decoration: none;
-		color: #888;
-	}
-	
 	/* Utility for cards */
 	.card {
 		background: white;
@@ -140,20 +114,6 @@ const { title } = Astro.props;
 			padding: 1rem;
 			height: auto;
 			min-height: 100vh;
-		}
-
-		.main-footer {
-			padding-top: 2rem;
-			font-size: 0.8rem;
-		}
-
-		.footer-links {
-			flex-direction: column;
-			gap: 0.3rem;
-		}
-
-		.separator {
-			display: none;
 		}
 	}
 

@@ -1,9 +1,14 @@
 ---
-import DashboardLayout from '../layouts/DashboardLayout.astro';
+import DashboardLayout from "../layouts/DashboardLayout.astro";
 ---
 
 <DashboardLayout title="Home"> 
-	hola
+
+
+
+
+
+	
 </DashboardLayout>
 
 <style>
@@ -71,3 +76,16 @@ import DashboardLayout from '../layouts/DashboardLayout.astro';
 		}
 	}
 </style>
+
+<script>
+	import { supabase } from "../lib/supabase.js";
+
+	// Verificar si el usuario tiene una sesión activa, si no, redirigir a /login
+	const { data: { session } } = await supabase.auth.getSession();
+	
+	if (!session) {
+		window.location.href = "/login";
+	} else {
+		// Opcional: Podrías usar los datos del usuario aquí, ej. console.log(session.user)
+	}
+</script>

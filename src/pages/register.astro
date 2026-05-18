@@ -4,11 +4,27 @@ import Layout from "../layouts/Layout.astro";
 
 <Layout title="Registro">
 	<main>
-	
 		<div class="card">
+			<div class="logos-container">
+				<img src="/logo-camara-comercio.webp" alt="Cámara Oficial de Comercio" class="logo-camara" />
+				<div class="right-logos">
+					<img src="/S.webp" alt="S Logo" class="logo-s" />
+					<img src="/socio-a-socio.webp" alt="Socio a Socio" class="logo-socio" />
+				</div>
+			</div>
 			<h2>Registro</h2>
 
-			<form>
+			<form id="register-form">
+				<div class="form-group">
+					<label for="name">Nombre y Apellido</label>
+					<input
+						type="text"
+						id="name"
+						name="name"
+						required
+						placeholder=""
+					/>
+				</div>
 
 				<div class="form-group">
 					<label for="email">Email</label>
@@ -16,6 +32,7 @@ import Layout from "../layouts/Layout.astro";
 						type="email"
 						id="email"
 						name="email"
+						required
 						placeholder=""
 					/>
 				</div>
@@ -27,6 +44,8 @@ import Layout from "../layouts/Layout.astro";
 							type="password"
 							id="password"
 							name="password"
+							required
+							minlength="6"
 							placeholder=""
 						/>
 						<button
@@ -74,21 +93,17 @@ import Layout from "../layouts/Layout.astro";
 					</div>
 				</div>
 
+				<div class="login-link">
+					¿Ya tienes una cuenta? <a href="/login"><strong>Inicia sesión</strong></a>
+				</div>
+
 				<button
 					type="submit"
 					class="submit-btn"
-					onclick="event.preventDefault(); window.location.href='/login'"
-					>Ingresar</button
+					id="submit-btn"
+					>Registrarse</button
 				>
 			</form>
-
-			<div class="login-link">
-				<p>
-					¿Ya tienes una cuenta? <a href="/login"
-						><strong>Inicia sesión</strong></a
-					>
-				</p>
-			</div>
 		</div>
 	</main>
 </Layout>
@@ -97,51 +112,90 @@ import Layout from "../layouts/Layout.astro";
 main {
     flex: 1;
     display: flex;
-    flex-direction: column;
     align-items: center;
-    justify-content: center;
-    padding: 2rem;
+    justify-content: flex-start; /* Aligned to the left, like the mockup screenshot */
+    padding: 2rem 8%;
     width: 100%;
-    background-color: var(--bg-color);
+    min-height: 100vh;
+    background-image: url('/fondo.webp');
+    background-size: cover;
+    background-position: 95% 5%;
+    background-repeat: no-repeat;
 }
 
 .card {
-    background: white;
-    padding: 3.5rem;
-    border-radius: 24px;
+    background: rgba(255, 255, 255, 0.96);
+    padding: 3rem 2.5rem;
+    border-radius: 20px;
     width: 100%;
-    max-width: 480px;
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-    border: 1px solid #f1f5f9;
+    max-width: 440px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    text-align: center;
+}
+
+.logos-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    width: 100%;
+}
+
+.right-logos {
+    display: flex;
+    align-items: center;
+    gap: 0.2rem;
+}
+
+.logo-s {
+    height: 55px;
+    object-fit: contain;
+}
+
+.logo-camara {
+    height: 55px;
+    object-fit: contain;
+}
+
+.logo-socio {
+    height: 50px;
+    object-fit: contain;
 }
 
 h2 {
-    font-size: 1.75rem;
-    margin-bottom: 2.5rem;
+	font-family: 'Inter', sans-serif;
+	font-style: normal;
+    font-size: 28px;
+    margin-bottom: 2rem;
     font-weight: 700;
-    color: #1e293b;
+    color: #000;
     text-align: center;
 }
 
 .form-group {
-    margin-bottom: 1.75rem;
+    margin-bottom: 1.5rem;
     text-align: left;
 }
 
 label {
+	font-family: 'Inter', sans-serif;
+	font-style: normal;
     display: block;
-    margin-bottom: 0.6rem;
-    font-weight: 600;
-    font-size: 0.9rem;
-    color: #475569;
+    margin-bottom: 0.5rem;
+    font-weight: 400;
+    font-size: 0.85rem;
+    color: #000;
+    text-align: left;
 }
 
 input {
     width: 100%;
-    padding: 0.9rem 1.1rem;
-    border-radius: 12px;
-    border: 1.5px solid #e2e8f0;
-    background-color: #ffffff;
+    padding: 0.85rem 1.1rem;
+    border-radius: 10px;
+    border: 1.5px solid #DA291C; /* Red/coral border matching mockup */
+    background-color: #fafafa;
     font-size: 1rem;
     outline: none;
     transition: all 0.2s ease;
@@ -149,8 +203,9 @@ input {
 }
 
 input:focus {
-    border-color: var(--primary);
-    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+    border-color: #9a1c1c;
+    background-color: #ffffff;
+    box-shadow: 0 0 0 4px rgba(211, 47, 47, 0.1);
 }
 
 .password-wrapper {
@@ -178,56 +233,77 @@ input:focus {
 }
 
 .toggle-password:hover {
-    color: var(--primary);
+    color: #d32f2f;
+}
+
+.login-link {
+	font-family: 'Inter', sans-serif;
+	font-style: italic;
+    margin-top: 1.5rem;
+    font-size: 0.85rem;
+    color: #475569;
+    text-align: center;
+}
+
+.login-link a {
+    color: #000;
+    text-decoration: none;
+}
+
+.login-link a:hover {
+    text-decoration: none;
 }
 
 .submit-btn {
-    width: 100%;
-    padding: 1rem;
-    background-color: var(--primary);
+	font-family: 'Inter', sans-serif;
+	font-style: normal;
+    display: inline-block;
+    min-width: 180px;
+    padding: 0.75rem 2rem;
+    background-color: #DA291C; /* Match the red from logos */
     color: white;
     border: none;
-    border-radius: 12px;
-    font-size: 1.1rem;
-    font-weight: 600;
-    margin-top: 1rem;
-    margin-bottom: 2rem;
+    font-size: 1rem;
+    font-weight: 500;
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
     transition: all 0.3s ease;
     cursor: pointer;
 }
 
 .submit-btn:hover {
-    background-color: var(--primary-hover);
-    transform: translateY(-1px);
-    box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.4);
+    background-color: #b02121;
 }
 
-.login-link {
-    text-align: center;
-}
-
-.login-link p {
-    font-size: 0.95rem;
-    color: #64748b;
-}
-
-.login-link strong {
-    color: var(--primary);
-    text-decoration: none;
-}
-
-.login-link a:hover strong {
-    text-decoration: underline;
-}
-
-@media (max-width: 767px) {
-    .card {
+@media (max-width: 1024px) {
+    main {
+        justify-content: center;
         padding: 2rem;
+    }
+}
+
+/* Force layout styles cache invalidation */
+
+@media (max-width: 480px) {
+    .card {
+        padding: 2rem 1.5rem;
+    }
+    .logos-container {
+        gap: 1rem;
+    }
+    .logo-camara {
+        height: 45px;
+    }
+    .logo-socio {
+        height: 40px;
     }
 }
 </style>
 
 <script>
+	import { signUpUser } from "../services/auth.js";
+	import { showAlert, showToast } from "../utils/notifications.js";
+
 	const togglePassword = document.querySelector(".toggle-password");
 	const passwordInput = document.querySelector(
 		"#password",
@@ -251,6 +327,60 @@ input:focus {
 				eyeIcon.style.display = "none";
 				eyeOffIcon.style.display = "block";
 				togglePassword.setAttribute("aria-label", "Mostrar contraseña");
+			}
+		});
+	}
+
+	// Lógica de registro con Supabase
+	const registerForm = document.getElementById("register-form") as HTMLFormElement;
+	const nameInput = document.getElementById("name") as HTMLInputElement;
+	const emailInput = document.getElementById("email") as HTMLInputElement;
+	const submitBtn = document.getElementById("submit-btn") as HTMLButtonElement;
+
+	if (registerForm && nameInput && emailInput && passwordInput && submitBtn) {
+		registerForm.addEventListener("submit", async (e) => {
+			e.preventDefault();
+
+			const name = nameInput.value.trim();
+			const email = emailInput.value.trim();
+			const password = passwordInput.value;
+
+			// 1. Validación de dominio en el lado del cliente (para mejor UX)
+			const domain = email.split("@")[1];
+			if (!domain || domain.toLowerCase() !== "oberstaff.com") {
+				showToast({
+					text: "Solo se permiten registros con correos electrónicos de dominios autorizados.",
+					icon: "error"
+				});
+				return;
+			}
+
+			// 2. Cambiar estado del botón a cargando
+			submitBtn.disabled = true;
+			submitBtn.innerText = "Registrando...";
+
+			try {
+				// 3. Registrar usuario mediante el servicio de autenticación (pasando el nombre)
+				await signUpUser(email, password, name);
+
+				// 4. Mostrar hermosa alerta modal de confirmación y redirigir
+				await showAlert({
+					title: "¡Registro Exitoso!",
+					text: "",
+					icon: "success",
+					confirmButtonText: "Ir al Inicio de Sesión"
+				});
+				
+				window.location.href = "/login";
+			} catch (err: any) {
+				showToast({
+					text: err.message || "Ocurrió un error inesperado durante el registro.",
+					icon: "error"
+				});
+				console.error(err);
+			} finally {
+				submitBtn.disabled = false;
+				submitBtn.innerText = "Registrarse";
 			}
 		});
 	}

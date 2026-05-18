@@ -15,7 +15,7 @@ const { title } = Astro.props;
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="preconnect" href="https://fonts.googleapis.com">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-		<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 		<title>{title}</title>
 	</head>
 	<body>
@@ -65,5 +65,39 @@ const { title } = Astro.props;
 	button {
 		font-family: inherit;
 		cursor: pointer;
+	}
+
+	/* Estilos globales para alertas de SweetAlert2 */
+	.swal-submit-btn {
+		font-family: 'Inter', sans-serif !important;
+		font-style: normal !important;
+		display: inline-block !important;
+		min-width: 200px !important;
+		padding: 0.75rem 2rem !important;
+		background-color: #DA291C !important;
+		color: white !important;
+		border: none !important;
+		font-size: 1rem !important;
+		font-weight: 500 !important;
+		margin-top: 1.5rem !important;
+		margin-bottom: 0.5rem !important;
+		transition: all 0.3s ease !important;
+		cursor: pointer !important;
+		border-radius: 8px !important;
+		text-align: center !important;
+		outline: none !important;
+		box-shadow: 0 4px 6px rgba(218, 41, 28, 0.2) !important;
+	}
+
+	.swal-submit-btn:hover {
+		background-color: #b02121 !important;
+		box-shadow: 0 6px 12px rgba(218, 41, 28, 0.3) !important;
+	}
+
+	.premium-popup {
+		font-family: 'Inter', sans-serif !important;
+		border-radius: 20px !important;
+		padding: 2.5rem !important;
+		box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15) !important;
 	}
 </style>
