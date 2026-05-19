@@ -39,7 +39,7 @@ export async function signUpUser(email, password, name) {
  * @returns {Promise<any>}
  */
 export async function signInUser(email, password) {
-  const cleanEmail = email.trim();
+  const cleanEmail = email.trim(); 
   const domain = cleanEmail.split("@")[1];
 
   if (!domain || domain.toLowerCase() !== "oberstaff.com") {
@@ -74,15 +74,33 @@ export async function signOutUser() {
   if (error) throw error;
 }
 
-/**
- * Obtiene la sesión activa del usuario actual.
- * 
- * @returns {Promise<any>}
- */
 export async function getCurrentSession() {
   const { data: { session }, error } = await supabase.auth.getSession();
   if (error) throw error;
   return session;
+}
+
+/**
+ * Obtiene el perfil del usuario activo de la tabla public.profiles.
+ * Útil para obtener el rol (admin o user).
+ * 
+ * @returns {Promise<any>}
+ */
+export async function getUserProfile() {
+  const session = await getCurrentSession();
+  if (!session) return null;
+
+  const { data, error } = await supabase
+    .from('profiles')
+    .select('*')
+    .eq('id', session.user.id)
+    .single();
+
+  if (error) {
+    console.error("Error al obtener el perfil:", error.message);
+    return null;
+  }
+  return data;
 }
 
 /**
@@ -104,5 +122,30 @@ export async function directResetPassword(email, newPassword) {
   if (error) throw error;
   
   // data retornará true si el correo existía y se actualizó, false si no existe
+  return data;
+}
+
+/**
+ * Obtiene todos los usuarios registrados (Solo para administradores)
+ * 
+ * @returns {Promise<any[]>}
+ */
+export async function getAdminUsers() {
+  const { data, error } = await supabase.rpc('admin_get_users');
+  if (error) throw error;
+  return data;
+}
+
+/**
+ * Elimina a un usuario completamente (Solo para administradores)
+ * 
+ * @param {string} userId 
+ * @returns {Promise<boolean>}
+ */
+export async function deleteAdminUser(userId) {
+  const { data, error } = await supabase.rpc('admin_delete_user', {
+    user_id: userId
+  });
+  if (error) throw error;
   return data;
 }

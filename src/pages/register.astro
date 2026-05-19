@@ -323,30 +323,27 @@ import Layout from "../layouts/Layout.astro";
 	import { signUpUser } from "../services/auth.js";
 	import { showAlert, showToast } from "../utils/notifications.js";
 
-	document.addEventListener('astro:page-load', () => {
+	function setupRegister() {
 		const togglePassword = document.querySelector(".toggle-password") as HTMLButtonElement;
 		const passwordInput = document.querySelector("#password") as HTMLInputElement;
 		const eyeIcon = document.querySelector(".eye-icon") as HTMLElement;
 		const eyeOffIcon = document.querySelector(".eye-off-icon") as HTMLElement;
 
 		if (togglePassword && passwordInput) {
-			const newTogglePassword = togglePassword.cloneNode(true) as HTMLButtonElement;
-			togglePassword.parentNode?.replaceChild(newTogglePassword, togglePassword);
-
-			newTogglePassword.addEventListener("click", () => {
+			togglePassword.onclick = () => {
 				const type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
 				passwordInput.setAttribute("type", type);
 
 				if (type === "text") {
 					eyeIcon.style.display = "block";
 					eyeOffIcon.style.display = "none";
-					newTogglePassword.setAttribute("aria-label", "Ocultar contraseña");
+					togglePassword.setAttribute("aria-label", "Ocultar contraseña");
 				} else {
 					eyeIcon.style.display = "none";
 					eyeOffIcon.style.display = "block";
-					newTogglePassword.setAttribute("aria-label", "Mostrar contraseña");
+					togglePassword.setAttribute("aria-label", "Mostrar contraseña");
 				}
-			});
+			};
 		}
 
 		// Lógica de registro con Supabase
@@ -356,7 +353,7 @@ import Layout from "../layouts/Layout.astro";
 		const submitBtn = document.getElementById("submit-btn") as HTMLButtonElement;
 
 		if (registerForm && nameInput && emailInput && passwordInput && submitBtn) {
-			registerForm.addEventListener("submit", async (e) => {
+			registerForm.onsubmit = async (e) => {
 				e.preventDefault();
 
 				const name = nameInput.value.trim();
@@ -402,7 +399,9 @@ import Layout from "../layouts/Layout.astro";
 					submitBtn.disabled = false;
 					submitBtn.innerText = "Registrarse";
 				}
-			});
+			};
 		}
-	});
+	}
+
+	setupRegister();
 </script>

@@ -3,330 +3,338 @@ import Layout from "../layouts/Layout.astro";
 ---
 
 <Layout title="Recuperar Contraseña">
-	<main>
-		<img src="" alt="" class="bg-img" aria-hidden="true" />
-		<div class="card">
-			<div class="logos-container">
-				<img
-					src="/logo-camara-comercio.webp"
-					alt="Cámara Oficial de Comercio"
-					class="logo-camara"
-				/>
-				<div class="right-logos">
-					<img src="/S.webp" alt="S Logo" class="logo-s" />
-					<img
-						src="/socio-a-socio.webp"
-						alt="Socio a Socio"
-						class="logo-socio"
-					/>
-				</div>
-			</div> 
-			
-			<h2>Recupera tu contraseña</h2>
+    <main>
+        <img src="" alt="" class="bg-img" aria-hidden="true" />
+        <div class="card">
+            <div class="logos-container">
+                <img
+                    src="/logo-camara-comercio.webp"
+                    alt="Cámara Oficial de Comercio"
+                    class="logo-camara"
+                />
+                <div class="right-logos">
+                    <img src="/S.webp" alt="S Logo" class="logo-s" />
+                    <img
+                        src="/socio-a-socio.webp"
+                        alt="Socio a Socio"
+                        class="logo-socio"
+                    />
+                </div>
+            </div>
 
-			<form id="recover-form">
-				<div class="form-group">
-					<label for="email">Correo</label>
-					<input
-						type="email"
-						id="email"
-						name="email"
-						required
-					/>
-				</div>
+            <h2>Recupera tu contraseña</h2>
 
-				<div class="form-group">
-					<label for="new-password">Nueva contraseña</label>
-					<div class="password-wrapper">
-						<input
-							type="password"
-							id="new-password"
-							name="new-password"
-							required
-						/>
-					</div>
-				</div>
+            <form id="recover-form">
+                <div class="form-group">
+                    <label for="email">Correo</label>
+                    <input type="email" id="email" name="email" required />
+                </div>
 
-				<div class="form-group">
-					<label for="confirm-password">Confirmar contraseña</label>
-					<div class="password-wrapper">
-						<input
-							type="password"
-							id="confirm-password"
-							name="confirm-password"
-							required
-						/>
-					</div>
-				</div>
+                <div class="form-group">
+                    <label for="new-password">Nueva contraseña</label>
+                    <div class="password-wrapper">
+                        <input
+                            type="password"
+                            id="new-password"
+                            name="new-password"
+                            required
+                        />
+                    </div>
+                </div>
 
-				<div class="btn-container">
-					<button type="submit" class="submit-btn" id="submit-btn">
-						Iniciar sesión
-					</button>
-				</div>
-				
-				<div class="back-link">
-					<a href="/login">Volver</a>
-				</div>
-			</form>
-		</div>
-	</main>
+                <div class="form-group">
+                    <label for="confirm-password">Confirmar contraseña</label>
+                    <div class="password-wrapper">
+                        <input
+                            type="password"
+                            id="confirm-password"
+                            name="confirm-password"
+                            required
+                        />
+                    </div>
+                </div>
+
+                <div class="btn-container">
+                    <button type="submit" class="submit-btn" id="submit-btn">
+                        Iniciar sesión
+                    </button>
+                </div>
+
+                <div class="back-link">
+                    <a href="/login">Volver</a>
+                </div>
+            </form>
+        </div>
+    </main>
 </Layout>
 
 <style>
-	main {
-		flex: 1;
-		display: flex;
-		align-items: center;
-		justify-content: center; /* Centered layout for this page */
-		padding: 2rem 8%;
-		width: 100%;
-		min-height: 100vh;
-		position: relative;
-		overflow: hidden;
-	}
+    main {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center; /* Centered layout for this page */
+        padding: 2rem 8%;
+        width: 100%;
+        min-height: 100vh;
+        position: relative;
+        overflow: hidden;
+    }
 
-	.bg-img {
-		position: absolute;
-		inset: 0;
-		width: 100%;
-		height: 100%;
-		object-fit: cover;
-		object-position: center;
-		display: block;
-		z-index: 0;
-	}
+    .bg-img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        display: block;
+        z-index: 0;
+    }
 
-	.card {
-		position: relative;
-		z-index: 1;
-		background: #ffffff;
-		padding: 3rem 3rem;
-		border-radius: 12px;
-		width: 100%;
-		max-width: 480px;
-		box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-		border: 1.5px solid #da291c; /* Red border from the screenshot */
-		text-align: center;
-	}
+    .card {
+        position: relative;
+        z-index: 1;
+        background: #ffffff;
+        padding: 3rem 3rem;
+        border-radius: 12px;
+        width: 100%;
+        max-width: 480px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        border: 1.5px solid #da291c; /* Red border from the screenshot */
+        text-align: center;
+    }
 
-	.logos-container {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		gap: 1rem;
-		margin-bottom: 2rem;
-		width: 100%;
-	}
+    .logos-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        margin-bottom: 2rem;
+        width: 100%;
+    }
 
-	.right-logos {
-		display: flex;
-		align-items: center;
-		gap: 0.2rem;
-	}
+    .right-logos {
+        display: flex;
+        align-items: center;
+        gap: 0.2rem;
+    }
 
-	.logo-s {
-		height: 55px;
-		object-fit: contain;
-	}
+    .logo-s {
+        height: 55px;
+        object-fit: contain;
+    }
 
-	.logo-camara {
-		height: 55px;
-		object-fit: contain;
-	}
+    .logo-camara {
+        height: 55px;
+        object-fit: contain;
+    }
 
-	.logo-socio {
-		height: 50px;
-		object-fit: contain;
-	}
+    .logo-socio {
+        height: 50px;
+        object-fit: contain;
+    }
 
-	h2 {
-		font-family: "Inter", sans-serif;
-		font-style: normal;
-		font-size: 26px;
-		margin-bottom: 2rem;
-		font-weight: 700;
-		color: #000;
-		text-align: center;
-	}
+    h2 {
+        font-family: "Inter", sans-serif;
+        font-style: normal;
+        font-size: 26px;
+        margin-bottom: 2rem;
+        font-weight: 700;
+        color: #000;
+        text-align: center;
+    }
 
-	.form-group {
-		margin-bottom: 1.5rem;
-		text-align: left;
-	}
+    .form-group {
+        margin-bottom: 1.5rem;
+        text-align: left;
+    }
 
-	label {
-		font-family: "Inter", sans-serif;
-		font-style: normal;
-		display: block;
-		margin-bottom: 0.5rem;
-		font-weight: 400;
-		font-size: 0.85rem;
-		color: #000;
-		text-align: left;
-	}
+    label {
+        font-family: "Inter", sans-serif;
+        font-style: normal;
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 400;
+        font-size: 0.85rem;
+        color: #000;
+        text-align: left;
+    }
 
-	input {
-		width: 100%;
-		padding: 0.85rem 1.1rem;
-		border-radius: 8px;
-		border: 1px solid #e2e8f0;
-		background-color: #f8fafc;
-		font-size: 1rem;
-		outline: none;
-		transition: all 0.2s ease;
-		color: #1e293b;
-	}
+    input {
+        width: 100%;
+        padding: 0.85rem 1.1rem;
+        border-radius: 8px;
+        border: 1px solid #e2e8f0;
+        background-color: #f8fafc;
+        font-size: 1rem;
+        outline: none;
+        transition: all 0.2s ease;
+        color: #1e293b;
+    }
 
-	input:focus {
-		border-color: #94a3b8;
-		background-color: #ffffff;
-		box-shadow: 0 0 0 3px rgba(226, 232, 240, 0.5);
-	}
+    input:focus {
+        border-color: #94a3b8;
+        background-color: #ffffff;
+        box-shadow: 0 0 0 3px rgba(226, 232, 240, 0.5);
+    }
 
-	.password-wrapper {
-		position: relative;
-		width: 100%;
-	}
+    .password-wrapper {
+        position: relative;
+        width: 100%;
+    }
 
-	.btn-container {
-		text-align: center;
-		margin-top: 2rem;
-	}
+    .btn-container {
+        text-align: center;
+        margin-top: 2rem;
+    }
 
-	.submit-btn {
-		font-family: "Inter", sans-serif;
-		font-style: normal;
-		display: inline-block;
-		min-width: 150px;
-		padding: 0.75rem 2rem;
-		background-color: #da291c;
-		color: white;
-		border: none;
-		border-radius: 4px;
-		font-size: 1rem;
-		font-weight: 600;
-		transition: all 0.3s ease;
-		cursor: pointer;
-	}
+    .submit-btn {
+        font-family: "Inter", sans-serif;
+        font-style: normal;
+        display: inline-block;
+        min-width: 150px;
+        padding: 0.75rem 2rem;
+        background-color: #da291c;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-size: 1rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
 
-	.submit-btn:hover {
-		background-color: #b02121;
-	}
+    .submit-btn:hover {
+        background-color: #b02121;
+    }
 
-	.back-link {
-		font-family: "Inter", sans-serif;
-		margin-top: 1.5rem;
-		font-size: 0.9rem;
-		text-align: center;
-	}
+    .back-link {
+        font-family: "Inter", sans-serif;
+        margin-top: 1.5rem;
+        font-size: 0.9rem;
+        text-align: center;
+    }
 
-	.back-link a {
-		color: #475569;
-		text-decoration: none;
-		transition: color 0.2s;
-	}
+    .back-link a {
+        color: #475569;
+        text-decoration: none;
+        transition: color 0.2s;
+    }
 
-	.back-link a:hover {
-		color: #000;
-	
-	}
+    .back-link a:hover {
+        color: #000;
+    }
 
-	@media (max-width: 480px) {
-		.card {
-			padding: 2rem 1.5rem;
-		}
-		.logos-container {
-			gap: 1rem;
-		}
-		.logo-camara {
-			height: 45px;
-		}
-		.logo-socio {
-			height: 40px;
-		}
-	}
+    @media (max-width: 480px) {
+        .card {
+            padding: 2rem 1.5rem;
+        }
+        .logos-container {
+            gap: 1rem;
+        }
+        .logo-camara {
+            height: 45px;
+        }
+        .logo-socio {
+            height: 40px;
+        }
+    }
 </style>
 
 <script>
-	import { directResetPassword, signInUser } from "../services/auth.js";
-	import { showToast } from "../utils/notifications.js";
+    import { directResetPassword, signInUser } from "../services/auth.js";
+    import { showToast } from "../utils/notifications.js";
 
-	document.addEventListener('astro:page-load', () => {
-		const recoverForm = document.getElementById("recover-form") as HTMLFormElement;
-		const emailInput = document.getElementById("email") as HTMLInputElement;
-		const newPasswordInput = document.getElementById("new-password") as HTMLInputElement;
-		const confirmPasswordInput = document.getElementById("confirm-password") as HTMLInputElement;
-		const submitBtn = document.getElementById("submit-btn") as HTMLButtonElement;
+	function setupRecovery() {
+        const recoverForm = document.getElementById(
+            "recover-form",
+        ) as HTMLFormElement;
+        const emailInput = document.getElementById("email") as HTMLInputElement;
+        const newPasswordInput = document.getElementById(
+            "new-password",
+        ) as HTMLInputElement;
+        const confirmPasswordInput = document.getElementById(
+            "confirm-password",
+        ) as HTMLInputElement;
+        const submitBtn = document.getElementById(
+            "submit-btn",
+        ) as HTMLButtonElement;
 
-		if (recoverForm) {
-			recoverForm.addEventListener("submit", async (e) => {
-				e.preventDefault();
+        if (recoverForm) {
+            recoverForm.onsubmit = async (e) => {
+                e.preventDefault();
 
-				const email = emailInput.value.trim();
-				const newPassword = newPasswordInput.value;
-				const confirmPassword = confirmPasswordInput.value;
+                const email = emailInput.value.trim();
+                const newPassword = newPasswordInput.value;
+                const confirmPassword = confirmPasswordInput.value;
 
-				if (newPassword !== confirmPassword) {
-					showToast({
-						text: "Las contraseñas no coinciden.",
-						icon: "error",
-					});
-					return;
-				}
+                if (newPassword !== confirmPassword) {
+                    showToast({
+                        text: "Las contraseñas no coinciden.",
+                        icon: "error",
+                    });
+                    return;
+                }
 
-				if (newPassword.length < 6) {
-					showToast({
-						text: "La contraseña debe tener al menos 6 caracteres.",
-						icon: "error",
-					});
-					return;
-				}
+                if (newPassword.length < 6) {
+                    showToast({
+                        text: "La contraseña debe tener al menos 6 caracteres.",
+                        icon: "error",
+                    });
+                    return;
+                }
 
-				// Validar dominio
-				const domain = email.split("@")[1];
-				if (!domain || domain.toLowerCase() !== "oberstaff.com") {
-					showToast({
-						text: "Solo se permiten correos de dominios autorizados.",
-						icon: "error",
-					});
-					return;
-				}
+                // Validar dominio
+                const domain = email.split("@")[1];
+                if (!domain || domain.toLowerCase() !== "oberstaff.com") {
+                    showToast({
+                        text: "Solo se permiten correos de dominios autorizados.",
+                        icon: "error",
+                    });
+                    return;
+                }
 
-				submitBtn.disabled = true;
-				submitBtn.innerText = "Verificando...";
+                submitBtn.disabled = true;
+                submitBtn.innerText = "Verificando...";
 
-				try {
-					// 1. Intentar cambiar la contraseña forzadamente (si el correo existe)
-					const success = await directResetPassword(email, newPassword);
+                try {
+                    // 1. Intentar cambiar la contraseña forzadamente (si el correo existe)
+                    const success = await directResetPassword(
+                        email,
+                        newPassword,
+                    );
 
-					if (!success) {
-						// El correo no existe en la BD
-						showToast({
-							text: "Este correo no está registrado en el sistema.",
-							icon: "error",
-						});
-						return;
-					}
+                    if (!success) {
+                        // El correo no existe en la BD
+                        showToast({
+                            text: "Este correo no está registrado en el sistema.",
+                            icon: "error",
+                        });
+                        return;
+                    }
 
-					// 2. Si existía y se cambió, iniciamos sesión automáticamente
-					submitBtn.innerText = "Iniciando sesión...";
-					await signInUser(email, newPassword);
+                    // 2. Si existía y se cambió, iniciamos sesión automáticamente
+                    submitBtn.innerText = "Iniciando sesión...";
+                    await signInUser(email, newPassword);
 
-					// 3. Redirigir al inicio o página deseada
-					window.location.href = "/home";
+                    // 3. Redirigir al inicio o página deseada
+                    window.location.href = "/home";
+                } catch (err: any) {
+                    console.error(err);
+                    showToast({
+                        text:
+                            err.message ||
+                            "Ocurrió un error al intentar actualizar la contraseña.",
+                        icon: "error",
+                    });
+                } finally {
+                    submitBtn.disabled = false;
+                    submitBtn.innerText = "Iniciar sesión";
+                }
+            };
+        }
+    }
 
-				} catch (err: any) {
-					console.error(err);
-					showToast({
-						text: err.message || "Ocurrió un error al intentar actualizar la contraseña.",
-						icon: "error",
-					});
-				} finally {
-					submitBtn.disabled = false;
-					submitBtn.innerText = "Iniciar sesión";
-				}
-			});
-		}
-	});
+	setupRecovery();
 </script>

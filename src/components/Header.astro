@@ -17,6 +17,12 @@ const currentPath = pathname.replace(/\/$/, '') || '/';
     </div>
     
     <div class="header-actions">
+        <a href="/admin/dashboard" id="admin-btn" class="admin-btn" style="display: none;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            </svg>
+            <span>Administrar</span>
+        </a>
         <a href="#" id="logout-btn" class="logout-btn">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-log-out">
                 <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
@@ -29,23 +35,44 @@ const currentPath = pathname.replace(/\/$/, '') || '/';
 </header>
 
 <script>
-    import { signOutUser } from "../services/auth.js";
+    import { signOutUser, getUserProfile } from "../services/auth.js";
 
-    const logoutBtn = document.getElementById("logout-btn");
-    
-    if (logoutBtn) {
-        logoutBtn.addEventListener("click", async (e) => {
-            e.preventDefault();
+    function setupHeader() {
+        const logoutBtn = document.getElementById("logout-btn");
+        const adminBtn = document.getElementById("admin-btn");
+        
+        // Verificar si es administrador para mostrar el botón
+        async function checkAdminStatus() {
             try {
-                await signOutUser();
-                window.location.href = "/login";
-            } catch (err) {
-                console.error("Error al cerrar sesión:", err);
-                // Si falla por algún problema, forzamos redirección igual
-                window.location.href = "/login";
+                const profile = await getUserProfile();
+                if (profile && profile.role === 'admin' && adminBtn) {
+                    adminBtn.style.display = 'flex';
+                }
+            } catch (error) {
+                console.error("Error validando permisos de admin:", error);
             }
-        });
+        }
+
+        // Ejecutar verificación de permisos
+        checkAdminStatus();
+
+        if (logoutBtn) {
+            // Usar onclick sobrescribe cualquier listener anterior (ideal para ViewTransitions)
+            logoutBtn.onclick = async (e) => {
+                e.preventDefault();
+                try {
+                    await signOutUser();
+                    window.location.href = "/login";
+                } catch (err) {
+                    console.error("Error al cerrar sesión:", err);
+                    window.location.href = "/login";
+                }
+            };
+        }
     }
+
+    // Ejecutar al cargar la página
+    setupHeader();
 </script>
 
 <style>
@@ -103,11 +130,13 @@ const currentPath = pathname.replace(/\/$/, '') || '/';
 
 .header-actions {
     margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
 }
 
-.logout-btn {
+.logout-btn, .admin-btn {
     text-decoration: none;
-    color: #000000;
     font-family: 'Inter', sans-serif;
     font-weight: 600;
     font-size: 0.95rem;
@@ -115,8 +144,31 @@ const currentPath = pathname.replace(/\/$/, '') || '/';
     align-items: center;
     gap: 0.6rem;
     padding: 0.5rem 0.8rem;
-    transition: opacity 0.2s ease;
+    border-radius: 6px;
+    transition: all 0.2s ease;
 }
+
+.logout-btn {
+    color: #000000;
+}
+
+.logout-btn:hover {
+    background-color: #f1f5f9;
+}
+
+.admin-btn {
+    color: #020617;
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+}
+
+.admin-btn:hover {
+    background-color: #f1f5f9;
+    border-color: #cbd5e1;
+    transform: translateY(-1px);
+}
+
+
 
 
 /* Responsive adjustments */
@@ -151,7 +203,7 @@ const currentPath = pathname.replace(/\/$/, '') || '/';
         height: 48px; /* Aumentado para mayor presencia */
     }
 
-    .logout-btn {
+    .logout-btn, .admin-btn {
         font-size: 0.85rem;
         gap: 0.4rem;
         padding: 0.4rem 0.5rem;
@@ -180,8 +232,8 @@ const currentPath = pathname.replace(/\/$/, '') || '/';
         height: 44px;
     }
     
-    .logout-btn span {
-        display: none; /* Ocultar texto "Cerrar sesión" para dar espacio a los logos en móviles muy pequeños */
+    .logout-btn span, .admin-btn span {
+        display: none; /* Ocultar texto para dar espacio a los logos en móviles muy pequeños */
     }
 }
 </style>
