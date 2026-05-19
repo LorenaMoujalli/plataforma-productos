@@ -1,0 +1,29 @@
+/* Paginación */
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 40px;
+}
+
+.page-num {
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #DA291C;
+  border-radius: 0;
+  text-decoration: none;
+  color: #1a1a1a;
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  background-color: transparent;
+  transition: all 0.2s ease;
+}
+
+.page-num.active {
+  background-color: #DA291C;
+  color: white;
+  border-color: #DA291C;
+}

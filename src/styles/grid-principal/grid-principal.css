@@ -1,0 +1,30 @@
+/* Estilos Generales y Grid */
+.benefits-container {
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  padding: 40px 20px;
+  color: #333;
+}
+
+.benefits-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  gap: 25px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+  .benefits-container {
+    padding: 30px 15px;
+  }
+  .benefits-grid {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+  }
+}
+
+@media (max-width: 500px) {
+  .benefits-grid {
+    grid-template-columns: 1fr;
+  }
+}

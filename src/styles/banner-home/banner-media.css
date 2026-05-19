@@ -1,0 +1,13 @@
+/* ===== BANNER MEDIA — CONTENEDOR DE LA IMAGEN ===== */
+.banner-media {
+	position: absolute;
+	inset: 0;
+}
+
+.banner-img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	object-position: center 30%;
+	display: block;
+}

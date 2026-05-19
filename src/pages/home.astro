@@ -1,91 +1,26 @@
 ---
 import DashboardLayout from "../layouts/DashboardLayout.astro";
+import BannerHome from "../components/banner-home/BannerHome.astro";
+import GridPrincipal from "../components/grid-principal/GridPrincipal.astro";
 ---
 
-<DashboardLayout title="Home"> 
-
-
-
-
-
-	
+<DashboardLayout title="Home">
+	<BannerHome />
+	<GridPrincipal />
 </DashboardLayout>
-
-<style>
-	.dashboard-grid {
-		display: grid;
-		grid-template-columns: 2fr 1fr;
-		gap: 1.5rem;
-		width: 100%;
-	}
-
-	.main-column {
-		display: flex;
-		flex-direction: column;
-		gap: 1.5rem;
-	}
-
-	.side-column {
-		display: flex;
-		flex-direction: column;
-		gap: 1.5rem;
-	}
-
-	.stats-row {
-		display: grid;
-		grid-template-columns: 1fr 1fr;
-		gap: 1.5rem;
-	}
-
-	/* ========================================
-	   RESPONSIVE MEDIA QUERIES
-	   ======================================== */
-
-	/* Tablet */
-	@media (max-width: 1023px) {
-		.dashboard-grid {
-			grid-template-columns: 1fr;
-			gap: 1.25rem;
-		}
-
-		.stats-row {
-			gap: 1.25rem;
-		}
-	}
-
-	/* Mobile */
-	@media (max-width: 767px) {
-		.dashboard-grid {
-			gap: 1rem;
-		}
-
-		.main-column,
-		.side-column {
-			gap: 1rem;
-		}
-
-		.stats-row {
-			gap: 1rem;
-		}
-	}
-
-	/* Mobile small */
-	@media (max-width: 480px) {
-		.stats-row {
-			grid-template-columns: 1fr;
-		}
-	}
-</style>
 
 <script>
 	import { supabase } from "../lib/supabase.js";
 
 	// Verificar si el usuario tiene una sesión activa, si no, redirigir a /login
-	const { data: { session } } = await supabase.auth.getSession();
-	
+	const {
+		data: { session },
+	} = await supabase.auth.getSession();
+
 	if (!session) {
 		window.location.href = "/login";
 	} else {
-		// Opcional: Podrías usar los datos del usuario aquí, ej. console.log(session.user)
+		
 	}
+	import "../scripts/paginacion.js";
 </script>

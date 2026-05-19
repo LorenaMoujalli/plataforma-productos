@@ -1,0 +1,11 @@
+---
+import "../../styles/banner-home/banner-title.css";
+
+export interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<h1 class="banner-title">{title}</h1>

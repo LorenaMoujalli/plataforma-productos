@@ -4,12 +4,21 @@ import Layout from "../layouts/Layout.astro";
 
 <Layout title="Iniciar Sesión">
 	<main>
+		<img src="/fondo.webp" alt="" class="bg-img" aria-hidden="true" />
 		<div class="card">
 			<div class="logos-container">
-				<img src="/logo-camara-comercio.webp" alt="Cámara Oficial de Comercio" class="logo-camara" />
+				<img
+					src="/logo-camara-comercio.webp"
+					alt="Cámara Oficial de Comercio"
+					class="logo-camara"
+				/>
 				<div class="right-logos">
 					<img src="/S.webp" alt="S Logo" class="logo-s" />
-					<img src="/socio-a-socio.webp" alt="Socio a Socio" class="logo-socio" />
+					<img
+						src="/socio-a-socio.webp"
+						alt="Socio a Socio"
+						class="logo-socio"
+					/>
 				</div>
 			</div>
 			<h2>Inicio de sesión</h2>
@@ -82,231 +91,239 @@ import Layout from "../layouts/Layout.astro";
 				</div>
 
 				<div class="forgot-password">
-					¿Olvidaste tu contraseña? <a href="#"><strong>Recupérala</strong></a>
+					¿Olvidaste tu contraseña? <a href="#"
+						><strong>Recupérala</strong></a
+					>
 				</div>
 
-				<button
-					type="submit"
-					class="submit-btn"
-					id="submit-btn"
+				<button type="submit" class="submit-btn" id="submit-btn"
 					>Ingresar</button
 				>
 			</form>
 
 			<div class="register-link">
-				¿Todavía no tienes una cuenta? <a href="/register"><strong>Regístrate</strong></a>
+				¿Todavía no tienes una cuenta? <a href="/register"
+					><strong>Regístrate</strong></a
+				>
 			</div>
 		</div>
 	</main>
 </Layout>
 
 <style>
-main {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start; /* Aligned to the left, like the mockup screenshot */
-    padding: 2rem 8%;
-    width: 100%;
-    min-height: 100vh;
-    background-image: url('/fondo.webp');
-    background-size: cover;
-    background-position: 95% 5%;
-    background-repeat: no-repeat;
-}
+	main {
+		flex: 1;
+		display: flex;
+		align-items: center;
+		justify-content: flex-start;
+		padding: 2rem 8%;
+		width: 100%;
+		min-height: 100vh;
+		position: relative;
+		overflow: hidden;
+	}
 
-.card {
-    background: rgba(255, 255, 255, 0.96);
-    padding: 3rem 2.5rem;
-    border-radius: 20px;
-    width: 100%;
-    max-width: 440px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    text-align: center;
-}
+	.bg-img {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		object-position: 95% 5%;
+		display: block;
+		z-index: 0;
+	}
 
-.logos-container {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    margin-bottom: 2rem;
-    width: 100%;
-}
+	.card {
+		position: relative;
+		z-index: 1;
+		background: rgba(255, 255, 255, 0.96);
+		padding: 3rem 2.5rem;
+		border-radius: 20px;
+		width: 100%;
+		max-width: 440px;
+		box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+		border: 1px solid rgba(255, 255, 255, 0.3);
+		text-align: center;
+	}
 
-.right-logos {
-    display: flex;
-    align-items: center;
-    gap: 0.2rem;
-}
+	.logos-container {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1rem;
+		margin-bottom: 2rem;
+		width: 100%;
+	}
 
-.logo-s {
-    height: 55px;
-    object-fit: contain;
-}
+	.right-logos {
+		display: flex;
+		align-items: center;
+		gap: 0.2rem;
+	}
 
-.logo-camara {
-    height: 55px;
-    object-fit: contain;
-}
+	.logo-s {
+		height: 55px;
+		object-fit: contain;
+	}
 
-.logo-socio {
-    height: 50px;
-    object-fit: contain;
-}
+	.logo-camara {
+		height: 55px;
+		object-fit: contain;
+	}
 
-h2 {
-	font-family: 'Inter', sans-serif;
-	font-style: normal;
- font-size: 28px;
-    margin-bottom: 2rem;
-    font-weight: 700;
-    color: #000;
-    text-align: center;
-}
+	.logo-socio {
+		height: 50px;
+		object-fit: contain;
+	}
 
-.form-group {
-    margin-bottom: 1.5rem;
-    text-align: left;
-}
+	h2 {
+		font-family: "Inter", sans-serif;
+		font-style: normal;
+		font-size: 28px;
+		margin-bottom: 2rem;
+		font-weight: 700;
+		color: #000;
+		text-align: center;
+	}
 
-label {
-	font-family: 'Inter', sans-serif;
-	font-style: normal;
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 400;
-    font-size: 0.85rem;
-    color: #000;
-    text-align: left;
-}
+	.form-group {
+		margin-bottom: 1.5rem;
+		text-align: left;
+	}
 
-input {
-    width: 100%;
-    padding: 0.85rem 1.1rem;
-    border-radius: 10px;
-    border: 1.5px solid #DA291C; /* Red/coral border matching mockup */
-    background-color: #fafafa;
-    font-size: 1rem;
-    outline: none;
-    transition: all 0.2s ease;
-    color: #1e293b;
-}
+	label {
+		font-family: "Inter", sans-serif;
+		font-style: normal;
+		display: block;
+		margin-bottom: 0.5rem;
+		font-weight: 400;
+		font-size: 0.85rem;
+		color: #000;
+		text-align: left;
+	}
 
-input:focus {
-    border-color: #9a1c1c;
-    background-color: #ffffff;
-    box-shadow: 0 0 0 4px rgba(211, 47, 47, 0.1);
-}
+	input {
+		width: 100%;
+		padding: 0.85rem 1.1rem;
+		border-radius: 10px;
+		border: 1.5px solid #da291c; /* Red/coral border matching mockup */
+		background-color: #fafafa;
+		font-size: 1rem;
+		outline: none;
+		transition: all 0.2s ease;
+		color: #1e293b;
+	}
 
-.password-wrapper {
-    position: relative;
-    width: 100%;
-}
+	input:focus {
+		border-color: #9a1c1c;
+		background-color: #ffffff;
+		box-shadow: 0 0 0 4px rgba(211, 47, 47, 0.1);
+	}
 
-.password-wrapper input {
-    padding-right: 3.5rem;
-}
+	.password-wrapper {
+		position: relative;
+		width: 100%;
+	}
 
-.toggle-password {
-    position: absolute;
-    right: 1.1rem;
-    top: 50%;
-    transform: translateY(-50%);
-    background: none;
-    border: none;
-    padding: 0;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    color: #94a3b8;
-    transition: color 0.2s;
-}
+	.password-wrapper input {
+		padding-right: 3.5rem;
+	}
 
-.toggle-password:hover {
-    color: #d32f2f;
-}
+	.toggle-password {
+		position: absolute;
+		right: 1.1rem;
+		top: 50%;
+		transform: translateY(-50%);
+		background: none;
+		border: none;
+		padding: 0;
+		cursor: pointer;
+		display: flex;
+		align-items: center;
+		color: #94a3b8;
+		transition: color 0.2s;
+	}
 
-.forgot-password {
-	font-family: 'Inter', sans-serif;
-	font-style: italic;
-    margin-top: 1.5rem;
-    font-size: 0.85rem;
-    color: #475569;
-    text-align: center;
-}
+	.toggle-password:hover {
+		color: #d32f2f;
+	}
 
-.forgot-password a {
-    color: #0f172a;
-    text-decoration: none;
-}
+	.forgot-password {
+		font-family: "Inter", sans-serif;
+		font-style: italic;
+		margin-top: 1.5rem;
+		font-size: 0.85rem;
+		color: #475569;
+		text-align: center;
+	}
 
+	.forgot-password a {
+		color: #0f172a;
+		text-decoration: none;
+	}
 
+	.submit-btn {
+		font-family: "Inter", sans-serif;
+		font-style: normal;
+		display: inline-block;
+		min-width: 180px;
+		padding: 0.75rem 2rem;
+		background-color: #da291c; /* Match the red from logos */
+		color: white;
+		border: none;
 
+		font-size: 1rem;
+		font-weight: 500;
+		margin-top: 1.5rem;
+		margin-bottom: 1rem;
+		transition: all 0.3s ease;
+		cursor: pointer;
+	}
 
-.submit-btn {
-		font-family: 'Inter', sans-serif;
-	font-style: normal;
-    display: inline-block;
-    min-width: 180px;
-    padding: 0.75rem 2rem;
-    background-color: #DA291C; /* Match the red from logos */
-    color: white;
-    border: none;
-   
-    font-size: 1rem;
-    font-weight: 500;
-    margin-top: 1.5rem;
-    margin-bottom: 1rem;
-    transition: all 0.3s ease;
-    cursor: pointer;
-}
+	.submit-btn:hover {
+		background-color: #b02121;
+	}
 
-.submit-btn:hover {
-    background-color: #b02121;
-   
-}
+	.register-link {
+		font-family: "Inter", sans-serif;
+		font-style: italic;
+		margin-top: 1.5rem;
+		font-size: 0.85rem;
+		color: #475569;
+		text-align: center;
+	}
 
-.register-link {
-	font-family: 'Inter', sans-serif;
-	font-style: italic;
-    margin-top: 1.5rem;
-    font-size: 0.85rem;
-    color: #475569;
-    text-align: center;
-}
+	.register-link a {
+		color: #000;
+		text-decoration: none;
+	}
 
-.register-link a {
-    color: #000;
-    text-decoration: none;
-}
+	.register-link a:hover {
+		text-decoration: none;
+	}
 
-.register-link a:hover {
-    text-decoration: none;
-}
+	@media (max-width: 1024px) {
+		main {
+			justify-content: center;
+			padding: 2rem;
+		}
+	}
 
-@media (max-width: 1024px) {
-    main {
-        justify-content: center;
-        padding: 2rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .card {
-        padding: 2rem 1.5rem;
-    }
-    .logos-container {
-        gap: 1rem;
-    }
-    .logo-camara {
-        height: 45px;
-    }
-    .logo-socio {
-        height: 40px;
-    }
-}
+	@media (max-width: 480px) {
+		.card {
+			padding: 2rem 1.5rem;
+		}
+		.logos-container {
+			gap: 1rem;
+		}
+		.logo-camara {
+			height: 45px;
+		}
+		.logo-socio {
+			height: 40px;
+		}
+	}
 </style>
 
 <script>
@@ -343,7 +360,9 @@ input:focus {
 	// Lógica de inicio de sesión con Supabase
 	const loginForm = document.getElementById("login-form") as HTMLFormElement;
 	const emailInput = document.getElementById("email") as HTMLInputElement;
-	const submitBtn = document.getElementById("submit-btn") as HTMLButtonElement;
+	const submitBtn = document.getElementById(
+		"submit-btn",
+	) as HTMLButtonElement;
 
 	if (loginForm && emailInput && passwordInput && submitBtn) {
 		loginForm.addEventListener("submit", async (e) => {
@@ -357,7 +376,7 @@ input:focus {
 			if (!domain || domain.toLowerCase() !== "oberstaff.com") {
 				showToast({
 					text: "Solo se permiten correos electrónicos de dominios autorizados.",
-					icon: "error"
+					icon: "error",
 				});
 				return;
 			}
@@ -374,8 +393,10 @@ input:focus {
 				window.location.href = "/home";
 			} catch (err: any) {
 				showToast({
-					text: err.message || "Ocurrió un error inesperado al iniciar sesión.",
-					icon: "error"
+					text:
+						err.message ||
+						"Ocurrió un error inesperado al iniciar sesión.",
+					icon: "error",
 				});
 				console.error(err);
 			} finally {

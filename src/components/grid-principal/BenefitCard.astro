@@ -1,0 +1,28 @@
+---
+import "../../styles/grid-principal/benefit-card.css";
+
+export interface Props {
+  logoSrc: string;
+  title: string;
+  companyName: string;
+  vigencia: string;
+  tipoDescuento: string;
+}
+
+const { logoSrc, title, companyName, vigencia, tipoDescuento } = Astro.props;
+---
+<article class="benefit-card">
+  <div class="card-header">
+    <img src={logoSrc} alt="Logo" class="brand-logo" />
+    <a href="#" class="btn-benefit">Ver beneficio</a>
+  </div>
+  <div class="card-body">
+    <h3>{title}</h3>
+    <span class="company-name">{companyName}</span>
+    <p class="description"><slot /></p>
+  </div>
+  <div class="card-footer">
+    <div class="info-row"><span class="info-label">Vigencia:</span> {vigencia}</div>
+    <div class="info-row"><span class="info-label">Tipo de descuento:</span> {tipoDescuento}</div>
+  </div>
+</article>

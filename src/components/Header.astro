@@ -10,7 +10,10 @@ const currentPath = pathname.replace(/\/$/, '') || '/';
             <img src="/socio-a-socio.webp" alt="Socio a Socio" class="logo-socio" />
         </div>
         <div class="divider"></div>
-        <img src="/logo-horizontal.webp" alt="Cámara Oficial de Comercio" class="logo-camara" />
+        <!-- Logo versión Web -->
+        <img src="/logo-horizontal.webp" alt="Cámara Oficial de Comercio" class="logo-camara logo-desktop" />
+        <!-- Logo versión Móvil -->
+        <img src="/logo-camara-comercio.webp" alt="Cámara Oficial de Comercio" class="logo-camara logo-mobile" />
     </div>
     
     <div class="header-actions">
@@ -94,6 +97,10 @@ const currentPath = pathname.replace(/\/$/, '') || '/';
     object-fit: contain;
 }
 
+.logo-mobile {
+    display: none; /* Oculto por defecto en web */
+}
+
 .header-actions {
     margin-left: auto;
 }
@@ -128,15 +135,20 @@ const currentPath = pathname.replace(/\/$/, '') || '/';
     }
 
     .logo-s {
-        height: 34px;
+        height: 32px;
     }
 
     .logo-socio {
-        height: 30px;
+        height: 28px;
     }
 
-    .logo-camara {
-        height: 34px;
+    .logo-desktop {
+        display: none; /* Ocultar el horizontal en móviles/tablets */
+    }
+
+    .logo-mobile {
+        display: block; /* Mostrar el logo móvil */
+        height: 48px; /* Aumentado para mayor presencia */
     }
 
     .logout-btn {
@@ -155,8 +167,21 @@ const currentPath = pathname.replace(/\/$/, '') || '/';
         display: none;
     }
 
-    .logo-camara {
-        display: none; /* Occurs only on super small phones to prevent layout breaking */
+    .logo-s {
+        height: 28px;
+    }
+
+    .logo-socio {
+        height: 25px;
+    }
+
+    /* Ajustar tamaño para que quepa bien junto al botón de cerrar sesión */
+    .logo-mobile {
+        height: 44px;
+    }
+    
+    .logout-btn span {
+        display: none; /* Ocultar texto "Cerrar sesión" para dar espacio a los logos en móviles muy pequeños */
     }
 }
 </style>
