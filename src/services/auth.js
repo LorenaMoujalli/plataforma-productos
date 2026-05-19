@@ -217,18 +217,21 @@ export async function adminCreateUser(email, password, name, role = 'user') {
 }
 
 /**
- * Actualiza los datos de un usuario desde el panel de admin.
- * Solo actualiza nombre y rol en public.profiles.
+ * Actualiza los datos de un usuario desde el panel de admin (incluyendo email y password).
  * 
  * @param {string} userId
  * @param {string} name
  * @param {string} role
+ * @param {string} email
+ * @param {string} password
  */
-export async function adminUpdateUser(userId, name, role) {
-  const { data, error } = await supabase.rpc('admin_update_user', {
+export async function adminUpdateUser(userId, name, role, email, password) {
+  const { data, error } = await supabase.rpc('admin_update_user_full', {
     p_user_id: userId,
     p_name: name,
-    p_role: role
+    p_role: role,
+    p_email: email,
+    p_password: password || null
   });
 
   if (error) throw error;

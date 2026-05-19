@@ -117,7 +117,15 @@ export async function showCreateUserModal() {
       </div>
       <div class="swal-form-group">
         <label for="swal-password">Contraseña (Mínimo 6 caracteres)</label>
-        <input id="swal-password" type="password" class="swal-input-custom" placeholder="••••••••">
+        <div style="position: relative;">
+          <input id="swal-password" type="password" class="swal-input-custom" placeholder="••••••••" style="padding-right: 2.5rem;">
+          <button type="button" tabindex="-1" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: #64748b; padding: 0; display: flex;" onclick="const input = document.getElementById('swal-password'); const icon = this.querySelector('svg'); if(input.type === 'password'){ input.type='text'; icon.innerHTML='<path d=\\'M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24\\'></path><line x1=\\'1\\' y1=\\'1\\' x2=\\'23\\' y2=\\'23\\'></line>'; } else { input.type='password'; icon.innerHTML='<path d=\\'M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z\\'></path><circle cx=\\'12\\' cy=\\'12\\' r=\\'3\\'></circle>'; }">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+          </button>
+        </div>
       </div>
       <div class="swal-form-group">
         <label for="swal-role">Rol en la plataforma</label>
@@ -188,8 +196,20 @@ export async function showEditUserModal(user) {
         .swal-select-custom { appearance: none; background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e"); background-repeat: no-repeat; background-position: right 1rem center; background-size: 1em; cursor: pointer; }
       </style>
       <div class="swal-form-group">
-        <label for="swal-edit-email">Correo Electrónico (No editable)</label>
-        <input id="swal-edit-email" type="email" class="swal-input-custom swal-input-disabled" value="${user.email}" disabled>
+        <label for="swal-edit-email">Correo Electrónico (@oberstaff.com)</label>
+        <input id="swal-edit-email" type="email" class="swal-input-custom" value="${user.email}">
+      </div>
+      <div class="swal-form-group">
+        <label for="swal-edit-password">Nueva Contraseña (Opcional, déjalo en blanco para no cambiar)</label>
+        <div style="position: relative;">
+          <input id="swal-edit-password" type="password" class="swal-input-custom" placeholder="••••••••" style="padding-right: 2.5rem;">
+          <button type="button" tabindex="-1" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: #64748b; padding: 0; display: flex;" onclick="const input = document.getElementById('swal-edit-password'); const icon = this.querySelector('svg'); if(input.type === 'password'){ input.type='text'; icon.innerHTML='<path d=\\'M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24\\'></path><line x1=\\'1\\' y1=\\'1\\' x2=\\'23\\' y2=\\'23\\'></line>'; } else { input.type='password'; icon.innerHTML='<path d=\\'M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z\\'></path><circle cx=\\'12\\' cy=\\'12\\' r=\\'3\\'></circle>'; }">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+          </button>
+        </div>
       </div>
       <div class="swal-form-group">
         <label for="swal-edit-name">Nombre y Apellido</label>
@@ -215,15 +235,28 @@ export async function showEditUserModal(user) {
       popup: 'premium-popup',
     },
     preConfirm: () => {
+      const email = document.getElementById('swal-edit-email').value;
+      const password = document.getElementById('swal-edit-password').value;
       const name = document.getElementById('swal-edit-name').value;
       const role = document.getElementById('swal-edit-role').value;
 
-      if (!name) {
-        Swal.showValidationMessage('El nombre es obligatorio');
+      if (!name || !email) {
+        Swal.showValidationMessage('El nombre y correo son obligatorios');
+        return false;
+      }
+      
+      const domain = email.split('@')[1];
+      if (!domain || domain.toLowerCase() !== 'oberstaff.com') {
+        Swal.showValidationMessage('El correo debe terminar en @oberstaff.com');
+        return false;
+      }
+      
+      if (password && password.length < 6) {
+        Swal.showValidationMessage('La nueva contraseña debe tener al menos 6 caracteres');
         return false;
       }
 
-      return { name, role };
+      return { email, password, name, role };
     }
   });
 
