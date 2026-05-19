@@ -9,7 +9,7 @@ import DashboardLayout from '../../layouts/DashboardLayout.astro';
         <h1>Panel de Administración</h1>
         <p>Gestiona los usuarios de la plataforma.</p>
       </div>
-      <button id="add-user-btn" class="btn-primary" onclick="alert('Próximamente: Crear usuarios desde el panel')">
+      <button id="add-user-btn" class="btn-success">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <line x1="12" y1="5" x2="12" y2="19"></line>
           <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -50,7 +50,8 @@ import DashboardLayout from '../../layouts/DashboardLayout.astro';
 </DashboardLayout>
 
 <script>
-  import { getUserProfile, getAdminUsers, deleteAdminUser } from "../../services/auth.js";
+  import { getUserProfile, getAdminUsers, deleteAdminUser, adminCreateUser, adminUpdateUser } from "../../services/auth.js";
+  import { showConfirm, showToast, showCreateUserModal, showEditUserModal } from "../../utils/notifications.js";
 
   function setupDashboard() {
     // Solo ejecutar en la ruta del dashboard
@@ -125,7 +126,6 @@ import DashboardLayout from '../../layouts/DashboardLayout.astro';
         tr.innerHTML = `
           <td data-label="Nombre">
             <div class="user-info">
-              <div class="avatar">${(user.name || user.email || 'U')[0].toUpperCase()}</div>
               <span class="font-medium">${user.name || 'Sin nombre'}</span>
             </div>
           </td>
@@ -133,16 +133,24 @@ import DashboardLayout from '../../layouts/DashboardLayout.astro';
           <td data-label="Rol">${roleBadge}</td>
           <td data-label="Fecha Registro"><span class="text-gray">${formatDate(user.created_at)}</span></td>
           <td data-label="Acciones" class="actions-cell">
-            ${user.role !== 'admin' ? `
-              <button class="btn-icon btn-delete" data-id="${user.id}" data-email="${user.email}" title="Eliminar usuario">
+            <div style="display: flex; gap: 0.5rem; justify-content: flex-end;">
+              <button class="btn-icon btn-edit" data-user='${JSON.stringify({id: user.id, email: user.email, name: user.name, role: user.role}).replace(/'/g, "&apos;")}' title="Editar usuario">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <polyline points="3 6 5 6 21 6"></polyline>
-                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                  <line x1="10" y1="11" x2="10" y2="17"></line>
-                  <line x1="14" y1="11" x2="14" y2="17"></line>
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                 </svg>
               </button>
-            ` : '<span class="text-muted text-sm">No eliminable</span>'}
+              ${user.role !== 'admin' ? `
+                <button class="btn-icon btn-delete" data-id="${user.id}" data-email="${user.email}" title="Eliminar usuario">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="3 6 5 6 21 6"></polyline>
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    <line x1="10" y1="11" x2="10" y2="17"></line>
+                    <line x1="14" y1="11" x2="14" y2="17"></line>
+                  </svg>
+                </button>
+              ` : '<span class="text-muted text-sm" style="display: flex; align-items: center;">No eliminable</span>'}
+            </div>
           </td>
         `;
         
@@ -156,22 +164,91 @@ import DashboardLayout from '../../layouts/DashboardLayout.astro';
           const userId = btn.getAttribute('data-id') as string;
           const userEmail = btn.getAttribute('data-email');
           
-          if (confirm(`¿Estás completamente seguro de que deseas eliminar al usuario ${userEmail}? Esta acción no se puede deshacer.`)) {
+          const isConfirmed = await showConfirm({
+            title: "¿Estás seguro?",
+            text: `¿Deseas eliminar permanentemente al usuario ${userEmail}? Esta acción no se puede deshacer.`,
+            confirmButtonText: "Sí, eliminar",
+            cancelButtonText: "Cancelar"
+          });
+
+          if (isConfirmed) {
             btn.classList.add('loading');
             btn.disabled = true;
             
             try {
               await deleteAdminUser(userId);
-              showMessage(`El usuario ${userEmail} ha sido eliminado correctamente.`);
+              showToast({ text: `El usuario ${userEmail} ha sido eliminado.`, icon: 'success' });
               loadUsers(); // Recargar la tabla
             } catch (error: any) {
               console.error("Error eliminando usuario:", error);
-              showMessage(`Hubo un error al eliminar el usuario: ${error.message}`, "error");
+              showToast({ text: `Hubo un error al eliminar el usuario: ${error.message}`, icon: 'error' });
               btn.classList.remove('loading');
               btn.disabled = false;
             }
           }
         });
+      });
+
+      // Agregar event listeners a los botones de editar
+      document.querySelectorAll('.btn-edit').forEach(element => {
+        const btn = element as HTMLButtonElement;
+        btn.addEventListener('click', async () => {
+          const userDataRaw = btn.getAttribute('data-user');
+          if (!userDataRaw) return;
+          
+          const user = JSON.parse(userDataRaw);
+          const newValues: any = await showEditUserModal(user);
+          
+          if (newValues) {
+            btn.classList.add('loading');
+            try {
+              await adminUpdateUser(user.id, newValues.name, newValues.role);
+              showToast({ text: `Usuario actualizado correctamente.`, icon: 'success' });
+              loadUsers();
+            } catch (error: any) {
+              console.error("Error actualizando usuario:", error);
+              
+              // Si falla por RLS, mostrar mensaje amigable
+              if (error.message.includes("Row Level Security") || error.message.includes("RLS") || error.message.includes("not allowed")) {
+                showToast({ text: `Necesitamos crear un permiso SQL (RPC) para actualizar perfiles.`, icon: 'error' });
+              } else {
+                showToast({ text: `Error: ${error.message}`, icon: 'error' });
+              }
+              btn.classList.remove('loading');
+            }
+          }
+        });
+      });
+    }
+
+    // Configurar botón de Nuevo Usuario
+    const addUserBtn = document.getElementById('add-user-btn') as HTMLButtonElement;
+    if (addUserBtn) {
+      addUserBtn.addEventListener('click', async () => {
+        const userData: any = await showCreateUserModal();
+        if (userData) {
+          try {
+            addUserBtn.disabled = true;
+            addUserBtn.innerHTML = '<span class="spinner" style="width:20px;height:20px;border-width:2px;margin-right:8px;"></span> Registrando...';
+            
+            await adminCreateUser(userData.email, userData.password, userData.name, userData.role);
+            
+            showToast({ text: `Usuario ${userData.email} creado con éxito.`, icon: 'success' });
+            loadUsers(); // Recargar la tabla
+          } catch (error: any) {
+            console.error("Error creando usuario:", error);
+            showToast({ text: `Error: ${error.message}`, icon: 'error' });
+          } finally {
+            addUserBtn.disabled = false;
+            addUserBtn.innerHTML = `
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+              Nuevo Usuario
+            `;
+          }
+        }
       });
     }
 
@@ -202,11 +279,12 @@ import DashboardLayout from '../../layouts/DashboardLayout.astro';
   setupDashboard();
 </script>
 
-<style>
+<style is:global>
   .admin-container {
-    max-width: 1200px;
+    width: 100%;
+    max-width: 100%; /* Ocupará todo el ancho disponible */
     margin: 0 auto;
-    padding: 2.5rem 2rem;
+    padding: 2rem 5%; /* Un poco de margen a los lados */
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
   }
 
@@ -214,101 +292,121 @@ import DashboardLayout from '../../layouts/DashboardLayout.astro';
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 2.5rem;
+    margin-bottom: 2rem;
+    padding: 1rem 0; /* Removido el padding grueso */
+    background: transparent; /* Fondo blanco/transparente */
+    color: #0f172a; /* Texto oscuro de nuevo */
+    border-radius: 0;
+    box-shadow: none; /* Sin sombra en el header */
   }
 
   .admin-header h1 {
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: #0f172a;
+    font-size: 2.2rem;
+    font-weight: 800;
     margin: 0 0 0.5rem 0;
+    letter-spacing: -0.5px;
+    color: #0f172a;
   }
 
   .admin-header p {
     color: #64748b;
     margin: 0;
-    font-size: 1rem;
+    font-size: 1.1rem;
+    font-weight: 400;
   }
 
-  .btn-primary {
-    background-color: #0f172a;
+  .btn-success {
+    background-color: #10b981;
     color: white;
     border: none;
-    border-radius: 8px;
-    padding: 0.6rem 1.2rem;
-    font-weight: 500;
-    font-size: 0.95rem;
+    border-radius: 12px;
+    padding: 0.9rem 1.8rem;
+    font-weight: 600;
+    font-size: 1.05rem;
     cursor: pointer;
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    transition: all 0.2s ease;
-    box-shadow: 0 2px 4px rgba(15, 23, 42, 0.1);
+    gap: 0.6rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+    position: relative;
+    z-index: 1;
   }
 
-  .btn-primary:hover {
-    background-color: #1e293b;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 6px rgba(15, 23, 42, 0.15);
+  .btn-success:hover {
+    background-color: #059669;
+    transform: translateY(-3px);
+    box-shadow: 0 12px 24px rgba(16, 185, 129, 0.4);
   }
 
   .status-message {
-    padding: 1rem 1.5rem;
-    border-radius: 8px;
-    margin-bottom: 1.5rem;
-    font-weight: 500;
-    animation: fadeIn 0.3s ease;
+    padding: 1.2rem 2rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    font-weight: 600;
+    font-size: 1.05rem;
+    animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
   }
 
   .status-message.success {
     background-color: #ecfdf5;
     color: #047857;
     border: 1px solid #a7f3d0;
+    border-left: 5px solid #10b981;
   }
 
   .status-message.error {
     background-color: #fef2f2;
     color: #b91c1c;
     border: 1px solid #fecaca;
+    border-left: 5px solid #ef4444;
   }
 
   .table-container {
     background-color: white;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
-    border: 1px solid #e2e8f0;
+    border-radius: 20px;
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.08);
+    border: 1px solid #f1f5f9;
     overflow: hidden;
   }
 
   .users-table {
     width: 100%;
-    border-collapse: collapse;
+    border-collapse: separate;
+    border-spacing: 0;
     text-align: left;
   }
 
   .users-table th {
     background-color: #f8fafc;
-    padding: 1.2rem 1.5rem;
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: #475569;
+    padding: 1.5rem 2rem;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #334155;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    border-bottom: 1px solid #e2e8f0;
+    border-bottom: 2px solid #e2e8f0;
   }
 
   .users-table td {
-    padding: 1.2rem 1.5rem;
+    padding: 1.5rem 2rem;
     border-bottom: 1px solid #f1f5f9;
     vertical-align: middle;
+    font-size: 1.05rem;
   }
 
   .users-table tbody tr {
-    transition: background-color 0.15s ease;
+    transition: all 0.25s ease;
+    background-color: white;
   }
 
   .users-table tbody tr:hover {
-    background-color: #f8fafc;
+    background-color: #fefeff;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+    transform: scale(1.001) translateY(-1px);
+    position: relative;
+    z-index: 10;
   }
 
   .users-table tbody tr:last-child td {
@@ -318,38 +416,43 @@ import DashboardLayout from '../../layouts/DashboardLayout.astro';
   .user-info {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 1.2rem;
   }
 
   .avatar {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background-color: #e2e8f0;
-    color: #334155;
+    width: 50px;
+    height: 50px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #da291c 0%, #a21c13 100%);
+    color: white;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: 600;
-    font-size: 1.1rem;
+    font-weight: 700;
+    font-size: 1.4rem;
+    box-shadow: 0 8px 16px rgba(218, 41, 28, 0.25);
   }
 
+  /* Si quieres avatares azules para usuarios normales, se puede cambiar en JS, pero rojo es tu marca */
+
   .font-medium {
-    font-weight: 500;
+    font-weight: 700;
     color: #0f172a;
+    font-size: 1.15rem;
   }
 
   .text-gray {
-    color: #64748b;
-    font-size: 0.95rem;
+    color: #475569;
+    font-weight: 500;
   }
 
   .text-muted {
     color: #94a3b8;
+    font-weight: 500;
   }
 
   .text-sm {
-    font-size: 0.85rem;
+    font-size: 0.9rem;
   }
 
   .text-right {
@@ -361,32 +464,37 @@ import DashboardLayout from '../../layouts/DashboardLayout.astro';
   }
 
   .badge {
-    padding: 0.35rem 0.75rem;
+    padding: 0.45rem 1.2rem;
     border-radius: 9999px;
-    font-size: 0.75rem;
-    font-weight: 600;
+    font-size: 0.85rem;
+    font-weight: 800;
     text-transform: uppercase;
-    letter-spacing: 0.025em;
+    letter-spacing: 0.05em;
+    display: inline-block;
   }
 
   .badge-admin {
-    background-color: #ede9fe;
-    color: #6d28d9;
+    background-color: #f8fafc;
+    color: #475569;
+    border: 1px solid #e2e8f0;
+    box-shadow: none;
   }
 
   .badge-user {
-    background-color: #f1f5f9;
+    background-color: transparent;
     color: #475569;
+    border: 1px solid transparent;
+    box-shadow: none;
   }
 
   .btn-icon {
-    background: transparent;
-    border: none;
-    color: #94a3b8;
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    color: #64748b;
     cursor: pointer;
-    padding: 0.5rem;
-    border-radius: 6px;
-    transition: all 0.2s ease;
+    padding: 0.7rem;
+    border-radius: 10px;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -395,31 +503,44 @@ import DashboardLayout from '../../layouts/DashboardLayout.astro';
   .btn-delete:hover {
     background-color: #fee2e2;
     color: #ef4444;
+    border-color: #fecaca;
+    transform: scale(1.1) rotate(2deg);
+    box-shadow: 0 4px 10px rgba(239, 68, 68, 0.2);
   }
 
-  .btn-delete.loading {
+  .btn-edit:hover {
+    background-color: #e0f2fe;
+    color: #0284c7;
+    border-color: #bae6fd;
+    transform: scale(1.1);
+    box-shadow: 0 4px 10px rgba(2, 132, 199, 0.2);
+  }
+
+  .btn-delete.loading, .btn-edit.loading {
     opacity: 0.5;
     cursor: not-allowed;
+    transform: scale(1);
   }
 
   .loading-state, .empty-state {
-    padding: 4rem 2rem;
+    padding: 6rem 2rem;
     text-align: center;
     color: #64748b;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 1rem;
+    gap: 1.5rem;
+    font-size: 1.1rem;
   }
 
   .spinner {
-    width: 40px;
-    height: 40px;
-    border: 3px solid #f1f5f9;
-    border-top-color: #0f172a;
+    width: 50px;
+    height: 50px;
+    border: 4px solid #f1f5f9;
+    border-top-color: #da291c;
     border-radius: 50%;
-    animation: spin 1s linear infinite;
+    animation: spin 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
   }
 
   @keyframes spin {
@@ -427,15 +548,24 @@ import DashboardLayout from '../../layouts/DashboardLayout.astro';
   }
 
   @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-10px); }
+    from { opacity: 0; transform: translateY(-15px); }
     to { opacity: 1; transform: translateY(0); }
   }
 
   @media (max-width: 768px) {
+    .admin-container {
+      padding: 1.5rem 1rem;
+    }
+    
     .admin-header {
       flex-direction: column;
       align-items: flex-start;
-      gap: 1rem;
+      gap: 1.5rem;
+      padding: 1.5rem;
+    }
+    
+    .admin-header h1 {
+      font-size: 1.8rem;
     }
     
     .users-table, .users-table tbody, .users-table tr, .users-table td {
@@ -448,15 +578,16 @@ import DashboardLayout from '../../layouts/DashboardLayout.astro';
     }
     
     .users-table tr {
-      margin-bottom: 1rem;
+      margin-bottom: 1.5rem;
       border: 1px solid #e2e8f0;
-      border-radius: 8px;
-      background-color: #fafafa;
+      border-radius: 12px;
+      background-color: #ffffff;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.03);
     }
     
     .users-table td {
       text-align: right;
-      padding: 1rem;
+      padding: 1.2rem;
       position: relative;
       border-bottom: 1px solid #f1f5f9;
     }
@@ -468,10 +599,10 @@ import DashboardLayout from '../../layouts/DashboardLayout.astro';
     .users-table td::before {
       content: attr(data-label);
       position: absolute;
-      left: 1rem;
+      left: 1.2rem;
       top: 50%;
       transform: translateY(-50%);
-      font-weight: 600;
+      font-weight: 700;
       color: #64748b;
       font-size: 0.85rem;
       text-transform: uppercase;

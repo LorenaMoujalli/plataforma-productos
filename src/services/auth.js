@@ -149,3 +149,88 @@ export async function deleteAdminUser(userId) {
   if (error) throw error;
   return data;
 }
+
+/**
+ * Crea un usuario nuevo directamente desde el panel de admin sin cerrar la sesión actual.
+ * Utilizamos un cliente secundario de Supabase sin persistencia para que no interfiera
+ * con la sesión del administrador activa.
+ * 
+ * @param {string} email 
+ * @param {string} password 
+ * @param {string} name 
+ * @param {string} role 
+ * @returns {Promise<any>}
+ */
+export async function adminCreateUser(email, password, name, role = 'user') {
+  const cleanEmail = email.trim();
+  const domain = cleanEmail.split("@")[1];
+  
+  if (!domain || domain.toLowerCase() !== "oberstaff.com") {
+    throw new Error("Solo se permiten correos electrónicos del dominio @oberstaff.com");
+  }
+
+  // 1. Crear un cliente temporal que NO guarde sesión
+  const { createClient } = await import('@supabase/supabase-js');
+  const tempSupabase = createClient(
+    import.meta.env.PUBLIC_SUPABASE_URL,
+    import.meta.env.PUBLIC_SUPABASE_ANON_KEY,
+    {
+      auth: {
+        persistSession: false,
+        autoRefreshToken: false,
+        detectSessionInUrl: false
+      }
+    }
+  );
+
+  // 2. Crear el usuario de forma nativa (Supabase se encarga de auth.users y auth.identities)
+  const { data: authData, error: authError } = await tempSupabase.auth.signUp({
+    email: cleanEmail,
+    password: password,
+    options: {
+      data: { name: name }
+    }
+  });
+
+  if (authError) throw authError;
+
+  const newUserId = authData?.user?.id;
+  if (!newUserId) throw new Error("No se pudo obtener el ID del usuario creado.");
+
+  // 3. Si el rol es admin, actualizamos el perfil
+  // Nota: El trigger 'on_auth_user_created' de Supabase habrá creado el perfil en 'public.profiles'
+  if (role === 'admin') {
+    // Usamos el RPC para evitar bloqueos por políticas RLS
+    const { error: updateError } = await supabase.rpc('admin_update_user', {
+      p_user_id: newUserId,
+      p_name: name,
+      p_role: 'admin'
+    });
+      
+    if (updateError) {
+      console.error("Error al asignar rol de admin:", updateError);
+      throw new Error("Usuario creado, pero no se pudo asignar el rol de administrador.");
+    }
+  }
+
+  return authData.user;
+}
+
+/**
+ * Actualiza los datos de un usuario desde el panel de admin.
+ * Solo actualiza nombre y rol en public.profiles.
+ * 
+ * @param {string} userId
+ * @param {string} name
+ * @param {string} role
+ */
+export async function adminUpdateUser(userId, name, role) {
+  const { data, error } = await supabase.rpc('admin_update_user', {
+    p_user_id: userId,
+    p_name: name,
+    p_role: role
+  });
+
+  if (error) throw error;
+  return data;
+}
