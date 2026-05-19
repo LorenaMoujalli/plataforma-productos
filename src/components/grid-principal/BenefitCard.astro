@@ -7,22 +7,86 @@ export interface Props {
   companyName: string;
   vigencia: string;
   tipoDescuento: string;
+  discountAmount?: string;
+  discountLabel?: string;
+  codeLabel?: string;
+  discountCode?: string;
+  benefitText?: string;
+  terms?: string;
 }
 
-const { logoSrc, title, companyName, vigencia, tipoDescuento } = Astro.props;
+const { 
+  logoSrc, 
+  title, 
+  companyName, 
+  vigencia, 
+  tipoDescuento,
+  discountAmount = "XXXX",
+  discountLabel = "DE DESCUENTO",
+  codeLabel = "Usando el código",
+  discountCode = "XXXXXXXXXX",
+  benefitText = "Beneficio para los Miembros de la Cámara Comercio de España en PR que se hagan socio.",
+  terms = "Beneficio para los Miembros de la Cámara Comercio de España en PR, que se hagan socio. Los participantes que requieran pasar por el examen físico requerido para el ingreso al Plan de Socios, este será libre de costo. Los servicios recibidos en la clínica exclusiva de Socio el copago será $10.00."
+} = Astro.props;
 ---
 <article class="benefit-card">
-  <div class="card-header">
-    <img src={logoSrc} alt="Logo" class="brand-logo" />
-    <a href="#" class="btn-benefit">Ver beneficio</a>
+  <!-- FRONT -->
+  <div class="card-front">
+    <div class="card-header">
+      <img src={logoSrc} alt="Logo" class="brand-logo" />
+      <button type="button" class="btn-benefit btn-flip">Ver beneficio</button>
+    </div>
+    <div class="card-body">
+      <h3>{title}</h3>
+      <span class="company-name">{companyName}</span>
+      <p class="description"><slot /></p>
+    </div>
+    <div class="card-footer">
+      <div class="info-row"><span class="info-label">Vigencia:</span> {vigencia}</div>
+      <div class="info-row"><span class="info-label">Tipo de descuento:</span> {tipoDescuento}</div>
+    </div>
   </div>
-  <div class="card-body">
-    <h3>{title}</h3>
-    <span class="company-name">{companyName}</span>
-    <p class="description"><slot /></p>
-  </div>
-  <div class="card-footer">
-    <div class="info-row"><span class="info-label">Vigencia:</span> {vigencia}</div>
-    <div class="info-row"><span class="info-label">Tipo de descuento:</span> {tipoDescuento}</div>
+
+  <!-- BACK -->
+  <div class="card-back hidden">
+    <div class="back-header">
+      <button type="button" class="btn-back btn-flip" aria-label="Regresar">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M10 19L3 12M3 12L10 5M3 12H13C16.866 12 20 15.134 20 19V20" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <div class="discount-info">
+        <span class="discount-amount">{discountAmount}</span>
+        <span class="discount-label">{discountLabel}</span>
+      </div>
+    </div>
+    <div class="back-body">
+      <p class="code-text" set:html={`${codeLabel} <strong>${discountCode}</strong>`} />
+      {benefitText && <p class="benefit-text" set:html={benefitText} />}
+      
+      <h4>Términos y condiciones</h4>
+      <p class="terms-text" set:html={terms} />
+    </div>
   </div>
 </article>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const cards = document.querySelectorAll('.benefit-card');
+    cards.forEach(card => {
+      const flipBtns = card.querySelectorAll('.btn-flip');
+      const front = card.querySelector('.card-front');
+      const back = card.querySelector('.card-back');
+      
+      flipBtns.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          if(front && back) {
+            front.classList.toggle('hidden');
+            back.classList.toggle('hidden');
+          }
+        });
+      });
+    });
+  });
+</script>

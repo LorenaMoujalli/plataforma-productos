@@ -7,10 +7,18 @@ import Layout from "../layouts/Layout.astro";
 		<img src="/fondo.webp" alt="" class="bg-img" aria-hidden="true" />
 		<div class="card">
 			<div class="logos-container">
-				<img src="/logo-camara-comercio.webp" alt="Cámara Oficial de Comercio" class="logo-camara" />
+				<img
+					src="/logo-camara-comercio.webp"
+					alt="Cámara Oficial de Comercio"
+					class="logo-camara"
+				/>
 				<div class="right-logos">
 					<img src="/S.webp" alt="S Logo" class="logo-s" />
-					<img src="/socio-a-socio.webp" alt="Socio a Socio" class="logo-socio" />
+					<img
+						src="/socio-a-socio.webp"
+						alt="Socio a Socio"
+						class="logo-socio"
+					/>
 				</div>
 			</div>
 			<h2>Registro</h2>
@@ -95,13 +103,12 @@ import Layout from "../layouts/Layout.astro";
 				</div>
 
 				<div class="login-link">
-					¿Ya tienes una cuenta? <a href="/login"><strong>Inicia sesión</strong></a>
+					¿Ya tienes una cuenta? <a href="/login"
+						><strong>Inicia sesión</strong></a
+					>
 				</div>
 
-				<button
-					type="submit"
-					class="submit-btn"
-					id="submit-btn"
+				<button type="submit" class="submit-btn" id="submit-btn"
 					>Registrarse</button
 				>
 			</form>
@@ -110,290 +117,292 @@ import Layout from "../layouts/Layout.astro";
 </Layout>
 
 <style>
-main {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    padding: 2rem 8%;
-    width: 100%;
-    min-height: 100vh;
-    position: relative;
-    overflow: hidden;
-}
+	main {
+		flex: 1;
+		display: flex;
+		align-items: center;
+		justify-content: flex-start;
+		padding: 2rem 8%;
+		width: 100%;
+		min-height: 100vh;
+		position: relative;
+		overflow: hidden;
+	}
 
-.bg-img {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: 95% 5%;
-    display: block;
-    z-index: 0;
-}
+	.bg-img {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		object-position: 95% 5%;
+		display: block;
+		z-index: 0;
+	}
 
-.card {
-    position: relative;
-    z-index: 1;
-    background: rgba(255, 255, 255, 0.96);
-    padding: 3rem 2.5rem;
-    border-radius: 20px;
-    width: 100%;
-    max-width: 440px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    text-align: center;
-}
+	.card {
+		position: relative;
+		z-index: 1;
+		background: rgba(255, 255, 255, 0.96);
+		padding: 3rem 2.5rem;
+		border-radius: 20px;
+		width: 100%;
+		max-width: 440px;
+		box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+		border: 1px solid rgba(255, 255, 255, 0.3);
+		text-align: center;
+	}
 
-.logos-container {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    margin-bottom: 2rem;
-    width: 100%;
-}
+	.logos-container {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1rem;
+		margin-bottom: 2rem;
+		width: 100%;
+	}
 
-.right-logos {
-    display: flex;
-    align-items: center;
-    gap: 0.2rem;
-}
+	.right-logos {
+		display: flex;
+		align-items: center;
+		gap: 0.2rem;
+	}
 
-.logo-s {
-    height: 55px;
-    object-fit: contain;
-}
+	.logo-s {
+		height: 55px;
+		object-fit: contain;
+	}
 
-.logo-camara {
-    height: 55px;
-    object-fit: contain;
-}
+	.logo-camara {
+		height: 55px;
+		object-fit: contain;
+	}
 
-.logo-socio {
-    height: 50px;
-    object-fit: contain;
-}
+	.logo-socio {
+		height: 50px;
+		object-fit: contain;
+	}
 
-h2 {
-	font-family: 'Inter', sans-serif;
-	font-style: normal;
-    font-size: 28px;
-    margin-bottom: 2rem;
-    font-weight: 700;
-    color: #000;
-    text-align: center;
-}
+	h2 {
+		font-family: "Inter", sans-serif;
+		font-style: normal;
+		font-size: 28px;
+		margin-bottom: 2rem;
+		font-weight: 700;
+		color: #000;
+		text-align: center;
+	}
 
-.form-group {
-    margin-bottom: 1.5rem;
-    text-align: left;
-}
+	.form-group {
+		margin-bottom: 1.5rem;
+		text-align: left;
+	}
 
-label {
-	font-family: 'Inter', sans-serif;
-	font-style: normal;
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 400;
-    font-size: 0.85rem;
-    color: #000;
-    text-align: left;
-}
+	label {
+		font-family: "Inter", sans-serif;
+		font-style: normal;
+		display: block;
+		margin-bottom: 0.5rem;
+		font-weight: 400;
+		font-size: 0.85rem;
+		color: #000;
+		text-align: left;
+	}
 
-input {
-    width: 100%;
-    padding: 0.85rem 1.1rem;
-    border-radius: 10px;
-    border: 1.5px solid #DA291C; /* Red/coral border matching mockup */
-    background-color: #fafafa;
-    font-size: 1rem;
-    outline: none;
-    transition: all 0.2s ease;
-    color: #1e293b;
-}
+	input {
+		width: 100%;
+		padding: 0.85rem 1.1rem;
+		border-radius: 10px;
+		border: 1.5px solid #da291c; /* Red/coral border matching mockup */
+		background-color: #fafafa;
+		font-size: 1rem;
+		outline: none;
+		transition: all 0.2s ease;
+		color: #1e293b;
+	}
 
-input:focus {
-    border-color: #9a1c1c;
-    background-color: #ffffff;
-    box-shadow: 0 0 0 4px rgba(211, 47, 47, 0.1);
-}
+	input:focus {
+		border-color: #9a1c1c;
+		background-color: #ffffff;
+		box-shadow: 0 0 0 4px rgba(211, 47, 47, 0.1);
+	}
 
-.password-wrapper {
-    position: relative;
-    width: 100%;
-}
+	.password-wrapper {
+		position: relative;
+		width: 100%;
+	}
 
-.password-wrapper input {
-    padding-right: 3.5rem;
-}
+	.password-wrapper input {
+		padding-right: 3.5rem;
+	}
 
-.toggle-password {
-    position: absolute;
-    right: 1.1rem;
-    top: 50%;
-    transform: translateY(-50%);
-    background: none;
-    border: none;
-    padding: 0;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    color: #94a3b8;
-    transition: color 0.2s;
-}
+	.toggle-password {
+		position: absolute;
+		right: 1.1rem;
+		top: 50%;
+		transform: translateY(-50%);
+		background: none;
+		border: none;
+		padding: 0;
+		cursor: pointer;
+		display: flex;
+		align-items: center;
+		color: #94a3b8;
+		transition: color 0.2s;
+	}
 
-.toggle-password:hover {
-    color: #d32f2f;
-}
+	.toggle-password:hover {
+		color: #d32f2f;
+	}
 
-.login-link {
-	font-family: 'Inter', sans-serif;
-	font-style: italic;
-    margin-top: 1.5rem;
-    font-size: 0.85rem;
-    color: #475569;
-    text-align: center;
-}
+	.login-link {
+		font-family: "Inter", sans-serif;
+		font-style: italic;
+		margin-top: 1.5rem;
+		font-size: 0.85rem;
+		color: #475569;
+		text-align: center;
+	}
 
-.login-link a {
-    color: #000;
-    text-decoration: none;
-}
+	.login-link a {
+		color: #000;
+		text-decoration: none;
+	}
 
-.login-link a:hover {
-    text-decoration: none;
-}
+	.login-link a:hover {
+		text-decoration: none;
+	}
 
-.submit-btn {
-	font-family: 'Inter', sans-serif;
-	font-style: normal;
-    display: inline-block;
-    min-width: 180px;
-    padding: 0.75rem 2rem;
-    background-color: #DA291C; /* Match the red from logos */
-    color: white;
-    border: none;
-    font-size: 1rem;
-    font-weight: 500;
-    margin-top: 1.5rem;
-    margin-bottom: 1rem;
-    transition: all 0.3s ease;
-    cursor: pointer;
-}
+	.submit-btn {
+		font-family: "Inter", sans-serif;
+		font-style: normal;
+		display: inline-block;
+		min-width: 180px;
+		padding: 0.75rem 2rem;
+		background-color: #da291c; /* Match the red from logos */
+		color: white;
+		border: none;
+		font-size: 1rem;
+		font-weight: 500;
+		margin-top: 1.5rem;
+		margin-bottom: 1rem;
+		transition: all 0.3s ease;
+		cursor: pointer;
+	}
 
-.submit-btn:hover {
-    background-color: #b02121;
-}
+	.submit-btn:hover {
+		background-color: #b02121;
+	}
 
-@media (max-width: 1024px) {
-    main {
-        justify-content: center;
-        padding: 2rem;
-    }
-}
+	@media (max-width: 1024px) {
+		main {
+			justify-content: center;
+			padding: 2rem;
+		}
+	}
 
-/* Force layout styles cache invalidation */
+	/* Force layout styles cache invalidation */
 
-@media (max-width: 480px) {
-    .card {
-        padding: 2rem 1.5rem;
-    }
-    .logos-container {
-        gap: 1rem;
-    }
-    .logo-camara {
-        height: 45px;
-    }
-    .logo-socio {
-        height: 40px;
-    }
-}
+	@media (max-width: 480px) {
+		.card {
+			padding: 2rem 1.5rem;
+		}
+		.logos-container {
+			gap: 1rem;
+		}
+		.logo-camara {
+			height: 45px;
+		}
+		.logo-socio {
+			height: 40px;
+		}
+	}
 </style>
 
 <script>
 	import { signUpUser } from "../services/auth.js";
 	import { showAlert, showToast } from "../utils/notifications.js";
 
-	const togglePassword = document.querySelector(".toggle-password");
-	const passwordInput = document.querySelector(
-		"#password",
-	) as HTMLInputElement;
-	const eyeIcon = document.querySelector(".eye-icon") as HTMLElement;
-	const eyeOffIcon = document.querySelector(".eye-off-icon") as HTMLElement;
+	document.addEventListener('astro:page-load', () => {
+		const togglePassword = document.querySelector(".toggle-password") as HTMLButtonElement;
+		const passwordInput = document.querySelector("#password") as HTMLInputElement;
+		const eyeIcon = document.querySelector(".eye-icon") as HTMLElement;
+		const eyeOffIcon = document.querySelector(".eye-off-icon") as HTMLElement;
 
-	if (togglePassword && passwordInput) {
-		togglePassword.addEventListener("click", () => {
-			const type =
-				passwordInput.getAttribute("type") === "password"
-					? "text"
-					: "password";
-			passwordInput.setAttribute("type", type);
+		if (togglePassword && passwordInput) {
+			const newTogglePassword = togglePassword.cloneNode(true) as HTMLButtonElement;
+			togglePassword.parentNode?.replaceChild(newTogglePassword, togglePassword);
 
-			if (type === "text") {
-				eyeIcon.style.display = "block";
-				eyeOffIcon.style.display = "none";
-				togglePassword.setAttribute("aria-label", "Ocultar contraseña");
-			} else {
-				eyeIcon.style.display = "none";
-				eyeOffIcon.style.display = "block";
-				togglePassword.setAttribute("aria-label", "Mostrar contraseña");
-			}
-		});
-	}
+			newTogglePassword.addEventListener("click", () => {
+				const type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
+				passwordInput.setAttribute("type", type);
 
-	// Lógica de registro con Supabase
-	const registerForm = document.getElementById("register-form") as HTMLFormElement;
-	const nameInput = document.getElementById("name") as HTMLInputElement;
-	const emailInput = document.getElementById("email") as HTMLInputElement;
-	const submitBtn = document.getElementById("submit-btn") as HTMLButtonElement;
+				if (type === "text") {
+					eyeIcon.style.display = "block";
+					eyeOffIcon.style.display = "none";
+					newTogglePassword.setAttribute("aria-label", "Ocultar contraseña");
+				} else {
+					eyeIcon.style.display = "none";
+					eyeOffIcon.style.display = "block";
+					newTogglePassword.setAttribute("aria-label", "Mostrar contraseña");
+				}
+			});
+		}
 
-	if (registerForm && nameInput && emailInput && passwordInput && submitBtn) {
-		registerForm.addEventListener("submit", async (e) => {
-			e.preventDefault();
+		// Lógica de registro con Supabase
+		const registerForm = document.getElementById("register-form") as HTMLFormElement;
+		const nameInput = document.getElementById("name") as HTMLInputElement;
+		const emailInput = document.getElementById("email") as HTMLInputElement;
+		const submitBtn = document.getElementById("submit-btn") as HTMLButtonElement;
 
-			const name = nameInput.value.trim();
-			const email = emailInput.value.trim();
-			const password = passwordInput.value;
+		if (registerForm && nameInput && emailInput && passwordInput && submitBtn) {
+			registerForm.addEventListener("submit", async (e) => {
+				e.preventDefault();
 
-			// 1. Validación de dominio en el lado del cliente (para mejor UX)
-			const domain = email.split("@")[1];
-			if (!domain || domain.toLowerCase() !== "oberstaff.com") {
-				showToast({
-					text: "Solo se permiten registros con correos electrónicos de dominios autorizados.",
-					icon: "error"
-				});
-				return;
-			}
+				const name = nameInput.value.trim();
+				const email = emailInput.value.trim();
+				const password = passwordInput.value;
 
-			// 2. Cambiar estado del botón a cargando
-			submitBtn.disabled = true;
-			submitBtn.innerText = "Registrando...";
+				// 1. Validación de dominio en el lado del cliente (para mejor UX)
+				const domain = email.split("@")[1];
+				if (!domain || domain.toLowerCase() !== "oberstaff.com") {
+					showToast({
+						text: "Solo se permiten registros con correos electrónicos de dominios autorizados.",
+						icon: "error",
+					});
+					return;
+				}
 
-			try {
-				// 3. Registrar usuario mediante el servicio de autenticación (pasando el nombre)
-				await signUpUser(email, password, name);
+				// 2. Cambiar estado del botón a cargando
+				submitBtn.disabled = true;
+				submitBtn.innerText = "Registrando...";
 
-				// 4. Mostrar hermosa alerta modal de confirmación y redirigir
-				await showAlert({
-					title: "¡Registro Exitoso!",
-					text: "",
-					icon: "success",
-					confirmButtonText: "Ir al Inicio de Sesión"
-				});
-				
-				window.location.href = "/login";
-			} catch (err: any) {
-				showToast({
-					text: err.message || "Ocurrió un error inesperado durante el registro.",
-					icon: "error"
-				});
-				console.error(err);
-			} finally {
-				submitBtn.disabled = false;
-				submitBtn.innerText = "Registrarse";
-			}
-		});
-	}
+				try {
+					// 3. Registrar usuario mediante el servicio de autenticación (pasando el nombre)
+					await signUpUser(email, password, name);
+
+					// 4. Mostrar hermosa alerta modal de confirmación y redirigir
+					await showAlert({
+						title: "¡Registro Exitoso!",
+						text: "",
+						icon: "success",
+						confirmButtonText: "Ir al Inicio de Sesión",
+					});
+
+					window.location.href = "/login";
+				} catch (err: any) {
+					showToast({
+						text:
+							err.message ||
+							"Ocurrió un error inesperado durante el registro.",
+						icon: "error",
+					});
+					console.error(err);
+				} finally {
+					submitBtn.disabled = false;
+					submitBtn.innerText = "Registrarse";
+				}
+			});
+		}
+	});
 </script>

@@ -84,3 +84,25 @@ export async function getCurrentSession() {
   if (error) throw error;
   return session;
 }
+
+/**
+ * Fuerza el cambio de contraseña directo mediante RPC (Solo usar si es estrictamente necesario)
+ * 
+ * @param {string} email 
+ * @param {string} newPassword 
+ * @returns {Promise<boolean>}
+ */
+export async function directResetPassword(email, newPassword) {
+  const cleanEmail = email.trim();
+  
+  // Llamamos a la función RPC que crearemos en la base de datos
+  const { data, error } = await supabase.rpc('direct_reset_password', {
+    p_email: cleanEmail,
+    p_new_password: newPassword
+  });
+
+  if (error) throw error;
+  
+  // data retornará true si el correo existía y se actualizó, false si no existe
+  return data;
+}

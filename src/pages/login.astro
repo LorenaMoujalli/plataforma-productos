@@ -91,7 +91,7 @@ import Layout from "../layouts/Layout.astro";
 				</div>
 
 				<div class="forgot-password">
-					¿Olvidaste tu contraseña? <a href="#"
+					¿Olvidaste tu contraseña? <a href="/recuperar_clave"
 						><strong>Recupérala</strong></a
 					>
 				</div>
@@ -330,79 +330,78 @@ import Layout from "../layouts/Layout.astro";
 	import { signInUser } from "../services/auth.js";
 	import { showToast } from "../utils/notifications.js";
 
-	const togglePassword = document.querySelector(".toggle-password");
-	const passwordInput = document.querySelector(
-		"#password",
-	) as HTMLInputElement;
-	const eyeIcon = document.querySelector(".eye-icon") as HTMLElement;
-	const eyeOffIcon = document.querySelector(".eye-off-icon") as HTMLElement;
+	document.addEventListener('astro:page-load', () => {
+		const togglePassword = document.querySelector(".toggle-password") as HTMLButtonElement;
+		const passwordInput = document.querySelector("#password") as HTMLInputElement;
+		const eyeIcon = document.querySelector(".eye-icon") as HTMLElement;
+		const eyeOffIcon = document.querySelector(".eye-off-icon") as HTMLElement;
 
-	if (togglePassword && passwordInput) {
-		togglePassword.addEventListener("click", () => {
-			const type =
-				passwordInput.getAttribute("type") === "password"
-					? "text"
-					: "password";
-			passwordInput.setAttribute("type", type);
+		if (togglePassword && passwordInput) {
+			// Remove previous listener to avoid duplicates if any
+			const newTogglePassword = togglePassword.cloneNode(true) as HTMLButtonElement;
+			togglePassword.parentNode?.replaceChild(newTogglePassword, togglePassword);
+			
+			newTogglePassword.addEventListener("click", () => {
+				const type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
+				passwordInput.setAttribute("type", type);
 
-			if (type === "text") {
-				eyeIcon.style.display = "block";
-				eyeOffIcon.style.display = "none";
-				togglePassword.setAttribute("aria-label", "Ocultar contraseña");
-			} else {
-				eyeIcon.style.display = "none";
-				eyeOffIcon.style.display = "block";
-				togglePassword.setAttribute("aria-label", "Mostrar contraseña");
-			}
-		});
-	}
+				if (type === "text") {
+					eyeIcon.style.display = "block";
+					eyeOffIcon.style.display = "none";
+					newTogglePassword.setAttribute("aria-label", "Ocultar contraseña");
+				} else {
+					eyeIcon.style.display = "none";
+					eyeOffIcon.style.display = "block";
+					newTogglePassword.setAttribute("aria-label", "Mostrar contraseña");
+				}
+			});
+		}
 
-	// Lógica de inicio de sesión con Supabase
-	const loginForm = document.getElementById("login-form") as HTMLFormElement;
-	const emailInput = document.getElementById("email") as HTMLInputElement;
-	const submitBtn = document.getElementById(
-		"submit-btn",
-	) as HTMLButtonElement;
+		// Lógica de inicio de sesión con Supabase
+		const loginForm = document.getElementById("login-form") as HTMLFormElement;
+		const emailInput = document.getElementById("email") as HTMLInputElement;
+		const submitBtn = document.getElementById("submit-btn") as HTMLButtonElement;
 
-	if (loginForm && emailInput && passwordInput && submitBtn) {
-		loginForm.addEventListener("submit", async (e) => {
-			e.preventDefault();
+		if (loginForm && emailInput && passwordInput && submitBtn) {
+			loginForm.addEventListener("submit", async (e) => {
+				e.preventDefault();
 
-			const email = emailInput.value.trim();
-			const password = passwordInput.value;
+				const email = emailInput.value.trim();
+				const password = passwordInput.value;
 
-			// 1. Validación de dominio en el lado del cliente (para mejor UX)
-			const domain = email.split("@")[1];
-			if (!domain || domain.toLowerCase() !== "oberstaff.com") {
-				showToast({
-					text: "Solo se permiten correos electrónicos de dominios autorizados.",
-					icon: "error",
-				});
-				return;
-			}
+				// 1. Validación de dominio en el lado del cliente (para mejor UX)
+				const domain = email.split("@")[1];
+				if (!domain || domain.toLowerCase() !== "oberstaff.com") {
+					showToast({
+						text: "Solo se permiten correos electrónicos de dominios autorizados.",
+						icon: "error",
+					});
+					return;
+				}
 
-			// 2. Cambiar estado del botón a cargando
-			submitBtn.disabled = true;
-			submitBtn.innerText = "Ingresando...";
+				// 2. Cambiar estado del botón a cargando
+				submitBtn.disabled = true;
+				submitBtn.innerText = "Ingresando...";
 
-			try {
-				// 3. Iniciar sesión mediante el servicio de autenticación
-				await signInUser(email, password);
+				try {
+					// 3. Iniciar sesión mediante el servicio de autenticación
+					await signInUser(email, password);
 
-				// 4. Redirigir al home
-				window.location.href = "/home";
-			} catch (err: any) {
-				showToast({
-					text:
-						err.message ||
-						"Ocurrió un error inesperado al iniciar sesión.",
-					icon: "error",
-				});
-				console.error(err);
-			} finally {
-				submitBtn.disabled = false;
-				submitBtn.innerText = "Ingresar";
-			}
-		});
-	}
+					// 4. Redirigir al home
+					window.location.href = "/home";
+				} catch (err: any) {
+					showToast({
+						text:
+							err.message ||
+							"Ocurrió un error inesperado al iniciar sesión.",
+						icon: "error",
+					});
+					console.error(err);
+				} finally {
+					submitBtn.disabled = false;
+					submitBtn.innerText = "Ingresar";
+				}
+			});
+		}
+	});
 </script>

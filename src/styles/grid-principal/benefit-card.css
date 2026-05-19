@@ -4,11 +4,20 @@
   border: 1px solid #DADADA;
   border-radius: 12px;
   padding: 24px;
-  display: flex;
-  flex-direction: column;
+  display: block;
   box-shadow: 0 2px 8px rgba(0,0,0,0.05);
   min-height: 380px;
   transition: all 0.3s ease;
+}
+
+.card-front, .card-back {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.hidden {
+  display: none !important;
 }
 
 .benefit-card:hover {
@@ -39,10 +48,104 @@
   font-weight: bold;
   font-size: 13px;
   white-space: nowrap;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
 }
 
 .btn-benefit:hover {
   background-color: #e5b42e;
+}
+
+/* Estilos de la parte trasera */
+.card-back .back-header {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 30px;
+}
+
+.btn-back {
+  background-color: #FFC72C;
+  border: none;
+  border-radius: 4px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background-color 0.3s;
+}
+
+.btn-back:hover {
+  background-color: #e5b42e;
+}
+
+.discount-info {
+  flex-grow: 1;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  margin-right: 32px; /* Balance the back button width to center text */
+}
+
+.discount-amount {
+  font-family: 'Inter', sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  color: #000;
+  line-height: 1.2;
+}
+
+.discount-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #000;
+}
+
+.back-body .code-text {
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 5px;
+  margin-top: 0;
+}
+
+.back-body .code-text strong {
+  font-weight: 700;
+  color: #000;
+}
+
+.back-body .benefit-text {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-style: italic;
+  color: #666;
+  margin-bottom: 25px;
+  line-height: 1.4;
+  margin-top: 0;
+}
+
+.back-body h4 {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: #000;
+  margin-bottom: 10px;
+  margin-top: 25px;
+}
+
+.back-body .terms-text {
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  color: #444;
+  line-height: 1.5;
+  text-align: justify;
+  margin-top: 0;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 /* Contenido de la Tarjeta */
