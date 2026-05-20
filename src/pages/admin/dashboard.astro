@@ -4,15 +4,15 @@ import DashboardLayout from '../../layouts/DashboardLayout.astro';
 
 <DashboardLayout title="Administración de Usuarios - Oberstaff">
   <div class="admin-container">
+    <a href="/home" class="back-link">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+      </svg>
+      Volver 
+    </a> 
     <div class="admin-header">
       <div class="header-titles">
-        <a href="/home" class="back-link">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="19" y1="12" x2="5" y2="12"></line>
-            <polyline points="12 19 5 12 12 5"></polyline>
-          </svg>
-          Volver al Inicio
-        </a>
         <h1>Panel de Administración</h1>
         <p>Gestiona los usuarios de la plataforma.</p>
       </div>
@@ -322,6 +322,7 @@ import DashboardLayout from '../../layouts/DashboardLayout.astro';
 
 <style is:global>
   .admin-container {
+    position: relative;
     width: 100%;
     max-width: 100%; /* Ocupará todo el ancho disponible */
     margin: 0 auto;
@@ -350,6 +351,9 @@ import DashboardLayout from '../../layouts/DashboardLayout.astro';
   }
 
   .back-link {
+    position: absolute;
+    top: 0;
+    left: 0;
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
@@ -357,7 +361,6 @@ import DashboardLayout from '../../layouts/DashboardLayout.astro';
     text-decoration: none;
     font-weight: 600;
     font-size: 0.95rem;
-    margin-bottom: 0.8rem;
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
