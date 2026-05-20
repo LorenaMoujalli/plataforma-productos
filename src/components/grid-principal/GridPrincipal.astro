@@ -1,144 +1,180 @@
 ---
 import "../../styles/grid-principal/grid-principal.css";
+import "../../styles/grid-principal/benefit-card.css";
 import FilterBar from "./FilterBar.astro";
-import BenefitCard from "./BenefitCard.astro";
 import Pagination from "./Pagination.astro";
 ---
+
 <div class="benefits-container">
   <FilterBar />
 
-  <div class="benefits-grid">
-    <BenefitCard
-      logoSrc="/logo-auxilio.webp"
-      title="Plan de Socios"
-      companyName="Sociedad Española de Auxilio Mutuo y Beneficencia de Puerto Rico"
-      vigencia="Marzo 2026 - No especificado"
-      tipoDescuento="No especificado"
-      discountAmount="XXXX"
-      discountCode="XXXXXXXXXX"
-      benefitText="Beneficio para los Miembros de la Cámara Comercio de España en PR que se hagan socio."
-      terms="Beneficio para los Miembros de la Cámara Comercio de España en PR, que se hagan socio. Los participantes que requieran pasar por el examen físico requerido para el ingreso al Plan de Socios, este será libre de costo. Los servicios recibidos en la clínica exclusiva de Socio el copago será $10.00."
-    >
-      El Plan de Socios es un programa de salud sin fines de lucro. Está financiado con fondos que se disponen de la cuota que pagan sus Socios. Actualmente brinda sus servicios bajo el modelo que se conoce como un plan de cuidado dirigido, donde su proveedor primario es el Hospital Auxilio Mutuo. Por disposición de ley, el mismo no está regido por el Código de Seguros de Puerto Rico.
-    </BenefitCard>
-
-    <BenefitCard
-      logoSrc="/logo-viaja.webp"
-      title="Vamos Pa' España"
-      companyName="VIAJA CON ÁLVARO"
-      vigencia="16/04/26 - 31/12/26"
-      tipoDescuento="Descuento porcentual"
-      discountAmount="10%"
-      discountCode="CAMARACONALVARO"
-      benefitText=""
-      terms="No aplica en billetes de tren y otros transportes, transfers, entradas de monumentos o shows."
-    >
-      Ofrezco un descuento en todos los servicios de Tours que damos en España, ya sea para trabajadores de empresas socios de la cámara, como familiares.
-    </BenefitCard>
-
-    <BenefitCard
-      logoSrc="/logo-foobespain.webp"
-      title="DESCUENTOS EN PARTICIPACIO DE TALLERES Y CATAS EN SHOW ROOM Y DESCUENTO PARA SOCIOS EN COMPRAS DIRECTAS DE VINOS"
-      companyName="FOOBESPAIN AMERICAN LLC"
-      vigencia="04/01/26 - No especificado"
-      tipoDescuento="No especificado"
-      discountAmount="5%"
-      discountCode="CAMARAESPAÑAPR"
-      benefitText="Beneficio para los Miembros de la Cámara Comercio de España en PR que se hagan socio."
-      terms="( Se necesita mas información por parte de la empresa)."
-    >
-      DESCUENTO DEL 5% EN COMPRAS DE VINO Y TALLERES DE SHOW ROOM DE FOOBESPAIN AMERICAN - WINE & WONDER PARA SOCIOS DE LA CAMARA
-    </BenefitCard>
-
-    <BenefitCard
-      logoSrc="/logo-pharma.webp"
-      title="Primera hora gratis y descuentos variables en los servicios"
-      companyName="Pharma-Bio Serv, Inc."
-      vigencia="16/03/26 - 31/12/27"
-      tipoDescuento="Otro"
-      discountAmount="XXXX"
-      codeLabel="Usando la identificación de"
-      discountCode="Socio de la Cámara Oficial de Comercio de España en PR"
-      benefitText="Ofrecemos servicios como &quot;US Agents&quot; para el registro de plantas de fabricación de productos de alimentación, farmacéuticos, biológicos y de productos sanitarios, así como el listado de los productos.<br/><br/>Además de eso ofrecemos servicios de preparación de registros para todos los productos regulados por la FDA en los EEUU."
-      terms="Primera hora de consulta por videoconferencia gratis. Registro de planta 1.000&euro;, listado de productos 500&euro;/producto. Descuento de 10% en todos los servicios con facturación superior a 75.000&euro;."
-    >
-      Ofrecemos servicios como "US Agents" para el registro de plantas de fabricación de productos de alimentación, farmacéuticos, biológicos y de productos sanitarios, así como el listado de los productos...<br/>
-      <br/>Además de eso ofrecemos servicios de preparación de registros para todos los productos regulados por la FDA en los EEUU.<br/>
-      <br/>Los beneficios explicados abajo.
-    </BenefitCard>
-
-    <BenefitCard
-      logoSrc="/logo-dreamy.webp"
-      title="INVITACION AL SHOW DE ARTICULOS PROMOCIONALES"
-      companyName="McDreamy Promotions"
-      vigencia="09/03/26 - 30/03/26"
-      tipoDescuento="Otro"
-      discountAmount="XXXX"
-      discountCode="INVSAS"
-      benefitText="Invitación pagada por McDreamy Promotions a la asociación regional. SIN COSTO para el invitado"
-      terms="Contactar en el período de tiempo arriba indicado."
-    >
-      McDreamy Promotions ofrece CINCO INVITACIONES –sin costo– para igual cantidad de socios que estén interesados en asistir. Más información en el flyer que se adjunta.
-    </BenefitCard>
-
-    <BenefitCard
-      logoSrc="/logo-ponchar.webp"
-      title="Ponchar.com te ofrece un descuento en los ponchadores para el control de asistencia de empleados"
-      companyName="Ponchar.com"
-      vigencia="01/02/26 - 30/04/26"
-      tipoDescuento="Descuento porcentual"
-      discountAmount="5%"
-      discountLabel="DE DESCUENTO EN LOS PONCHADORES"
-      discountCode="COCEPR"
-      benefitText="Beneficio para los Miembros de la Cámara Comercio de España en PR que se hagan socio."
-      terms="Beneficio para los Miembros de la Cámara Comercio de España en PR, que se hagan socio. Los participantes que requieran pasar por el examen físico requerido para el ingreso al Plan de Socios, este será libre de costo. Los servicios recibidos en la clínica exclusiva de Socio el copago será $10.00."
-    >
-      Ofrecemos 5% de descuento en los ponchadores para los miembros de la Cámara Oficial de Comercio de España en Puerto Rico.
-    </BenefitCard>
-
-    <BenefitCard
-      logoSrc="/logo-smart.webp"
-      title="Smart Compliance SC365®"
-      companyName="Smart Solutions & Services LLC."
-      vigencia="01/02/26 - 01/04/26"
-      tipoDescuento="Descuento porcentual"
-      discountAmount="20%"
-      discountCode="SC365#CCEPR"
-      benefitText=""
-      terms="Esta oferta de descuento es aplicable exclusivamente para empresas que son socios de la Cámara Oficial de Comercio de España en Puerto Rico que contraten servicios y/o soluciones previo a la fecha de finalización de esta promoción. No aplica en combinación con otras ofertas o promociones. De estar interesado en coordinar una cita o para obtener más información, favor de contactarnos enviando email a info@smartcompliance365.com o visitar www.smartcompliance365.com."
-    >
-      Somos el socio idóneo para fomentar una estrategia de transformación digital holística y segura que potencia su éxito en un entorno cibernético cada vez más complejo, dinámico, y regulado. Nuestros servicios consultivos y soluciones de software son especializados en el fortalecer la gobernanza empresarial integrando controles de riesgo, ciberseguridad y cumplimiento en los procesos de reclutamiento, contratación, y administración de IT. Ofrecemos cursos especializados de ciberseguridad para promover una cultura organizacional de resiliencia cibernética. Además, contamos con un equipo de analistas programadores expertos en el desarrollo de sistemas, sitios web y aplicaciones para facilitar la automatización de procesos con la integración de codificación y algoritmos de inteligencia de negocio (BI) e inteligencia artificial (AI). Nos distinguimos por nuestra sólida reputación al exceder consistentemente las expectativas de nuestros clientes.
-    </BenefitCard>
-
-    <BenefitCard
-      logoSrc="/logo-oberstaff.webp"
-      title="Crédito de $300 para Contratación de Talento con Oberstaff"
-      companyName="Oberstaff"
-      vigencia="01/01/26 - 31/12/26"
-      tipoDescuento="Otro"
-      discountAmount="10%"
-      discountLabel="DE CRÉDITO FIJO"
-      discountCode="XXXXXX"
-      benefitText=""
-      terms="Válido únicamente para socios activos de la Cámara de Comercio de España en Puerto Rico. No es transferible, no es canjeable por efectivo y no puede combinarse con otras promociones u ofertas. El crédito de $300 se aplica exclusivamente a la tercera factura mensual de cada suscripción contratada con Oberstaff. El cliente debe mantener la suscripción activa y al día hasta la tercera facturación para que el crédito sea aplicable. Aplica solo para nuevas suscripciones contratadas."
-    >
-      Los socios de la Cámara Oficial de Comercio de España en Puerto Rico reciben un crédito de $300 al contratar profesionales a tiempo completo con Oberstaff. <br/><br/> Este crédito se aplica automáticamente a la tercera factura mensual, ayudando a reducir el costo operativo inicial mientras el equipo ya está en marcha.
-    </BenefitCard>
-
-    <BenefitCard
-      logoSrc="/logo-sky.webp"
-      title="PRIMERA CONSULTA GRATUITA EN MERCADEO"
-      companyName="Sky Media Enterprises"
-      vigencia="01/02/26 - 29/11/26"
-      tipoDescuento="Otro"
-      discountAmount="XXXXXX"
-      discountCode="XXXXX"
-      benefitText="Beneficio para los Miembros de la Cámara Comercio de España en PR que se hagan socio."
-      terms="XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
-    >
-      En Sky Media Enterprises te ofrecemos tu primera consulta gratuita en mercadeo, diseñada para evaluar de manera estratégica las necesidades de tu negocio, marca o proyecto. Durante esta consulta analizamos oportu...
-    </BenefitCard>
+  <div class="benefits-grid" id="benefits-grid">
+    <!-- Las cards se renderizan dinámicamente desde Supabase -->
   </div>
 
   <Pagination />
 </div>
+
+<script>
+  import { getCoupons } from "../../services/coupons.js";
+
+  // ── Helpers ──────────────────────────────────────────────────
+  function esc(str: unknown): string {
+    if (str == null) return "";
+    return String(str)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
+  }
+
+  // ── Genera el HTML de una card (idéntico a BenefitCard.astro) ─
+  function renderCard(coupon: any): string {
+    const company        = coupon.companies ?? {};
+    const logoSrc        = esc(company.logo_url   ?? "");
+    const companyName    = esc(company.name        ?? "");
+    const title          = esc(coupon.title        ?? "");
+    const description    = coupon.description      ?? "";   // puede tener HTML
+    const vigencia       = esc(coupon.vigencia     ?? "");
+    const tipoDescuento  = esc(coupon.tipo_descuento ?? "");
+    const discountAmount = esc(coupon.discount_amount ?? "XXXX");
+    const discountLabel  = esc(coupon.discount_label  ?? "DE DESCUENTO");
+    const codeLabel      = esc(coupon.code_label      ?? "Usando el código");
+    const discountCode   = esc(coupon.discount_code   ?? "XXXXXXXXXX");
+    const benefitText    = coupon.benefit_text ?? "";       // puede tener HTML
+    const terms          = coupon.terms        ?? "";       // puede tener HTML
+
+    return `
+      <article class="benefit-card">
+
+        <!-- FRONT -->
+        <div class="card-front">
+          <div class="card-header">
+            <img src="${logoSrc}" alt="Logo" class="brand-logo" />
+            <button type="button" class="btn-benefit btn-flip">Ver beneficio</button>
+          </div>
+          <div class="card-body">
+            <h3>${title}</h3>
+            <span class="company-name">${companyName}</span>
+            <p class="description">${description}</p>
+          </div>
+          <div class="card-footer">
+            <div class="info-row">
+              <span class="info-label">Vigencia:</span> ${vigencia}
+            </div>
+            <div class="info-row">
+              <span class="info-label">Tipo de descuento:</span> ${tipoDescuento}
+            </div>
+          </div>
+        </div>
+
+        <!-- BACK -->
+        <div class="card-back hidden">
+          <div class="back-header">
+            <button type="button" class="btn-back btn-flip" aria-label="Regresar">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                   xmlns="http://www.w3.org/2000/svg">
+                <path d="M10 19L3 12M3 12L10 5M3 12H13C16.866 12 20 15.134 20 19V20"
+                      stroke="black" stroke-width="2"
+                      stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <div class="discount-info">
+              <span class="discount-amount">${discountAmount}</span>
+              <span class="discount-label">${discountLabel}</span>
+            </div>
+          </div>
+          <div class="back-body">
+            <p class="code-text">${codeLabel} <strong>${discountCode}</strong></p>
+            ${benefitText ? `<p class="benefit-text">${benefitText}</p>` : ""}
+            <h4>Términos y condiciones</h4>
+            <p class="terms-text">${terms}</p>
+          </div>
+        </div>
+
+      </article>
+    `;
+  }
+
+  // ── Paginación ───────────────────────────────────────────────
+  function initPagination(): void {
+    const cards = document.querySelectorAll<HTMLElement>(".benefit-card");
+    const paginationContainer = document.getElementById("pagination-container");
+
+    if (!paginationContainer || cards.length === 0) return;
+
+    // Reasignamos a const para que TypeScript sepa que ya no es null
+    const container = paginationContainer;
+
+    const itemsPerPage = 6;
+    const totalPages   = Math.ceil(cards.length / itemsPerPage);
+
+    function showPage(page: number): void {
+      cards.forEach((card, index) => {
+        const inRange =
+          index >= (page - 1) * itemsPerPage && index < page * itemsPerPage;
+        card.style.display = inRange ? "flex" : "none";
+      });
+      container
+        .querySelectorAll<HTMLElement>(".page-num")
+        .forEach((btn, i) => btn.classList.toggle("active", i === page - 1));
+    }
+
+    if (totalPages > 1) {
+      container.innerHTML = "";
+      for (let i = 1; i <= totalPages; i++) {
+        const btn       = document.createElement("a");
+        btn.href        = "#";
+        btn.className   = `page-num${i === 1 ? " active" : ""}`;
+        btn.textContent = String(i);
+        btn.addEventListener("click", (e) => {
+          e.preventDefault();
+          showPage(i);
+          document
+            .querySelector(".search-filter-title")
+            ?.scrollIntoView({ behavior: "smooth", block: "start" });
+        });
+        container.appendChild(btn);
+      }
+      showPage(1);
+    } else {
+      showPage(1);
+      container.style.display = "none";
+    }
+  }
+
+  // ── Flip de cards (delegación de eventos) ───────────────────
+  function setupFlip(grid: HTMLElement): void {
+    grid.addEventListener("click", (e) => {
+      const btn = (e.target as Element).closest<HTMLElement>(".btn-flip");
+      if (!btn) return;
+      const card  = btn.closest<HTMLElement>(".benefit-card");
+      const front = card?.querySelector<HTMLElement>(".card-front");
+      const back  = card?.querySelector<HTMLElement>(".card-back");
+      if (front && back) {
+        front.classList.toggle("hidden");
+        back.classList.toggle("hidden");
+      }
+    });
+  }
+
+  // ── Carga principal ──────────────────────────────────────────
+  async function loadCoupons(): Promise<void> {
+    const grid = document.getElementById("benefits-grid");
+    if (!grid) return;
+
+    try {
+      const coupons = await getCoupons();
+      grid.innerHTML = coupons.map(renderCard).join("");
+      setupFlip(grid);
+      initPagination();
+    } catch (err) {
+      console.error("Error cargando cupones:", err);
+      grid.innerHTML =
+        '<p style="color:#64748b;padding:2rem;text-align:center;">Error al cargar los beneficios. Intenta refrescar la página.</p>';
+    }
+  }
+
+  loadCoupons();
+</script>
