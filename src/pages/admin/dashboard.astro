@@ -1,5 +1,6 @@
 ---
 import DashboardLayout from '../../layouts/DashboardLayout.astro';
+import "../../styles/grid-principal/benefit-card.css";
 ---
 
 <DashboardLayout title="Administración de Usuarios - Oberstaff">
@@ -198,6 +199,9 @@ import DashboardLayout from '../../layouts/DashboardLayout.astro';
 
       <div class="cm-body">
 
+        <!-- ── Columna Formulario ── -->
+        <div class="cm-form-col">
+
         <!-- Empresa -->
         <div class="cm-section">
           <h3 class="cm-section-title">
@@ -291,6 +295,23 @@ import DashboardLayout from '../../layouts/DashboardLayout.astro';
             <textarea id="cm-terms" class="cm-input cm-textarea" rows="4" placeholder="Escribe los términos y condiciones del cupón..."></textarea>
           </div>
         </div>
+
+        </div><!-- /.cm-form-col -->
+
+        <!-- ── Columna Vista Previa ── -->
+        <div class="cm-preview-col">
+          <p class="cm-preview-label">Vista Previa</p>
+          <div class="cm-prev-flip">
+            <button type="button" id="cm-prev-front-btn" class="cm-prev-btn active">Frente</button>
+            <button type="button" id="cm-prev-back-btn" class="cm-prev-btn">Reverso</button>
+          </div>
+          <div class="cm-preview-wrap">
+            <article class="benefit-card cm-preview-card">
+              <div class="card-front" id="cm-prev-front"></div>
+              <div class="card-back hidden" id="cm-prev-back"></div>
+            </article>
+          </div>
+        </div><!-- /.cm-preview-col -->
 
       </div><!-- /.cm-body -->
 
@@ -967,6 +988,12 @@ import DashboardLayout from '../../layouts/DashboardLayout.astro';
 
       if (cmOverlay) cmOverlay.style.display = 'flex';
       document.body.style.overflow = 'hidden';
+      // Resetear flip a "Frente" y actualizar preview
+      document.getElementById('cm-prev-front')?.classList.remove('hidden');
+      document.getElementById('cm-prev-back')?.classList.add('hidden');
+      document.getElementById('cm-prev-front-btn')?.classList.add('active');
+      document.getElementById('cm-prev-back-btn')?.classList.remove('active');
+      updatePreview();
       cmTitleInput?.focus();
     }
 
@@ -1019,6 +1046,93 @@ import DashboardLayout from '../../layouts/DashboardLayout.astro';
     cmOverlay?.addEventListener('click', (e) => { if (e.target === cmOverlay) closeCouponModal(); });
     cmSaveBtn?.addEventListener('click', saveCoupon);
     document.getElementById('add-cupon-btn')?.addEventListener('click', () => openCouponModal());
+
+    // ── Vista previa en tiempo real ─────────────────────────────
+    function escPrev(str: unknown): string {
+      if (str == null) return '';
+      return String(str)
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    function updatePreview(): void {
+      const prevFront = document.getElementById('cm-prev-front');
+      const prevBack  = document.getElementById('cm-prev-back');
+      if (!prevFront || !prevBack) return;
+
+      const co          = allCompanies.find((c: any) => String(c.id) === cmCompanyId?.value);
+      const logoSrc     = co?.logo_url  ?? '';
+      const companyName = co?.name      ?? '';
+      const title       = cmTitleInput?.value  || '(Sin título)';
+      const description = cmDescription?.value || '';
+      const vigencia    = cmVigencia?.value     || '—';
+      const tipoDesc    = cmTipoDesc?.value     || '—';
+      const discAmt     = cmDiscountAmt?.value  || 'XXXX';
+      const discLbl     = cmDiscountLbl?.value  || 'DE DESCUENTO';
+      const codeLbl     = cmCodeLabel?.value    || 'Usando el código';
+      const discCode    = cmDiscountCode?.value || 'XXXXXXXXXX';
+      const benefitText = cmBenefitText?.value  || '';
+      const terms       = cmTerms?.value        || '';
+
+      prevFront.innerHTML = `
+        <div class="card-header">
+          ${logoSrc
+            ? `<img src="${escPrev(logoSrc)}" alt="Logo" class="brand-logo">`
+            : `<div class="brand-logo" style="width:80px;height:40px;background:#f1f5f9;border-radius:4px;"></div>`}
+          <button type="button" class="btn-benefit" style="pointer-events:none;">Ver beneficio</button>
+        </div>
+        <div class="card-body">
+          <h3>${escPrev(title)}</h3>
+          <span class="company-name">${escPrev(companyName)}</span>
+          <p class="description">${description}</p>
+        </div>
+        <div class="card-footer">
+          <div class="info-row"><span class="info-label">Vigencia:</span> ${escPrev(vigencia)}</div>
+          <div class="info-row"><span class="info-label">Tipo de descuento:</span> ${escPrev(tipoDesc)}</div>
+        </div>`;
+
+      prevBack.innerHTML = `
+        <div class="back-header">
+          <button type="button" class="btn-back" style="pointer-events:none;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M10 19L3 12M3 12L10 5M3 12H13C16.866 12 20 15.134 20 19V20" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <div class="discount-info">
+            <span class="discount-amount">${escPrev(discAmt)}</span>
+            <span class="discount-label">${escPrev(discLbl)}</span>
+          </div>
+        </div>
+        <div class="back-body">
+          <p class="code-text">${escPrev(codeLbl)} <strong>${escPrev(discCode)}</strong></p>
+          ${benefitText ? `<p class="benefit-text">${benefitText}</p>` : ''}
+          <h4>Términos y condiciones</h4>
+          <p class="terms-text">${terms}</p>
+        </div>`;
+    }
+
+    // Escuchar cambios en todos los campos del formulario
+    [cmTitleInput, cmDescription, cmVigencia, cmDiscountAmt, cmDiscountLbl,
+     cmCodeLabel, cmDiscountCode, cmBenefitText, cmTerms
+    ].forEach(el => el?.addEventListener('input', updatePreview));
+    cmCompanyId?.addEventListener('change', updatePreview);
+    cmTipoDesc?.addEventListener('change', updatePreview);
+
+    // Botones flip de la preview
+    const prevFrontBtn = document.getElementById('cm-prev-front-btn');
+    const prevBackBtn  = document.getElementById('cm-prev-back-btn');
+    prevFrontBtn?.addEventListener('click', () => {
+      document.getElementById('cm-prev-front')?.classList.remove('hidden');
+      document.getElementById('cm-prev-back')?.classList.add('hidden');
+      prevFrontBtn.classList.add('active');
+      prevBackBtn?.classList.remove('active');
+    });
+    prevBackBtn?.addEventListener('click', () => {
+      document.getElementById('cm-prev-front')?.classList.add('hidden');
+      document.getElementById('cm-prev-back')?.classList.remove('hidden');
+      prevBackBtn.classList.add('active');
+      prevFrontBtn?.classList.remove('active');
+    });
     // ──────────────────────────────────────────────────────────
 
     // Inicialización y verificación de seguridad
@@ -1525,7 +1639,7 @@ import DashboardLayout from '../../layouts/DashboardLayout.astro';
   .cm-dialog {
     background: #fff; border-radius: 20px;
     box-shadow: 0 25px 60px rgba(0,0,0,0.18);
-    width: 100%; max-width: 700px;
+    width: 100%; max-width: 1100px;
     max-height: 90vh; display: flex; flex-direction: column;
     overflow: hidden;
   }
@@ -1543,8 +1657,69 @@ import DashboardLayout from '../../layouts/DashboardLayout.astro';
   }
   .cm-close-btn:hover { background: #fee2e2; color: #ef4444; }
   .cm-body {
-    overflow-y: auto; padding: 1.4rem 1.8rem;
-    display: flex; flex-direction: column; gap: 1.4rem; flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 400px;
+    flex: 1;
+    overflow: hidden;
+  }
+  /* Columna formulario */
+  .cm-form-col {
+    overflow-y: auto;
+    padding: 1.4rem 1.8rem;
+    display: flex; flex-direction: column; gap: 1.4rem;
+  }
+  /* Columna preview */
+  .cm-preview-col {
+    background: #f8fafc;
+    border-left: 1px solid #e2e8f0;
+    padding: 1.4rem 1.2rem;
+    display: flex; flex-direction: column; gap: 0.8rem;
+    overflow-y: auto;
+    min-width: 0;
+  }
+  .cm-preview-label {
+    font-size: 0.78rem; font-weight: 700; color: #94a3b8;
+    text-transform: uppercase; letter-spacing: 0.06em; margin: 0;
+  }
+  .cm-prev-flip {
+    display: flex; gap: 0.4rem;
+    background: #e2e8f0; border-radius: 9px; padding: 0.25rem;
+    width: fit-content;
+  }
+  .cm-prev-btn {
+    padding: 0.35rem 0.9rem; border: none; border-radius: 7px;
+    background: transparent; color: #64748b;
+    font-family: inherit; font-size: 0.82rem; font-weight: 600;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .cm-prev-btn.active {
+    background: #fff; color: #0f172a;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  }
+  .cm-preview-wrap {
+    flex: 1; overflow-y: auto;
+    display: flex; align-items: flex-start; justify-content: center;
+    padding: 0.4rem 0;
+  }
+  .cm-preview-card {
+    width: 100%; max-width: 340px;
+    transform-style: flat !important;
+    cursor: default !important;
+  }
+  .cm-preview-card:hover {
+    border-color: #DADADA !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05) !important;
+  }
+  .cm-preview-card .card-front,
+  .cm-preview-card .card-back {
+    position: relative !important;
+    transform: none !important;
+    backface-visibility: visible !important;
+    pointer-events: none;
+  }
+  .cm-preview-card .card-back.hidden,
+  .cm-preview-card .card-front.hidden {
+    display: none;
   }
   .cm-section {
     background: #f8fafc; border: 1px solid #e2e8f0;
@@ -1634,7 +1809,9 @@ import DashboardLayout from '../../layouts/DashboardLayout.astro';
   @media (max-width: 600px) {
     .cm-row { grid-template-columns: 1fr; }
     .cm-dialog { border-radius: 16px; }
-    .cm-body { padding: 1rem; }
+    .cm-body { grid-template-columns: 1fr; }
+    .cm-preview-col { border-left: none; border-top: 1px solid #e2e8f0; }
+    .cm-form-col { padding: 1rem; }
     .cm-header, .cm-footer { padding: 1rem; }
   }
 </style>
