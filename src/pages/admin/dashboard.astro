@@ -9,14 +9,43 @@ import DashboardLayout from '../../layouts/DashboardLayout.astro';
         <line x1="19" y1="12" x2="5" y2="12"></line>
         <polyline points="12 19 5 12 12 5"></polyline>
       </svg>
-      Volver 
-    </a> 
+      Volver
+    </a>
+
     <div class="admin-header">
       <div class="header-titles">
-        <h1>Panel de Administración</h1>
-        <p>Gestiona los usuarios de la plataforma.</p>
+        <div class="title-row">
+          <h1>Panel de Administración</h1>
+          <div class="admin-tabs">
+            <button class="tab-btn tab-active" data-tab="usuarios">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+              </svg>
+              Usuarios
+            </button>
+            <button class="tab-btn" data-tab="dominios">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="2" y1="12" x2="22" y2="12"></line>
+                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+              </svg>
+              Dominios
+            </button>
+            <button class="tab-btn" data-tab="cupon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+                <line x1="7" y1="7" x2="7.01" y2="7"></line>
+              </svg>
+              Cupón
+            </button>
+          </div>
+        </div>
+        <p id="tab-subtitle">Gestiona los usuarios de la plataforma.</p>
       </div>
-      <div class="header-actions">
+      <div class="header-actions" id="usuarios-actions">
         <div class="search-box">
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="11" cy="11" r="8"></circle>
@@ -37,31 +66,66 @@ import DashboardLayout from '../../layouts/DashboardLayout.astro';
     <!-- Mensajes de estado -->
     <div id="status-message" class="status-message" style="display: none;"></div>
 
-    <div class="table-container">
-      <div id="loading-state" class="loading-state">
-        <div class="spinner"></div>
-        <p>Cargando usuarios...</p>
-      </div>
+    <!-- Panel: Usuarios -->
+    <div id="panel-usuarios" class="tab-panel">
+      <div class="table-container">
+        <div id="loading-state" class="loading-state">
+          <div class="spinner"></div>
+          <p>Cargando usuarios...</p>
+        </div>
 
-      <table id="users-table" class="users-table" style="display: none;">
-        <thead>
-          <tr>
-            <th>Nombre</th>
-            <th>Correo Electrónico</th>
-            <th>Rol</th>
-            <th>Fecha de Registro</th>
-            <th class="text-right">Acciones</th>
-          </tr>
-        </thead>
-        <tbody id="users-tbody">
-          <!-- Las filas se renderizarán dinámicamente aquí -->
-        </tbody>
-      </table>
-      
-      <div id="empty-state" class="empty-state" style="display: none;">
-        <p>No se encontraron usuarios o hubo un error al cargar los datos.</p>
+        <table id="users-table" class="users-table" style="display: none;">
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Correo Electrónico</th>
+              <th>Rol</th>
+              <th>Fecha de Registro</th>
+              <th class="text-right">Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="users-tbody">
+            <!-- Las filas se renderizarán dinámicamente aquí -->
+          </tbody>
+        </table>
+
+        <div id="empty-state" class="empty-state" style="display: none;">
+          <p>No se encontraron usuarios o hubo un error al cargar los datos.</p>
+        </div>
       </div>
     </div>
+
+    <!-- Panel: Dominios -->
+    <div id="panel-dominios" class="tab-panel" style="display:none;">
+      <div class="placeholder-panel">
+        <div class="placeholder-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="2" y1="12" x2="22" y2="12"></line>
+            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+          </svg>
+        </div>
+        <h2>Gestión de Dominios</h2>
+        <p>Aquí podrás administrar los dominios de la plataforma.</p>
+        <span class="coming-soon-badge">Próximamente</span>
+      </div>
+    </div>
+
+    <!-- Panel: Cupón -->
+    <div id="panel-cupon" class="tab-panel" style="display:none;">
+      <div class="placeholder-panel">
+        <div class="placeholder-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+            <line x1="7" y1="7" x2="7.01" y2="7"></line>
+          </svg>
+        </div>
+        <h2>Gestión de Cupones</h2>
+        <p>Aquí podrás crear y administrar los cupones de descuento.</p>
+        <span class="coming-soon-badge">Próximamente</span>
+      </div>
+    </div>
+
   </div>
 </DashboardLayout>
 
@@ -82,6 +146,47 @@ import DashboardLayout from '../../layouts/DashboardLayout.astro';
     const searchInput = document.getElementById("search-user") as HTMLInputElement;
 
     let allUsers: any[] = []; // Guardamos los usuarios globalmente para filtrarlos
+
+    // ── Tab switching ──────────────────────────────────────────
+    const tabBtns = document.querySelectorAll<HTMLButtonElement>('.tab-btn');
+    const tabPanels: Record<string, HTMLElement | null> = {
+      usuarios: document.getElementById('panel-usuarios'),
+      dominios: document.getElementById('panel-dominios'),
+      cupon:    document.getElementById('panel-cupon'),
+    };
+    const usuariosActions = document.getElementById('usuarios-actions');
+    const tabSubtitle = document.getElementById('tab-subtitle');
+
+    const subtitles: Record<string, string> = {
+      usuarios: 'Gestiona los usuarios de la plataforma.',
+      dominios: 'Administra los dominios registrados en la plataforma.',
+      cupon:    'Crea y gestiona cupones de descuento.',
+    };
+
+    function switchTab(tab: string) {
+      tabBtns.forEach(btn => btn.classList.remove('tab-active'));
+      const activeBtn = document.querySelector<HTMLButtonElement>(`.tab-btn[data-tab="${tab}"]`);
+      if (activeBtn) activeBtn.classList.add('tab-active');
+
+      Object.entries(tabPanels).forEach(([key, panel]) => {
+        if (panel) panel.style.display = key === tab ? 'block' : 'none';
+      });
+
+      if (usuariosActions) {
+        usuariosActions.style.display = tab === 'usuarios' ? 'flex' : 'none';
+      }
+      if (tabSubtitle) {
+        tabSubtitle.textContent = subtitles[tab] ?? '';
+      }
+    }
+
+    tabBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const tab = btn.getAttribute('data-tab');
+        if (tab) switchTab(tab);
+      });
+    });
+    // ──────────────────────────────────────────────────────────
 
     // Event listener para el buscador
     if (searchInput) {
@@ -324,9 +429,9 @@ import DashboardLayout from '../../layouts/DashboardLayout.astro';
   .admin-container {
     position: relative;
     width: 100%;
-    max-width: 100%; /* Ocupará todo el ancho disponible */
+    max-width: 100%;
     margin: 0 auto;
-    padding: 2rem 5%; /* Un poco de margen a los lados */
+    padding: 2rem 5%;
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
   }
 
@@ -335,21 +440,122 @@ import DashboardLayout from '../../layouts/DashboardLayout.astro';
     justify-content: space-between;
     align-items: center;
     margin-bottom: 2rem;
-    padding: 1rem 0; /* Removido el padding grueso */
-    background: transparent; /* Fondo blanco/transparente */
-    color: #0f172a; /* Texto oscuro de nuevo */
+    padding: 1rem 0;
+    background: transparent;
+    color: #0f172a;
     border-radius: 0;
-    box-shadow: none; /* Sin sombra en el header */
+    box-shadow: none;
   }
 
   .admin-header h1 {
     font-size: 2.2rem;
     font-weight: 800;
-    margin: 0 0 0.5rem 0;
+    margin: 0;
     letter-spacing: -0.5px;
     color: #0f172a;
   }
 
+  .title-row {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.5rem;
+  }
+
+  /* ── Tabs ── */
+  .admin-tabs {
+    display: flex;
+    gap: 0.4rem;
+    background: #f1f5f9;
+    border-radius: 12px;
+    padding: 0.3rem;
+  }
+
+  .tab-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.55rem 1.1rem;
+    border: none;
+    border-radius: 9px;
+    background: transparent;
+    color: #64748b;
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+  }
+
+  .tab-btn:hover {
+    background: #e2e8f0;
+    color: #0f172a;
+  }
+
+  .tab-btn.tab-active {
+    background: #ffffff;
+    color: #0f172a;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  }
+
+  .tab-panel {
+    animation: fadeIn 0.25s ease;
+  }
+
+  /* ── Placeholder panels ── */
+  .placeholder-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: 5rem 2rem;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.08);
+    border: 1px solid #f1f5f9;
+    text-align: center;
+  }
+
+  .placeholder-icon {
+    width: 90px;
+    height: 90px;
+    border-radius: 22px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .placeholder-panel h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 0;
+  }
+
+  .placeholder-panel p {
+    color: #64748b;
+    font-size: 1rem;
+    margin: 0;
+  }
+
+  .coming-soon-badge {
+    background: #f1f5f9;
+    color: #64748b;
+    border: 1px solid #e2e8f0;
+    border-radius: 9999px;
+    padding: 0.35rem 1rem;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  /* ── Resto de estilos existentes ── */
   .back-link {
     position: absolute;
     top: 0;
@@ -465,25 +671,24 @@ import DashboardLayout from '../../layouts/DashboardLayout.astro';
     box-shadow: 0 15px 50px rgba(0, 0, 0, 0.08);
     border: 1px solid #f1f5f9;
     overflow: hidden;
-    max-height: 600px; /* Limita la altura */
-    overflow-y: auto;  /* Habilita el scroll vertical */
+    max-height: 600px;
+    overflow-y: auto;
   }
 
-  /* Personalizar el scrollbar */
   .table-container::-webkit-scrollbar {
     width: 8px;
     height: 8px;
   }
   .table-container::-webkit-scrollbar-track {
-    background: #f1f5f9; 
+    background: #f1f5f9;
     border-radius: 10px;
   }
   .table-container::-webkit-scrollbar-thumb {
-    background: #cbd5e1; 
+    background: #cbd5e1;
     border-radius: 10px;
   }
   .table-container::-webkit-scrollbar-thumb:hover {
-    background: #94a3b8; 
+    background: #94a3b8;
   }
 
   .users-table {
@@ -504,7 +709,7 @@ import DashboardLayout from '../../layouts/DashboardLayout.astro';
     border-bottom: 2px solid #e2e8f0;
     position: sticky;
     top: 0;
-    z-index: 20; /* Para que quede arriba al hacer scroll */
+    z-index: 20;
   }
 
   .users-table td {
@@ -550,8 +755,6 @@ import DashboardLayout from '../../layouts/DashboardLayout.astro';
     font-size: 1.4rem;
     box-shadow: 0 8px 16px rgba(218, 41, 28, 0.25);
   }
-
-  /* Si quieres avatares azules para usuarios normales, se puede cambiar en JS, pero rojo es tu marca */
 
   .font-medium {
     font-weight: 700;
@@ -666,7 +869,7 @@ import DashboardLayout from '../../layouts/DashboardLayout.astro';
   }
 
   @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-15px); }
+    from { opacity: 0; transform: translateY(-10px); }
     to { opacity: 1; transform: translateY(0); }
   }
 
@@ -674,14 +877,20 @@ import DashboardLayout from '../../layouts/DashboardLayout.astro';
     .admin-container {
       padding: 1.5rem 1rem;
     }
-    
+
     .admin-header {
       flex-direction: column;
       align-items: flex-start;
       gap: 1.5rem;
       padding: 1.5rem;
     }
-    
+
+    .title-row {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+
     .header-actions {
       flex-direction: column;
       width: 100%;
@@ -690,20 +899,29 @@ import DashboardLayout from '../../layouts/DashboardLayout.astro';
     .search-box, .search-box input, .btn-success {
       width: 100%;
     }
-    
+
     .admin-header h1 {
       font-size: 1.8rem;
     }
-    
+
+    .admin-tabs {
+      width: 100%;
+    }
+
+    .tab-btn {
+      flex: 1;
+      justify-content: center;
+    }
+
     .users-table, .users-table tbody, .users-table tr, .users-table td {
       display: block;
       width: 100%;
     }
-    
+
     .users-table thead {
       display: none;
     }
-    
+
     .users-table tr {
       margin-bottom: 1.5rem;
       border: 1px solid #e2e8f0;
@@ -711,18 +929,18 @@ import DashboardLayout from '../../layouts/DashboardLayout.astro';
       background-color: #ffffff;
       box-shadow: 0 4px 10px rgba(0,0,0,0.03);
     }
-    
+
     .users-table td {
       text-align: right;
       padding: 1.2rem;
       position: relative;
       border-bottom: 1px solid #f1f5f9;
     }
-    
+
     .users-table td:last-child {
       border-bottom: none;
     }
-    
+
     .users-table td::before {
       content: attr(data-label);
       position: absolute;
@@ -734,7 +952,7 @@ import DashboardLayout from '../../layouts/DashboardLayout.astro';
       font-size: 0.85rem;
       text-transform: uppercase;
     }
-    
+
     .user-info {
       justify-content: flex-end;
     }
