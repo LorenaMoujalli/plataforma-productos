@@ -328,6 +328,7 @@ import Layout from "../layouts/Layout.astro";
 
 <script>
 	import { signInUser } from "../services/auth.js";
+	import { getAllowedDomainNames } from "../services/domains.js";
 	import { showToast } from "../utils/notifications.js";
 
 	function setupLogin() {
@@ -359,6 +360,10 @@ import Layout from "../layouts/Layout.astro";
 		const emailInput = document.getElementById("email") as HTMLInputElement;
 		const submitBtn = document.getElementById("submit-btn") as HTMLButtonElement;
 
+		// Precargamos dominios permitidos para validación client-side
+		let allowedDomains: string[] = [];
+		getAllowedDomainNames().then(d => { allowedDomains = d; }).catch(() => {});
+
 		if (loginForm && emailInput && passwordInput && submitBtn) {
 			loginForm.onsubmit = async (e) => {
 				e.preventDefault();
@@ -368,7 +373,7 @@ import Layout from "../layouts/Layout.astro";
 
 				// 1. Validación de dominio en el lado del cliente (para mejor UX)
 				const domain = email.split("@")[1];
-				if (!domain || domain.toLowerCase() !== "oberstaff.com") {
+				if (!domain || (allowedDomains.length > 0 && !allowedDomains.includes(domain.toLowerCase()))) {
 					showToast({
 						text: "Solo se permiten correos electrónicos de dominios autorizados.",
 						icon: "error",

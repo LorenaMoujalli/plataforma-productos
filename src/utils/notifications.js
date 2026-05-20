@@ -91,10 +91,14 @@ export async function showConfirm({ title, text, confirmButtonText = 'Sí, elimi
 
 /**
  * Muestra un formulario modal complejo para crear un usuario.
+ * @param {string[]} allowedDomains - Lista de dominios permitidos para validación.
  * @returns {Promise<Object|null>} Los datos del usuario o null si cancela.
  */
-export async function showCreateUserModal() {
+export async function showCreateUserModal(allowedDomains = []) {
   const Swal = (await import('sweetalert2')).default;
+  const domainsHint = allowedDomains.length > 0
+    ? allowedDomains.map(d => `@${d}`).join(', ')
+    : 'dominios autorizados';
   
   const { value: formValues } = await Swal.fire({
     title: 'Registrar Nuevo Usuario',
@@ -112,8 +116,8 @@ export async function showCreateUserModal() {
         <input id="swal-name" class="swal-input-custom" placeholder="Ej. Juan Pérez">
       </div>
       <div class="swal-form-group">
-        <label for="swal-email">Correo Electrónico (@oberstaff.com)</label>
-        <input id="swal-email" type="email" class="swal-input-custom" placeholder="juan@oberstaff.com">
+        <label for="swal-email">Correo Electrónico (${domainsHint})</label>
+        <input id="swal-email" type="email" class="swal-input-custom" placeholder="usuario@dominio.com">
       </div>
       <div class="swal-form-group">
         <label for="swal-password">Contraseña (Mínimo 6 caracteres)</label>
@@ -139,7 +143,7 @@ export async function showCreateUserModal() {
     showCancelButton: true,
     confirmButtonText: 'Registrar',
     cancelButtonText: 'Cancelar',
-    confirmButtonColor: '#10b981', /* Verde para crear */
+    confirmButtonColor: '#10b981',
     cancelButtonColor: '#64748b',
     background: '#ffffff',
     color: '#0f172a',
@@ -148,7 +152,7 @@ export async function showCreateUserModal() {
     },
     preConfirm: () => {
       const name = document.getElementById('swal-name').value;
-      const email = document.getElementById('swal-email').value;
+      const email = document.getElementById('swal-email').value.trim().toLowerCase();
       const password = document.getElementById('swal-password').value;
       const role = document.getElementById('swal-role').value;
 
@@ -156,10 +160,15 @@ export async function showCreateUserModal() {
         Swal.showValidationMessage('Todos los campos son obligatorios');
         return false;
       }
-      
+
       const domain = email.split('@')[1];
-      if (!domain || domain.toLowerCase() !== 'oberstaff.com') {
-        Swal.showValidationMessage('El correo debe terminar en @oberstaff.com');
+      if (!domain) {
+        Swal.showValidationMessage('Ingresa un correo electrónico válido');
+        return false;
+      }
+
+      if (allowedDomains.length > 0 && !allowedDomains.includes(domain)) {
+        Swal.showValidationMessage(`Dominio no autorizado. Permitidos: ${allowedDomains.map(d => '@' + d).join(', ')}`);
         return false;
       }
 
@@ -178,10 +187,14 @@ export async function showCreateUserModal() {
 /**
  * Muestra un formulario modal para editar un usuario.
  * @param {Object} user - Los datos actuales del usuario
+ * @param {string[]} allowedDomains - Lista de dominios permitidos para validación.
  * @returns {Promise<Object|null>} Los datos actualizados o null si cancela.
  */
-export async function showEditUserModal(user) {
+export async function showEditUserModal(user, allowedDomains = []) {
   const Swal = (await import('sweetalert2')).default;
+  const domainsHint = allowedDomains.length > 0
+    ? allowedDomains.map(d => `@${d}`).join(', ')
+    : 'dominios autorizados';
   
   const { value: formValues } = await Swal.fire({
     title: 'Editar Usuario',
@@ -196,7 +209,7 @@ export async function showEditUserModal(user) {
         .swal-select-custom { appearance: none; background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e"); background-repeat: no-repeat; background-position: right 1rem center; background-size: 1em; cursor: pointer; }
       </style>
       <div class="swal-form-group">
-        <label for="swal-edit-email">Correo Electrónico (@oberstaff.com)</label>
+        <label for="swal-edit-email">Correo Electrónico (${domainsHint})</label>
         <input id="swal-edit-email" type="email" class="swal-input-custom" value="${user.email}">
       </div>
       <div class="swal-form-group">
@@ -235,7 +248,7 @@ export async function showEditUserModal(user) {
       popup: 'premium-popup',
     },
     preConfirm: () => {
-      const email = document.getElementById('swal-edit-email').value;
+      const email = document.getElementById('swal-edit-email').value.trim().toLowerCase();
       const password = document.getElementById('swal-edit-password').value;
       const name = document.getElementById('swal-edit-name').value;
       const role = document.getElementById('swal-edit-role').value;
@@ -246,8 +259,13 @@ export async function showEditUserModal(user) {
       }
       
       const domain = email.split('@')[1];
-      if (!domain || domain.toLowerCase() !== 'oberstaff.com') {
-        Swal.showValidationMessage('El correo debe terminar en @oberstaff.com');
+      if (!domain) {
+        Swal.showValidationMessage('Ingresa un correo electrónico válido');
+        return false;
+      }
+
+      if (allowedDomains.length > 0 && !allowedDomains.includes(domain)) {
+        Swal.showValidationMessage(`Dominio no autorizado. Permitidos: ${allowedDomains.map(d => '@' + d).join(', ')}`);
         return false;
       }
       
@@ -257,6 +275,109 @@ export async function showEditUserModal(user) {
       }
 
       return { email, password, name, role };
+    }
+  });
+
+  return formValues || null;
+}
+
+/**
+ * Muestra un modal para agregar un nuevo dominio permitido.
+ * @returns {Promise<{domain:string}|null>}
+ */
+export async function showCreateDomainModal() {
+  const Swal = (await import('sweetalert2')).default;
+
+  const { value: formValues } = await Swal.fire({
+    title: 'Agregar Dominio',
+    html: `
+      <style>
+        .swal2-html-container { margin: 1rem 0 0 0; overflow: visible; }
+        .swal-form-group { margin-bottom: 1rem; text-align: left; }
+        .swal-form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; font-size: 0.85rem; color: #475569; }
+        .swal-input-custom { width: 100%; box-sizing: border-box; padding: 0.75rem 1rem; border-radius: 8px; border: 1px solid #e2e8f0; background-color: #f8fafc; font-size: 0.95rem; font-family: inherit; transition: all 0.2s; outline: none; }
+        .swal-input-custom:focus { border-color: #94a3b8; box-shadow: 0 0 0 3px rgba(226, 232, 240, 0.5); background-color: #fff; }
+        .swal-hint { font-size: 0.8rem; color: #94a3b8; margin-top: 0.3rem; }
+      </style>
+      <div class="swal-form-group">
+        <label for="swal-domain">Dominio</label>
+        <input id="swal-domain" class="swal-input-custom" placeholder="empresa.com" autocomplete="off">
+        <p class="swal-hint">Sin @ ni http. Ej: empresa.com</p>
+      </div>
+    `,
+    focusConfirm: false,
+    showCancelButton: true,
+    confirmButtonText: 'Agregar',
+    cancelButtonText: 'Cancelar',
+    confirmButtonColor: '#10b981',
+    cancelButtonColor: '#64748b',
+    background: '#ffffff',
+    color: '#0f172a',
+    customClass: { popup: 'premium-popup' },
+    preConfirm: () => {
+      const domain = document.getElementById('swal-domain').value.trim().toLowerCase();
+      if (!domain) {
+        Swal.showValidationMessage('El dominio es obligatorio');
+        return false;
+      }
+      const domainRegex = /^[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,}$/;
+      if (!domainRegex.test(domain)) {
+        Swal.showValidationMessage('Ingresa un dominio válido. Ej: empresa.com');
+        return false;
+      }
+      return { domain };
+    }
+  });
+
+  return formValues || null;
+}
+
+/**
+ * Muestra un modal para editar un dominio existente.
+ * @param {{ id: number, domain: string }} domainData
+ * @returns {Promise<{domain:string}|null>}
+ */
+export async function showEditDomainModal(domainData) {
+  const Swal = (await import('sweetalert2')).default;
+
+  const { value: formValues } = await Swal.fire({
+    title: 'Editar Dominio',
+    html: `
+      <style>
+        .swal2-html-container { margin: 1rem 0 0 0; overflow: visible; }
+        .swal-form-group { margin-bottom: 1rem; text-align: left; }
+        .swal-form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; font-size: 0.85rem; color: #475569; }
+        .swal-input-custom { width: 100%; box-sizing: border-box; padding: 0.75rem 1rem; border-radius: 8px; border: 1px solid #e2e8f0; background-color: #f8fafc; font-size: 0.95rem; font-family: inherit; transition: all 0.2s; outline: none; }
+        .swal-input-custom:focus { border-color: #94a3b8; box-shadow: 0 0 0 3px rgba(226, 232, 240, 0.5); background-color: #fff; }
+        .swal-hint { font-size: 0.8rem; color: #94a3b8; margin-top: 0.3rem; }
+      </style>
+      <div class="swal-form-group">
+        <label for="swal-edit-domain">Dominio</label>
+        <input id="swal-edit-domain" class="swal-input-custom" value="${domainData.domain}" autocomplete="off">
+        <p class="swal-hint">Sin @ ni http. Ej: empresa.com</p>
+      </div>
+    `,
+    focusConfirm: false,
+    showCancelButton: true,
+    confirmButtonText: 'Guardar Cambios',
+    cancelButtonText: 'Cancelar',
+    confirmButtonColor: '#0f172a',
+    cancelButtonColor: '#64748b',
+    background: '#ffffff',
+    color: '#0f172a',
+    customClass: { popup: 'premium-popup' },
+    preConfirm: () => {
+      const domain = document.getElementById('swal-edit-domain').value.trim().toLowerCase();
+      if (!domain) {
+        Swal.showValidationMessage('El dominio es obligatorio');
+        return false;
+      }
+      const domainRegex = /^[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,}$/;
+      if (!domainRegex.test(domain)) {
+        Swal.showValidationMessage('Ingresa un dominio válido. Ej: empresa.com');
+        return false;
+      }
+      return { domain };
     }
   });
 

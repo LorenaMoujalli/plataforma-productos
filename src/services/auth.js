@@ -1,6 +1,21 @@
 import { supabase } from "../lib/supabase.js";
 
 /**
+ * Verifica si un dominio está en la tabla allowed_domains.
+ * @param {string} domain
+ * @returns {Promise<boolean>}
+ */
+async function isAllowedDomain(domain) {
+  const { data, error } = await supabase
+    .from('allowed_domains')
+    .select('id')
+    .ilike('domain', domain.trim())
+    .maybeSingle();
+
+  return !error && data !== null;
+}
+
+/**
  * Registra un nuevo usuario en la base de datos de autenticación de Supabase.
  * Valida que el correo electrónico pertenezca al dominio autorizado.
  * 
@@ -12,7 +27,7 @@ export async function signUpUser(email, password, name) {
   const cleanEmail = email.trim();
   const domain = cleanEmail.split("@")[1];
   
-  if (!domain || domain.toLowerCase() !== "oberstaff.com") {
+  if (!domain || !(await isAllowedDomain(domain))) {
     throw new Error("Solo se permiten registros con correos electrónicos de dominios autorizados.");
   }
 
@@ -42,8 +57,8 @@ export async function signInUser(email, password) {
   const cleanEmail = email.trim(); 
   const domain = cleanEmail.split("@")[1];
 
-  if (!domain || domain.toLowerCase() !== "oberstaff.com") {
-    throw new Error("Solo se permiten registros con correos electrónicos de dominios autorizados.");
+  if (!domain || !(await isAllowedDomain(domain))) {
+    throw new Error("Solo se permiten correos electrónicos de dominios autorizados.");
   }
 
   const { data, error } = await supabase.auth.signInWithPassword({
@@ -165,8 +180,8 @@ export async function adminCreateUser(email, password, name, role = 'user') {
   const cleanEmail = email.trim();
   const domain = cleanEmail.split("@")[1];
   
-  if (!domain || domain.toLowerCase() !== "oberstaff.com") {
-    throw new Error("Solo se permiten correos electrónicos del dominio @oberstaff.com");
+  if (!domain || !(await isAllowedDomain(domain))) {
+    throw new Error("Solo se permiten correos electrónicos de dominios autorizados.");
   }
 
   // 1. Crear un cliente temporal que NO guarde sesión

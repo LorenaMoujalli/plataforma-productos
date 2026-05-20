@@ -45,6 +45,7 @@ import DashboardLayout from '../../layouts/DashboardLayout.astro';
         </div>
         <p id="tab-subtitle">Gestiona los usuarios de la plataforma.</p>
       </div>
+      <!-- Acciones tab Usuarios -->
       <div class="header-actions" id="usuarios-actions">
         <div class="search-box">
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -59,6 +60,24 @@ import DashboardLayout from '../../layouts/DashboardLayout.astro';
             <line x1="5" y1="12" x2="19" y2="12"></line>
           </svg>
           Nuevo Usuario
+        </button>
+      </div>
+
+      <!-- Acciones tab Dominios -->
+      <div class="header-actions" id="dominios-actions" style="display:none;">
+        <div class="search-box">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input type="text" id="search-domain" placeholder="Buscar dominio...">
+        </div>
+        <button id="add-domain-btn" class="btn-success">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+          Nuevo Dominio
         </button>
       </div>
     </div>
@@ -97,17 +116,27 @@ import DashboardLayout from '../../layouts/DashboardLayout.astro';
 
     <!-- Panel: Dominios -->
     <div id="panel-dominios" class="tab-panel" style="display:none;">
-      <div class="placeholder-panel">
-        <div class="placeholder-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="10"></circle>
-            <line x1="2" y1="12" x2="22" y2="12"></line>
-            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
-          </svg>
+      <div class="table-container">
+        <div id="loading-state-domains" class="loading-state">
+          <div class="spinner"></div>
+          <p>Cargando dominios...</p>
         </div>
-        <h2>Gestión de Dominios</h2>
-        <p>Aquí podrás administrar los dominios de la plataforma.</p>
-        <span class="coming-soon-badge">Próximamente</span>
+
+        <table id="domains-table" class="users-table" style="display: none;">
+          <thead>
+            <tr>
+              <th>Dominio</th>
+              <th>Fecha de Registro</th>
+              <th class="text-right">Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="domains-tbody">
+          </tbody>
+        </table>
+
+        <div id="empty-state-domains" class="empty-state" style="display: none;">
+          <p>No hay dominios registrados aún.</p>
+        </div>
       </div>
     </div>
 
@@ -131,11 +160,16 @@ import DashboardLayout from '../../layouts/DashboardLayout.astro';
 
 <script>
   import { getUserProfile, getAdminUsers, deleteAdminUser, adminCreateUser, adminUpdateUser } from "../../services/auth.js";
-  import { showConfirm, showToast, showCreateUserModal, showEditUserModal } from "../../utils/notifications.js";
+  import { getDomains, addDomain, updateDomain, deleteDomain, getAllowedDomainNames } from "../../services/domains.js";
+  import { showConfirm, showToast, showCreateUserModal, showEditUserModal, showCreateDomainModal, showEditDomainModal } from "../../utils/notifications.js";
 
   function setupDashboard() {
     // Solo ejecutar en la ruta del dashboard
     if (!window.location.pathname.includes('/admin/dashboard')) return;
+
+    // Dominios permitidos (para pasarlos a los modales de usuario)
+    let allowedDomains: string[] = [];
+    getAllowedDomainNames().then(d => { allowedDomains = d; }).catch(() => {});
 
     // Elementos del DOM
     const loadingState = document.getElementById("loading-state");
@@ -155,13 +189,16 @@ import DashboardLayout from '../../layouts/DashboardLayout.astro';
       cupon:    document.getElementById('panel-cupon'),
     };
     const usuariosActions = document.getElementById('usuarios-actions');
+    const dominiosActions = document.getElementById('dominios-actions');
     const tabSubtitle = document.getElementById('tab-subtitle');
 
     const subtitles: Record<string, string> = {
       usuarios: 'Gestiona los usuarios de la plataforma.',
-      dominios: 'Administra los dominios registrados en la plataforma.',
+      dominios: 'Administra los dominios autorizados para registro.',
       cupon:    'Crea y gestiona cupones de descuento.',
     };
+
+    let domainsLoaded = false;
 
     function switchTab(tab: string) {
       tabBtns.forEach(btn => btn.classList.remove('tab-active'));
@@ -172,11 +209,15 @@ import DashboardLayout from '../../layouts/DashboardLayout.astro';
         if (panel) panel.style.display = key === tab ? 'block' : 'none';
       });
 
-      if (usuariosActions) {
-        usuariosActions.style.display = tab === 'usuarios' ? 'flex' : 'none';
-      }
-      if (tabSubtitle) {
-        tabSubtitle.textContent = subtitles[tab] ?? '';
+      if (usuariosActions) usuariosActions.style.display = tab === 'usuarios' ? 'flex' : 'none';
+      if (dominiosActions) dominiosActions.style.display = tab === 'dominios' ? 'flex' : 'none';
+
+      if (tabSubtitle) tabSubtitle.textContent = subtitles[tab] ?? '';
+
+      // Cargar dominios la primera vez que se abre ese tab
+      if (tab === 'dominios' && !domainsLoaded) {
+        domainsLoaded = true;
+        loadDomains();
       }
     }
 
@@ -343,7 +384,7 @@ import DashboardLayout from '../../layouts/DashboardLayout.astro';
           if (!userDataRaw) return;
           
           const user = JSON.parse(userDataRaw);
-          const newValues: any = await showEditUserModal(user);
+          const newValues: any = await showEditUserModal(user, allowedDomains);
           
           if (newValues) {
             btn.classList.add('loading');
@@ -371,7 +412,7 @@ import DashboardLayout from '../../layouts/DashboardLayout.astro';
     const addUserBtn = document.getElementById('add-user-btn') as HTMLButtonElement;
     if (addUserBtn) {
       addUserBtn.addEventListener('click', async () => {
-        const userData: any = await showCreateUserModal();
+        const userData: any = await showCreateUserModal(allowedDomains);
         if (userData) {
           try {
             addUserBtn.disabled = true;
@@ -397,6 +438,182 @@ import DashboardLayout from '../../layouts/DashboardLayout.astro';
         }
       });
     }
+
+    // ── Gestión de Dominios ──────────────────────────────────────
+    const loadingStateDomains = document.getElementById("loading-state-domains");
+    const domainsTable = document.getElementById("domains-table");
+    const domainsTbody = document.getElementById("domains-tbody");
+    const emptyStateDomains = document.getElementById("empty-state-domains");
+    const searchDomainInput = document.getElementById("search-domain") as HTMLInputElement;
+
+    let allDomains: any[] = [];
+
+    if (searchDomainInput) {
+      searchDomainInput.addEventListener('input', () => {
+        if (allDomains.length > 0) renderDomains(allDomains);
+      });
+    }
+
+    async function loadDomains() {
+      if (!loadingStateDomains || !domainsTable || !emptyStateDomains) return;
+
+      loadingStateDomains.style.display = "flex";
+      domainsTable.style.display = "none";
+      emptyStateDomains.style.display = "none";
+
+      try {
+        const domains = await getDomains();
+        if (!domains || domains.length === 0) {
+          emptyStateDomains.style.display = "block";
+        } else {
+          allDomains = domains;
+          renderDomains(allDomains);
+          domainsTable.style.display = "table";
+        }
+      } catch (error: any) {
+        console.error("Error al cargar dominios:", error);
+        emptyStateDomains.style.display = "block";
+        emptyStateDomains.innerHTML = `<p>Error al cargar dominios: ${error.message}</p>`;
+      } finally {
+        loadingStateDomains.style.display = "none";
+      }
+    }
+
+    function renderDomains(domains: any[]) {
+      if (!domainsTbody) return;
+      domainsTbody.innerHTML = "";
+
+      const query = (searchDomainInput?.value || "").toLowerCase().trim();
+      const filtered = domains.filter((d: any) =>
+        (d.domain || "").toLowerCase().includes(query)
+      );
+
+      if (filtered.length === 0) {
+        domainsTbody.innerHTML = '<tr><td colspan="3" style="text-align:center; padding:3rem; color:#64748b;">No se encontraron dominios.</td></tr>';
+        return;
+      }
+
+      filtered.forEach((d: any) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td data-label="Dominio">
+            <div style="display:flex; align-items:center; gap:0.8rem;">
+              <div style="width:36px;height:36px;border-radius:10px;background:#f1f5f9;border:1px solid #e2e8f0;display:flex;align-items:center;justify-content:center;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="2" y1="12" x2="22" y2="12"></line>
+                  <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                </svg>
+              </div>
+              <span class="font-medium">${d.domain}</span>
+            </div>
+          </td>
+          <td data-label="Fecha Registro"><span class="text-gray">${formatDate(d.created_at)}</span></td>
+          <td data-label="Acciones" class="actions-cell">
+            <div style="display:flex;gap:0.5rem;justify-content:flex-end;">
+              <button class="btn-icon btn-edit-domain" data-id="${d.id}" data-domain="${d.domain}" title="Editar dominio">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                </svg>
+              </button>
+              <button class="btn-icon btn-delete-domain" data-id="${d.id}" data-domain="${d.domain}" title="Eliminar dominio">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="3 6 5 6 21 6"></polyline>
+                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                  <line x1="10" y1="11" x2="10" y2="17"></line>
+                  <line x1="14" y1="11" x2="14" y2="17"></line>
+                </svg>
+              </button>
+            </div>
+          </td>
+        `;
+        domainsTbody.appendChild(tr);
+      });
+
+      // Listeners editar
+      document.querySelectorAll('.btn-edit-domain').forEach(el => {
+        const btn = el as HTMLButtonElement;
+        btn.addEventListener('click', async () => {
+          const id = parseInt(btn.getAttribute('data-id') as string);
+          const domain = btn.getAttribute('data-domain') as string;
+          const result: any = await showEditDomainModal({ id, domain });
+          if (result) {
+            btn.classList.add('loading');
+            try {
+              await updateDomain(id, result.domain);
+              showToast({ text: `Dominio actualizado correctamente.`, icon: 'success' });
+              domainsLoaded = false;
+              loadDomains();
+            } catch (error: any) {
+              showToast({ text: `Error: ${error.message}`, icon: 'error' });
+              btn.classList.remove('loading');
+            }
+          }
+        });
+      });
+
+      // Listeners eliminar
+      document.querySelectorAll('.btn-delete-domain').forEach(el => {
+        const btn = el as HTMLButtonElement;
+        btn.addEventListener('click', async () => {
+          const id = parseInt(btn.getAttribute('data-id') as string);
+          const domain = btn.getAttribute('data-domain');
+
+          const confirmed = await showConfirm({
+            title: '¿Eliminar dominio?',
+            text: `¿Deseas eliminar el dominio "${domain}"? Esta acción no se puede deshacer.`,
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'Cancelar',
+          });
+
+          if (confirmed) {
+            btn.classList.add('loading');
+            btn.disabled = true;
+            try {
+              await deleteDomain(id);
+              showToast({ text: `Dominio "${domain}" eliminado.`, icon: 'success' });
+              domainsLoaded = false;
+              loadDomains();
+            } catch (error: any) {
+              showToast({ text: `Error: ${error.message}`, icon: 'error' });
+              btn.classList.remove('loading');
+              btn.disabled = false;
+            }
+          }
+        });
+      });
+    }
+
+    // Botón Nuevo Dominio
+    const addDomainBtn = document.getElementById('add-domain-btn') as HTMLButtonElement;
+    if (addDomainBtn) {
+      addDomainBtn.addEventListener('click', async () => {
+        const result: any = await showCreateDomainModal();
+        if (result) {
+          addDomainBtn.disabled = true;
+          addDomainBtn.innerHTML = '<span class="spinner" style="width:20px;height:20px;border-width:2px;margin-right:8px;"></span> Guardando...';
+          try {
+            await addDomain(result.domain);
+            showToast({ text: `Dominio "${result.domain}" agregado con éxito.`, icon: 'success' });
+            domainsLoaded = false;
+            loadDomains();
+          } catch (error: any) {
+            showToast({ text: `Error: ${error.message}`, icon: 'error' });
+          } finally {
+            addDomainBtn.disabled = false;
+            addDomainBtn.innerHTML = `
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+              Nuevo Dominio
+            `;
+          }
+        }
+      });
+    }
+    // ──────────────────────────────────────────────────────────
 
     // Inicialización y verificación de seguridad
     async function init() {
