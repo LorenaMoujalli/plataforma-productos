@@ -1,12 +1,22 @@
 ---
-import DashboardLayout from '../../layouts/DashboardLayout.astro';
+import DashboardLayout from "../../layouts/DashboardLayout.astro";
 import "../../styles/grid-principal/benefit-card.css";
 ---
 
 <DashboardLayout title="Administración de Usuarios - Oberstaff">
   <div class="admin-container">
     <a href="/home" class="back-link">
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
         <line x1="19" y1="12" x2="5" y2="12"></line>
         <polyline points="12 19 5 12 12 5"></polyline>
       </svg>
@@ -19,7 +29,17 @@ import "../../styles/grid-principal/benefit-card.css";
           <h1>Panel de Administración</h1>
           <div class="admin-tabs">
             <button class="tab-btn tab-active" data-tab="usuarios">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
                 <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
                 <circle cx="9" cy="7" r="4"></circle>
                 <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
@@ -28,23 +48,57 @@ import "../../styles/grid-principal/benefit-card.css";
               Usuarios
             </button>
             <button class="tab-btn" data-tab="dominios">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
                 <circle cx="12" cy="12" r="10"></circle>
                 <line x1="2" y1="12" x2="22" y2="12"></line>
-                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                <path
+                  d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"
+                ></path>
               </svg>
               Dominios
             </button>
             <button class="tab-btn" data-tab="empresas">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
                 <rect x="2" y="7" width="20" height="14" rx="2"></rect>
                 <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
               </svg>
               Empresas
             </button>
             <button class="tab-btn" data-tab="cupon">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"
+                ></path>
                 <line x1="7" y1="7" x2="7.01" y2="7"></line>
               </svg>
               Cupón
@@ -56,14 +110,38 @@ import "../../styles/grid-principal/benefit-card.css";
       <!-- Acciones tab Usuarios -->
       <div class="header-actions" id="usuarios-actions">
         <div class="search-box">
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
             <circle cx="11" cy="11" r="8"></circle>
             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
           </svg>
-          <input type="text" id="search-user" placeholder="Buscar por nombre o correo...">
+          <input
+            type="text"
+            id="search-user"
+            placeholder="Buscar por nombre o correo..."
+          />
         </div>
         <button id="add-user-btn" class="btn-success">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
             <line x1="12" y1="5" x2="12" y2="19"></line>
             <line x1="5" y1="12" x2="19" y2="12"></line>
           </svg>
@@ -74,14 +152,38 @@ import "../../styles/grid-principal/benefit-card.css";
       <!-- Acciones tab Dominios -->
       <div class="header-actions" id="dominios-actions" style="display:none;">
         <div class="search-box">
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
             <circle cx="11" cy="11" r="8"></circle>
             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
           </svg>
-          <input type="text" id="search-domain" placeholder="Buscar dominio...">
+          <input
+            type="text"
+            id="search-domain"
+            placeholder="Buscar dominio..."
+          />
         </div>
         <button id="add-domain-btn" class="btn-success">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
             <line x1="12" y1="5" x2="12" y2="19"></line>
             <line x1="5" y1="12" x2="19" y2="12"></line>
           </svg>
@@ -92,14 +194,38 @@ import "../../styles/grid-principal/benefit-card.css";
       <!-- Acciones tab Cupones -->
       <div class="header-actions" id="cupones-actions" style="display:none;">
         <div class="search-box">
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
             <circle cx="11" cy="11" r="8"></circle>
             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
           </svg>
-          <input type="text" id="search-cupon" placeholder="Buscar cupón o empresa...">
+          <input
+            type="text"
+            id="search-cupon"
+            placeholder="Buscar cupón o empresa..."
+          />
         </div>
         <button id="add-cupon-btn" class="btn-success">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
             <line x1="12" y1="5" x2="12" y2="19"></line>
             <line x1="5" y1="12" x2="19" y2="12"></line>
           </svg>
@@ -110,14 +236,38 @@ import "../../styles/grid-principal/benefit-card.css";
       <!-- Acciones tab Empresas -->
       <div class="header-actions" id="empresas-actions" style="display:none;">
         <div class="search-box">
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
             <circle cx="11" cy="11" r="8"></circle>
             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
           </svg>
-          <input type="text" id="search-empresa" placeholder="Buscar empresa...">
+          <input
+            type="text"
+            id="search-empresa"
+            placeholder="Buscar empresa..."
+          />
         </div>
         <button id="add-empresa-btn" class="btn-success">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
             <line x1="12" y1="5" x2="12" y2="19"></line>
             <line x1="5" y1="12" x2="19" y2="12"></line>
           </svg>
@@ -127,7 +277,8 @@ import "../../styles/grid-principal/benefit-card.css";
     </div>
 
     <!-- Mensajes de estado -->
-    <div id="status-message" class="status-message" style="display: none;"></div>
+    <div id="status-message" class="status-message" style="display: none;">
+    </div>
 
     <!-- Panel: Usuarios -->
     <div id="panel-usuarios" class="tab-panel">
@@ -174,11 +325,14 @@ import "../../styles/grid-principal/benefit-card.css";
               <th class="text-right">Acciones</th>
             </tr>
           </thead>
-          <tbody id="domains-tbody">
-          </tbody>
+          <tbody id="domains-tbody"> </tbody>
         </table>
 
-        <div id="empty-state-domains" class="empty-state" style="display: none;">
+        <div
+          id="empty-state-domains"
+          class="empty-state"
+          style="display: none;"
+        >
           <p>No hay dominios registrados aún.</p>
         </div>
       </div>
@@ -229,12 +383,15 @@ import "../../styles/grid-principal/benefit-card.css";
           </thead>
           <tbody id="empresas-tbody"></tbody>
         </table>
-        <div id="empty-state-empresas" class="empty-state" style="display:none;">
+        <div
+          id="empty-state-empresas"
+          class="empty-state"
+          style="display:none;"
+        >
           <p>No hay empresas registradas aún.</p>
         </div>
       </div>
     </div>
-
   </div><!-- /.admin-container -->
 
   <!-- ══ Modal Empresa ══════════════════════════════════════════════ -->
@@ -243,37 +400,82 @@ import "../../styles/grid-principal/benefit-card.css";
       <div class="cm-header">
         <h2 id="em-modal-title">Nueva Empresa</h2>
         <button id="em-close-btn" class="cm-close-btn" type="button">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            ><line x1="18" y1="6" x2="6" y2="18"></line><line
+              x1="6"
+              y1="6"
+              x2="18"
+              y2="18"></line></svg
+          >
         </button>
       </div>
       <div class="em-body">
-
         <!-- Nombre -->
         <div class="cm-field">
           <label for="em-name">Nombre de la empresa *</label>
-          <input id="em-name" type="text" class="cm-input" placeholder="Ej: Acme Corp">
+          <input
+            id="em-name"
+            type="text"
+            class="cm-input"
+            placeholder="Ej: Acme Corp"
+          />
         </div>
 
         <!-- Toggle URL / Archivo -->
         <div class="cm-field">
           <label>Logo</label>
           <div class="em-logo-tabs" style="display: none;">
-            <button type="button" id="em-tab-url" class="em-logo-tab active">URL</button>
-            <button type="button" id="em-tab-file" class="em-logo-tab">Subir imagen</button>
+            <button type="button" id="em-tab-url" class="em-logo-tab active"
+              >URL</button
+            >
+            <button type="button" id="em-tab-file" class="em-logo-tab"
+              >Subir imagen</button
+            >
           </div>
         </div>
 
         <!-- Panel URL -->
         <div id="em-panel-url" class="cm-field">
-          <input id="em-logo-url" type="url" class="cm-input" placeholder="https://ejemplo.com/logo.png">
+          <input
+            id="em-logo-url"
+            type="url"
+            class="cm-input"
+            placeholder="https://ejemplo.com/logo.png"
+          />
         </div>
 
         <!-- Panel Archivo -->
         <div id="em-panel-file" class="cm-field" style="display:none;">
           <label class="em-dropzone" id="em-dropzone">
-            <input id="em-logo-file" type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml" style="display:none;">
+            <input
+              id="em-logo-file"
+              type="file"
+              accept="image/png,image/jpeg,image/webp,image/svg+xml"
+              style="display:none;"
+            />
             <div class="em-drop-inner" id="em-drop-inner">
-              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="28"
+                height="28"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#94a3b8"
+                stroke-width="1.5"
+                ><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"
+                ></path><polyline points="17 8 12 3 7 8"></polyline><line
+                  x1="12"
+                  y1="3"
+                  x2="12"
+                  y2="15"></line></svg
+              >
               <span>Arrastra o haz clic para seleccionar</span>
               <span class="em-hint-text">PNG, JPG, WEBP, SVG</span>
             </div>
@@ -282,17 +484,48 @@ import "../../styles/grid-principal/benefit-card.css";
 
         <!-- Preview logo (compartida) -->
         <div class="em-logo-preview" id="em-logo-preview" style="display:none;">
-          <img id="em-logo-img" src="" alt="Preview logo" class="em-logo-img">
-          <button type="button" id="em-logo-clear" class="em-logo-clear" title="Quitar logo">
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          <img id="em-logo-img" src="" alt="Preview logo" class="em-logo-img" />
+          <button
+            type="button"
+            id="em-logo-clear"
+            class="em-logo-clear"
+            title="Quitar logo"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.5"
+              ><line x1="18" y1="6" x2="6" y2="18"></line><line
+                x1="6"
+                y1="6"
+                x2="18"
+                y2="18"></line></svg
+            >
           </button>
         </div>
-
       </div>
       <div class="cm-footer">
-        <button id="em-cancel-btn" type="button" class="cm-btn-cancel">Cancelar</button>
+        <button id="em-cancel-btn" type="button" class="cm-btn-cancel"
+          >Cancelar</button
+        >
         <button id="em-save-btn" type="button" class="cm-btn-save">
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            ><path
+              d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"
+            ></path><polyline points="17 21 17 13 7 13 7 21"
+            ></polyline><polyline points="7 3 7 8 15 8"></polyline></svg
+          >
           Guardar Empresa
         </button>
       </div>
@@ -305,113 +538,235 @@ import "../../styles/grid-principal/benefit-card.css";
       <div class="cm-header">
         <h2 id="cm-modal-title">Nuevo Cupón</h2>
         <button id="cm-close-btn" class="cm-close-btn" type="button">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            ><line x1="18" y1="6" x2="6" y2="18"></line><line
+              x1="6"
+              y1="6"
+              x2="18"
+              y2="18"></line></svg
+          >
         </button>
       </div>
 
       <div class="cm-body">
-
         <!-- ── Columna Formulario ── -->
         <div class="cm-form-col">
+          <!-- Empresa -->
+          <div class="cm-section">
+            <h3 class="cm-section-title">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                ><rect x="2" y="7" width="20" height="14" rx="2"></rect><path
+                  d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg
+              >
+              Empresa
+            </h3>
+            <div class="cm-field">
+              <label for="cm-company-id">Empresa *</label>
+              <select id="cm-company-id" class="cm-input cm-select">
+                <option value="">Cargando empresas...</option>
+              </select>
+            </div>
+            <div class="cm-row">
+              <div class="cm-field">
+                <label for="cm-sort-order">Orden de visualización</label>
+                <input
+                  id="cm-sort-order"
+                  type="number"
+                  min="0"
+                  class="cm-input"
+                  placeholder="0"
+                  value="0"
+                />
+              </div>
+              <div class="cm-field cm-field-toggle">
+                <label>Estado inicial</label>
+                <label class="cm-toggle">
+                  <input type="checkbox" id="cm-active" checked />
+                  <span class="cm-toggle-slider"></span>
+                </label>
+                <span id="cm-active-label" class="cm-toggle-text"
+                  >Activo (visible en home)</span
+                >
+              </div>
+            </div>
+          </div>
 
-        <!-- Empresa -->
-        <div class="cm-section">
-          <h3 class="cm-section-title">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
-            Empresa
-          </h3>
-          <div class="cm-field">
-            <label for="cm-company-id">Empresa *</label>
-            <select id="cm-company-id" class="cm-input cm-select">
-              <option value="">Cargando empresas...</option>
-            </select>
-          </div>
-          <div class="cm-row">
+          <!-- Cara Frontal -->
+          <div class="cm-section">
+            <h3 class="cm-section-title">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                ><rect x="2" y="3" width="20" height="14" rx="2"></rect><line
+                  x1="8"
+                  y1="21"
+                  x2="16"
+                  y2="21"></line><line x1="12" y1="17" x2="12" y2="21"
+                ></line></svg
+              >
+              Cara Frontal
+            </h3>
             <div class="cm-field">
-              <label for="cm-sort-order">Orden de visualización</label>
-              <input id="cm-sort-order" type="number" min="0" class="cm-input" placeholder="0" value="0">
+              <label for="cm-title">Título *</label>
+              <input
+                id="cm-title"
+                type="text"
+                class="cm-input"
+                placeholder="Ej: Descuento especial para socios"
+              />
             </div>
-            <div class="cm-field cm-field-toggle">
-              <label>Estado inicial</label>
-              <label class="cm-toggle">
-                <input type="checkbox" id="cm-active" checked>
-                <span class="cm-toggle-slider"></span>
-              </label>
-              <span id="cm-active-label" class="cm-toggle-text">Activo (visible en home)</span>
+            <div class="cm-field">
+              <label for="cm-description"
+                >Descripción <span class="cm-hint"
+                  >— Puede contener HTML básico (&lt;br/&gt;, &lt;strong&gt;)</span
+                ></label
+              >
+              <textarea
+                id="cm-description"
+                class="cm-input cm-textarea"
+                rows="4"
+                placeholder="Descripción visible en la cara frontal de la tarjeta..."
+              ></textarea>
+            </div>
+            <div class="cm-row">
+              <div class="cm-field">
+                <label for="cm-vigencia">Vigencia</label>
+                <input
+                  id="cm-vigencia"
+                  type="text"
+                  class="cm-input"
+                  placeholder="Ej: 01/01/26 - 31/12/26"
+                />
+              </div>
+              <div class="cm-field">
+                <label for="cm-tipo-descuento">Tipo de descuento</label>
+                <input
+                  id="cm-tipo-descuento"
+                  type="text"
+                  class="cm-input"
+                  placeholder="Ej: Descuento porcentual"
+                />
+              </div>
             </div>
           </div>
-        </div>
 
-        <!-- Cara Frontal -->
-        <div class="cm-section">
-          <h3 class="cm-section-title">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-            Cara Frontal
-          </h3>
-          <div class="cm-field">
-            <label for="cm-title">Título *</label>
-            <input id="cm-title" type="text" class="cm-input" placeholder="Ej: Descuento especial para socios">
-          </div>
-          <div class="cm-field">
-            <label for="cm-description">Descripción <span class="cm-hint">— Puede contener HTML básico (&lt;br/&gt;, &lt;strong&gt;)</span></label>
-            <textarea id="cm-description" class="cm-input cm-textarea" rows="4" placeholder="Descripción visible en la cara frontal de la tarjeta..."></textarea>
-          </div>
-          <div class="cm-row">
-            <div class="cm-field">
-              <label for="cm-vigencia">Vigencia</label>
-              <input id="cm-vigencia" type="text" class="cm-input" placeholder="Ej: 01/01/26 - 31/12/26">
+          <!-- Cara del Reverso -->
+          <div class="cm-section">
+            <h3 class="cm-section-title">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                ><path
+                  d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"
+                ></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg
+              >
+              Cara del Reverso
+            </h3>
+            <div class="cm-row">
+              <div class="cm-field">
+                <label for="cm-discount-amount">Cantidad de descuento</label>
+                <input
+                  id="cm-discount-amount"
+                  type="text"
+                  class="cm-input"
+                  placeholder="Ej: 10%, $300, XXXX"
+                />
+              </div>
+              <div class="cm-field">
+                <label for="cm-discount-label">Etiqueta del descuento</label>
+                <input
+                  id="cm-discount-label"
+                  type="text"
+                  class="cm-input"
+                  placeholder="Ej: DE DESCUENTO"
+                />
+              </div>
+            </div>
+            <div class="cm-row">
+              <div class="cm-field">
+                <label for="cm-code-label">Uso</label>
+                <input
+                  id="cm-code-label"
+                  type="text"
+                  class="cm-input"
+                  placeholder="Ej: Usando el código"
+                />
+              </div>
+              <div class="cm-field">
+                <label for="cm-discount-code">Código</label>
+                <input
+                  id="cm-discount-code"
+                  type="text"
+                  class="cm-input"
+                  placeholder="Ej: PROMO2026"
+                />
+              </div>
             </div>
             <div class="cm-field">
-              <label for="cm-tipo-descuento">Tipo de descuento</label>
-              <input id="cm-tipo-descuento" type="text" class="cm-input" placeholder="Ej: Descuento porcentual">
-            </div>
-          </div>
-        </div>
-
-        <!-- Cara del Reverso -->
-        <div class="cm-section">
-          <h3 class="cm-section-title">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
-            Cara del Reverso
-          </h3>
-          <div class="cm-row">
-            <div class="cm-field">
-              <label for="cm-discount-amount">Cantidad de descuento</label>
-              <input id="cm-discount-amount" type="text" class="cm-input" placeholder="Ej: 10%, $300, XXXX">
+              <label for="cm-benefit-text"
+                >Beneficio <span class="cm-hint"
+                  >— Puede contener HTML básico</span
+                ></label
+              >
+              <textarea
+                id="cm-benefit-text"
+                class="cm-input cm-textarea"
+                rows="3"
+                placeholder="Párrafo adicional que aparece en el reverso (opcional)..."
+              ></textarea>
             </div>
             <div class="cm-field">
-              <label for="cm-discount-label">Etiqueta del descuento</label>
-              <input id="cm-discount-label" type="text" class="cm-input" placeholder="Ej: DE DESCUENTO">
+              <label for="cm-terms"
+                >Términos y condiciones <span class="cm-hint"
+                  >— Puede contener HTML básico</span
+                ></label
+              >
+              <textarea
+                id="cm-terms"
+                class="cm-input cm-textarea"
+                rows="4"
+                placeholder="Escribe los términos y condiciones del cupón..."
+              ></textarea>
             </div>
           </div>
-          <div class="cm-row">
-            <div class="cm-field">
-              <label for="cm-code-label">Uso</label>
-              <input id="cm-code-label" type="text" class="cm-input" placeholder="Ej: Usando el código">
-            </div>
-            <div class="cm-field">
-              <label for="cm-discount-code">Código</label>
-              <input id="cm-discount-code" type="text" class="cm-input" placeholder="Ej: PROMO2026">
-            </div>
-          </div>
-          <div class="cm-field">
-            <label for="cm-benefit-text">Beneficio <span class="cm-hint">— Puede contener HTML básico</span></label>
-            <textarea id="cm-benefit-text" class="cm-input cm-textarea" rows="3" placeholder="Párrafo adicional que aparece en el reverso (opcional)..."></textarea>
-          </div>
-          <div class="cm-field">
-            <label for="cm-terms">Términos y condiciones <span class="cm-hint">— Puede contener HTML básico</span></label>
-            <textarea id="cm-terms" class="cm-input cm-textarea" rows="4" placeholder="Escribe los términos y condiciones del cupón..."></textarea>
-          </div>
-        </div>
-
         </div><!-- /.cm-form-col -->
 
         <!-- ── Columna Vista Previa ── -->
         <div class="cm-preview-col">
           <p class="cm-preview-label">Vista Previa</p>
           <div class="cm-prev-flip">
-            <button type="button" id="cm-prev-front-btn" class="cm-prev-btn active">Frente</button>
-            <button type="button" id="cm-prev-back-btn" class="cm-prev-btn">Reverso</button>
+            <button
+              type="button"
+              id="cm-prev-front-btn"
+              class="cm-prev-btn active">Frente</button
+            >
+            <button type="button" id="cm-prev-back-btn" class="cm-prev-btn"
+              >Reverso</button
+            >
           </div>
           <div class="cm-preview-wrap">
             <article class="benefit-card cm-preview-card">
@@ -420,13 +775,26 @@ import "../../styles/grid-principal/benefit-card.css";
             </article>
           </div>
         </div><!-- /.cm-preview-col -->
-
       </div><!-- /.cm-body -->
 
       <div class="cm-footer">
-        <button id="cm-cancel-btn" type="button" class="cm-btn-cancel">Cancelar</button>
+        <button id="cm-cancel-btn" type="button" class="cm-btn-cancel"
+          >Cancelar</button
+        >
         <button id="cm-save-btn" type="button" class="cm-btn-save">
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            ><path
+              d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"
+            ></path><polyline points="17 21 17 13 7 13 7 21"
+            ></polyline><polyline points="7 3 7 8 15 8"></polyline></svg
+          >
           Guardar Cupón
         </button>
       </div>
@@ -436,18 +804,53 @@ import "../../styles/grid-principal/benefit-card.css";
 </DashboardLayout>
 
 <script>
-  import { getUserProfile, getAdminUsers, deleteAdminUser, adminCreateUser, adminUpdateUser } from "../../services/auth.js";
-  import { getDomains, addDomain, updateDomain, deleteDomain, getAllowedDomainNames } from "../../services/domains.js";
-  import { getAdminCoupons, getCompaniesForSelect, createCoupon, updateCoupon, deleteCoupon, toggleCouponActive, getCompanies, createCompany, updateCompany, deleteCompany, uploadCompanyLogo } from "../../services/coupons-admin.js";
-  import { showConfirm, showToast, showCreateUserModal, showEditUserModal, showCreateDomainModal, showEditDomainModal } from "../../utils/notifications.js";
+  import {
+    getUserProfile,
+    getAdminUsers,
+    deleteAdminUser,
+    adminCreateUser,
+    adminUpdateUser,
+  } from "../../services/auth.js";
+  import {
+    getDomains,
+    addDomain,
+    updateDomain,
+    deleteDomain,
+    getAllowedDomainNames,
+  } from "../../services/domains.js";
+  import {
+    getAdminCoupons,
+    getCompaniesForSelect,
+    createCoupon,
+    updateCoupon,
+    deleteCoupon,
+    toggleCouponActive,
+    getCompanies,
+    createCompany,
+    updateCompany,
+    deleteCompany,
+    uploadCompanyLogo,
+  } from "../../services/coupons-admin.js";
+  import {
+    showConfirm,
+    showToast,
+    showCreateUserModal,
+    showEditUserModal,
+    showCreateDomainModal,
+    showEditDomainModal,
+  } from "../../utils/notifications.js";
 
   function setupDashboard() {
     // Solo ejecutar en la ruta del dashboard
-    if (!window.location.pathname.includes('/admin/dashboard')) return;
+    if (!window.location.pathname.includes("/admin/dashboard")) return;
 
     // Dominios permitidos (para pasarlos a los modales de usuario)
     let allowedDomains: string[] = [];
-    getAllowedDomainNames().then(d => { allowedDomains = d; }).catch(() => {});
+    getAllowedDomainNames()
+      .then((d) => {
+        allowedDomains = d;
+      })
+      .catch(() => {});
 
     // Elementos del DOM
     const loadingState = document.getElementById("loading-state");
@@ -455,29 +858,31 @@ import "../../styles/grid-principal/benefit-card.css";
     const usersTbody = document.getElementById("users-tbody");
     const emptyState = document.getElementById("empty-state");
     const statusMessage = document.getElementById("status-message");
-    const searchInput = document.getElementById("search-user") as HTMLInputElement;
+    const searchInput = document.getElementById(
+      "search-user",
+    ) as HTMLInputElement;
 
     let allUsers: any[] = []; // Guardamos los usuarios globalmente para filtrarlos
 
     // ── Tab switching ──────────────────────────────────────────
-    const tabBtns = document.querySelectorAll<HTMLButtonElement>('.tab-btn');
+    const tabBtns = document.querySelectorAll<HTMLButtonElement>(".tab-btn");
     const tabPanels: Record<string, HTMLElement | null> = {
-      usuarios: document.getElementById('panel-usuarios'),
-      dominios: document.getElementById('panel-dominios'),
-      empresas: document.getElementById('panel-empresas'),
-      cupon:    document.getElementById('panel-cupon'),
+      usuarios: document.getElementById("panel-usuarios"),
+      dominios: document.getElementById("panel-dominios"),
+      empresas: document.getElementById("panel-empresas"),
+      cupon: document.getElementById("panel-cupon"),
     };
-    const usuariosActions = document.getElementById('usuarios-actions');
-    const dominiosActions = document.getElementById('dominios-actions');
-    const cuponesActions  = document.getElementById('cupones-actions');
-    const empresasActions = document.getElementById('empresas-actions');
-    const tabSubtitle = document.getElementById('tab-subtitle');
+    const usuariosActions = document.getElementById("usuarios-actions");
+    const dominiosActions = document.getElementById("dominios-actions");
+    const cuponesActions = document.getElementById("cupones-actions");
+    const empresasActions = document.getElementById("empresas-actions");
+    const tabSubtitle = document.getElementById("tab-subtitle");
 
     const subtitles: Record<string, string> = {
-      usuarios: 'Gestiona los usuarios de la plataforma.',
-      dominios: 'Administra los dominios autorizados para registro.',
-      empresas: 'Administra las empresas y sus logos.',
-      cupon:    'Crea y gestiona cupones de descuento.',
+      usuarios: "Gestiona los usuarios de la plataforma.",
+      dominios: "Administra los dominios autorizados para registro.",
+      empresas: "Administra las empresas y sus logos.",
+      cupon: "Crea y gestiona cupones de descuento.",
     };
 
     let domainsLoaded = false;
@@ -485,29 +890,44 @@ import "../../styles/grid-principal/benefit-card.css";
     let empresasLoaded = false;
 
     function switchTab(tab: string) {
-      tabBtns.forEach(btn => btn.classList.remove('tab-active'));
-      const activeBtn = document.querySelector<HTMLButtonElement>(`.tab-btn[data-tab="${tab}"]`);
-      if (activeBtn) activeBtn.classList.add('tab-active');
+      tabBtns.forEach((btn) => btn.classList.remove("tab-active"));
+      const activeBtn = document.querySelector<HTMLButtonElement>(
+        `.tab-btn[data-tab="${tab}"]`,
+      );
+      if (activeBtn) activeBtn.classList.add("tab-active");
 
       Object.entries(tabPanels).forEach(([key, panel]) => {
-        if (panel) panel.style.display = key === tab ? 'block' : 'none';
+        if (panel) panel.style.display = key === tab ? "block" : "none";
       });
 
-      if (usuariosActions) usuariosActions.style.display = tab === 'usuarios' ? 'flex' : 'none';
-      if (dominiosActions) dominiosActions.style.display = tab === 'dominios' ? 'flex' : 'none';
-      if (cuponesActions)  cuponesActions.style.display  = tab === 'cupon'    ? 'flex' : 'none';
-      if (empresasActions) empresasActions.style.display = tab === 'empresas' ? 'flex' : 'none';
+      if (usuariosActions)
+        usuariosActions.style.display = tab === "usuarios" ? "flex" : "none";
+      if (dominiosActions)
+        dominiosActions.style.display = tab === "dominios" ? "flex" : "none";
+      if (cuponesActions)
+        cuponesActions.style.display = tab === "cupon" ? "flex" : "none";
+      if (empresasActions)
+        empresasActions.style.display = tab === "empresas" ? "flex" : "none";
 
-      if (tabSubtitle) tabSubtitle.textContent = subtitles[tab] ?? '';
+      if (tabSubtitle) tabSubtitle.textContent = subtitles[tab] ?? "";
 
-      if (tab === 'dominios' && !domainsLoaded)   { domainsLoaded = true;   loadDomains(); }
-      if (tab === 'cupon'    && !cuponesLoaded)   { cuponesLoaded = true;   loadCupons(); }
-      if (tab === 'empresas' && !empresasLoaded)  { empresasLoaded = true;  loadEmpresas(); }
+      if (tab === "dominios" && !domainsLoaded) {
+        domainsLoaded = true;
+        loadDomains();
+      }
+      if (tab === "cupon" && !cuponesLoaded) {
+        cuponesLoaded = true;
+        loadCupons();
+      }
+      if (tab === "empresas" && !empresasLoaded) {
+        empresasLoaded = true;
+        loadEmpresas();
+      }
     }
 
-    tabBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        const tab = btn.getAttribute('data-tab');
+    tabBtns.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const tab = btn.getAttribute("data-tab");
         if (tab) switchTab(tab);
       });
     });
@@ -515,7 +935,7 @@ import "../../styles/grid-principal/benefit-card.css";
 
     // Event listener para el buscador
     if (searchInput) {
-      searchInput.addEventListener('input', () => {
+      searchInput.addEventListener("input", () => {
         if (allUsers.length > 0) {
           renderUsers(allUsers);
         }
@@ -528,7 +948,7 @@ import "../../styles/grid-principal/benefit-card.css";
       statusMessage.textContent = msg;
       statusMessage.className = `status-message ${type}`;
       statusMessage.style.display = "block";
-      
+
       // Ocultar después de 4 segundos
       setTimeout(() => {
         statusMessage.style.display = "none";
@@ -538,14 +958,18 @@ import "../../styles/grid-principal/benefit-card.css";
     // Formatear fecha
     function formatDate(dateString: string | Date | null | undefined) {
       if (!dateString) return "N/A";
-      const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'short', day: 'numeric' };
-      return new Date(dateString).toLocaleDateString('es-ES', options);
+      const options: Intl.DateTimeFormatOptions = {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      };
+      return new Date(dateString).toLocaleDateString("es-ES", options);
     }
 
     // Cargar usuarios
     async function loadUsers() {
       if (!loadingState || !usersTable || !emptyState) return;
-      
+
       try {
         loadingState.style.display = "flex";
         usersTable.style.display = "none";
@@ -573,7 +997,7 @@ import "../../styles/grid-principal/benefit-card.css";
     function renderUsers(users: any[]) {
       if (!usersTbody) return;
       usersTbody.innerHTML = "";
-      
+
       const query = (searchInput?.value || "").toLowerCase().trim();
       const filteredUsers = users.filter((u: any) => {
         const nameMatch = (u.name || "").toLowerCase().includes(query);
@@ -582,22 +1006,24 @@ import "../../styles/grid-principal/benefit-card.css";
       });
 
       if (filteredUsers.length === 0) {
-        usersTbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:3rem; color:#64748b;">No se encontraron usuarios que coincidan con tu búsqueda.</td></tr>';
+        usersTbody.innerHTML =
+          '<tr><td colspan="5" style="text-align:center; padding:3rem; color:#64748b;">No se encontraron usuarios que coincidan con tu búsqueda.</td></tr>';
         return;
       }
 
       filteredUsers.forEach((user: any) => {
         const tr = document.createElement("tr");
-        
+
         // Estilo especial para admin badge
-        const roleBadge = user.role === 'admin' 
-          ? `<span class="badge badge-admin">Admin</span>` 
-          : `<span class="badge badge-user">Usuario</span>`;
+        const roleBadge =
+          user.role === "admin"
+            ? `<span class="badge badge-admin">Admin</span>`
+            : `<span class="badge badge-user">Usuario</span>`;
 
         tr.innerHTML = `
           <td data-label="Nombre">
             <div class="user-info">
-              <span class="font-medium">${user.name || 'Sin nombre'}</span>
+              <span class="font-medium">${user.name || "Sin nombre"}</span>
             </div>
           </td>
           <td data-label="Correo"><span class="text-gray">${user.email}</span></td>
@@ -605,13 +1031,15 @@ import "../../styles/grid-principal/benefit-card.css";
           <td data-label="Fecha Registro"><span class="text-gray">${formatDate(user.created_at)}</span></td>
           <td data-label="Acciones" class="actions-cell">
             <div style="display: flex; gap: 0.5rem; justify-content: flex-end;">
-              <button class="btn-icon btn-edit" data-user='${JSON.stringify({id: user.id, email: user.email, name: user.name, role: user.role}).replace(/'/g, "&apos;")}' title="Editar usuario">
+              <button class="btn-icon btn-edit" data-user='${JSON.stringify({ id: user.id, email: user.email, name: user.name, role: user.role }).replace(/'/g, "&apos;")}' title="Editar usuario">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
                   <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                 </svg>
               </button>
-              ${user.role !== 'admin' ? `
+              ${
+                user.role !== "admin"
+                  ? `
                 <button class="btn-icon btn-delete" data-id="${user.id}" data-email="${user.email}" title="Eliminar usuario">
                   <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <polyline points="3 6 5 6 21 6"></polyline>
@@ -620,40 +1048,48 @@ import "../../styles/grid-principal/benefit-card.css";
                     <line x1="14" y1="11" x2="14" y2="17"></line>
                   </svg>
                 </button>
-              ` : '<span class="text-muted text-sm" style="display: flex; align-items: center;">No eliminable</span>'}
+              `
+                  : '<span class="text-muted text-sm" style="display: flex; align-items: center;">No eliminable</span>'
+              }
             </div>
           </td>
         `;
-        
+
         usersTbody.appendChild(tr);
       });
 
       // Agregar event listeners a los botones de eliminar
-      document.querySelectorAll('.btn-delete').forEach(element => {
+      document.querySelectorAll(".btn-delete").forEach((element) => {
         const btn = element as HTMLButtonElement;
-        btn.addEventListener('click', async (e) => {
-          const userId = btn.getAttribute('data-id') as string;
-          const userEmail = btn.getAttribute('data-email');
-          
+        btn.addEventListener("click", async (e) => {
+          const userId = btn.getAttribute("data-id") as string;
+          const userEmail = btn.getAttribute("data-email");
+
           const isConfirmed = await showConfirm({
             title: "¿Estás seguro?",
             text: `¿Deseas eliminar permanentemente al usuario ${userEmail}? Esta acción no se puede deshacer.`,
             confirmButtonText: "Sí, eliminar",
-            cancelButtonText: "Cancelar"
+            cancelButtonText: "Cancelar",
           });
 
           if (isConfirmed) {
-            btn.classList.add('loading');
+            btn.classList.add("loading");
             btn.disabled = true;
-            
+
             try {
               await deleteAdminUser(userId);
-              showToast({ text: `El usuario ${userEmail} ha sido eliminado.`, icon: 'success' });
+              showToast({
+                text: `El usuario ${userEmail} ha sido eliminado.`,
+                icon: "success",
+              });
               loadUsers(); // Recargar la tabla
             } catch (error: any) {
               console.error("Error eliminando usuario:", error);
-              showToast({ text: `Hubo un error al eliminar el usuario: ${error.message}`, icon: 'error' });
-              btn.classList.remove('loading');
+              showToast({
+                text: `Hubo un error al eliminar el usuario: ${error.message}`,
+                icon: "error",
+              });
+              btn.classList.remove("loading");
               btn.disabled = false;
             }
           }
@@ -661,31 +1097,47 @@ import "../../styles/grid-principal/benefit-card.css";
       });
 
       // Agregar event listeners a los botones de editar
-      document.querySelectorAll('.btn-edit').forEach(element => {
+      document.querySelectorAll(".btn-edit").forEach((element) => {
         const btn = element as HTMLButtonElement;
-        btn.addEventListener('click', async () => {
-          const userDataRaw = btn.getAttribute('data-user');
+        btn.addEventListener("click", async () => {
+          const userDataRaw = btn.getAttribute("data-user");
           if (!userDataRaw) return;
-          
+
           const user = JSON.parse(userDataRaw);
           const newValues: any = await showEditUserModal(user, allowedDomains);
-          
+
           if (newValues) {
-            btn.classList.add('loading');
+            btn.classList.add("loading");
             try {
-              await adminUpdateUser(user.id, newValues.name, newValues.role, newValues.email, newValues.password);
-              showToast({ text: `Usuario actualizado correctamente.`, icon: 'success' });
+              await adminUpdateUser(
+                user.id,
+                newValues.name,
+                newValues.role,
+                newValues.email,
+                newValues.password,
+              );
+              showToast({
+                text: `Usuario actualizado correctamente.`,
+                icon: "success",
+              });
               loadUsers();
             } catch (error: any) {
               console.error("Error actualizando usuario:", error);
-              
+
               // Si falla por RLS, mostrar mensaje amigable
-              if (error.message.includes("Row Level Security") || error.message.includes("RLS") || error.message.includes("not allowed")) {
-                showToast({ text: `Necesitamos crear un permiso SQL (RPC) para actualizar perfiles.`, icon: 'error' });
+              if (
+                error.message.includes("Row Level Security") ||
+                error.message.includes("RLS") ||
+                error.message.includes("not allowed")
+              ) {
+                showToast({
+                  text: `Necesitamos crear un permiso SQL (RPC) para actualizar perfiles.`,
+                  icon: "error",
+                });
               } else {
-                showToast({ text: `Error: ${error.message}`, icon: 'error' });
+                showToast({ text: `Error: ${error.message}`, icon: "error" });
               }
-              btn.classList.remove('loading');
+              btn.classList.remove("loading");
             }
           }
         });
@@ -693,22 +1145,33 @@ import "../../styles/grid-principal/benefit-card.css";
     }
 
     // Configurar botón de Nuevo Usuario
-    const addUserBtn = document.getElementById('add-user-btn') as HTMLButtonElement;
+    const addUserBtn = document.getElementById(
+      "add-user-btn",
+    ) as HTMLButtonElement;
     if (addUserBtn) {
-      addUserBtn.addEventListener('click', async () => {
+      addUserBtn.addEventListener("click", async () => {
         const userData: any = await showCreateUserModal(allowedDomains);
         if (userData) {
           try {
             addUserBtn.disabled = true;
-            addUserBtn.innerHTML = '<span class="spinner" style="width:20px;height:20px;border-width:2px;margin-right:8px;"></span> Registrando...';
-            
-            await adminCreateUser(userData.email, userData.password, userData.name, userData.role);
-            
-            showToast({ text: `Usuario ${userData.email} creado con éxito.`, icon: 'success' });
+            addUserBtn.innerHTML =
+              '<span class="spinner" style="width:20px;height:20px;border-width:2px;margin-right:8px;"></span> Registrando...';
+
+            await adminCreateUser(
+              userData.email,
+              userData.password,
+              userData.name,
+              userData.role,
+            );
+
+            showToast({
+              text: `Usuario ${userData.email} creado con éxito.`,
+              icon: "success",
+            });
             loadUsers(); // Recargar la tabla
           } catch (error: any) {
             console.error("Error creando usuario:", error);
-            showToast({ text: `Error: ${error.message}`, icon: 'error' });
+            showToast({ text: `Error: ${error.message}`, icon: "error" });
           } finally {
             addUserBtn.disabled = false;
             addUserBtn.innerHTML = `
@@ -724,16 +1187,20 @@ import "../../styles/grid-principal/benefit-card.css";
     }
 
     // ── Gestión de Dominios ──────────────────────────────────────
-    const loadingStateDomains = document.getElementById("loading-state-domains");
+    const loadingStateDomains = document.getElementById(
+      "loading-state-domains",
+    );
     const domainsTable = document.getElementById("domains-table");
     const domainsTbody = document.getElementById("domains-tbody");
     const emptyStateDomains = document.getElementById("empty-state-domains");
-    const searchDomainInput = document.getElementById("search-domain") as HTMLInputElement;
+    const searchDomainInput = document.getElementById(
+      "search-domain",
+    ) as HTMLInputElement;
 
     let allDomains: any[] = [];
 
     if (searchDomainInput) {
-      searchDomainInput.addEventListener('input', () => {
+      searchDomainInput.addEventListener("input", () => {
         if (allDomains.length > 0) renderDomains(allDomains);
       });
     }
@@ -769,11 +1236,12 @@ import "../../styles/grid-principal/benefit-card.css";
 
       const query = (searchDomainInput?.value || "").toLowerCase().trim();
       const filtered = domains.filter((d: any) =>
-        (d.domain || "").toLowerCase().includes(query)
+        (d.domain || "").toLowerCase().includes(query),
       );
 
       if (filtered.length === 0) {
-        domainsTbody.innerHTML = '<tr><td colspan="3" style="text-align:center; padding:3rem; color:#64748b;">No se encontraron dominios.</td></tr>';
+        domainsTbody.innerHTML =
+          '<tr><td colspan="3" style="text-align:center; padding:3rem; color:#64748b;">No se encontraron dominios.</td></tr>';
         return;
       }
 
@@ -816,52 +1284,58 @@ import "../../styles/grid-principal/benefit-card.css";
       });
 
       // Listeners editar
-      document.querySelectorAll('.btn-edit-domain').forEach(el => {
+      document.querySelectorAll(".btn-edit-domain").forEach((el) => {
         const btn = el as HTMLButtonElement;
-        btn.addEventListener('click', async () => {
-          const id = parseInt(btn.getAttribute('data-id') as string);
-          const domain = btn.getAttribute('data-domain') as string;
+        btn.addEventListener("click", async () => {
+          const id = parseInt(btn.getAttribute("data-id") as string);
+          const domain = btn.getAttribute("data-domain") as string;
           const result: any = await showEditDomainModal({ id, domain });
           if (result) {
-            btn.classList.add('loading');
+            btn.classList.add("loading");
             try {
               await updateDomain(id, result.domain);
-              showToast({ text: `Dominio actualizado correctamente.`, icon: 'success' });
+              showToast({
+                text: `Dominio actualizado correctamente.`,
+                icon: "success",
+              });
               domainsLoaded = false;
               loadDomains();
             } catch (error: any) {
-              showToast({ text: `Error: ${error.message}`, icon: 'error' });
-              btn.classList.remove('loading');
+              showToast({ text: `Error: ${error.message}`, icon: "error" });
+              btn.classList.remove("loading");
             }
           }
         });
       });
 
       // Listeners eliminar
-      document.querySelectorAll('.btn-delete-domain').forEach(el => {
+      document.querySelectorAll(".btn-delete-domain").forEach((el) => {
         const btn = el as HTMLButtonElement;
-        btn.addEventListener('click', async () => {
-          const id = parseInt(btn.getAttribute('data-id') as string);
-          const domain = btn.getAttribute('data-domain');
+        btn.addEventListener("click", async () => {
+          const id = parseInt(btn.getAttribute("data-id") as string);
+          const domain = btn.getAttribute("data-domain");
 
           const confirmed = await showConfirm({
-            title: '¿Eliminar dominio?',
+            title: "¿Eliminar dominio?",
             text: `¿Deseas eliminar el dominio "${domain}"? Esta acción no se puede deshacer.`,
-            confirmButtonText: 'Sí, eliminar',
-            cancelButtonText: 'Cancelar',
+            confirmButtonText: "Sí, eliminar",
+            cancelButtonText: "Cancelar",
           });
 
           if (confirmed) {
-            btn.classList.add('loading');
+            btn.classList.add("loading");
             btn.disabled = true;
             try {
               await deleteDomain(id);
-              showToast({ text: `Dominio "${domain}" eliminado.`, icon: 'success' });
+              showToast({
+                text: `Dominio "${domain}" eliminado.`,
+                icon: "success",
+              });
               domainsLoaded = false;
               loadDomains();
             } catch (error: any) {
-              showToast({ text: `Error: ${error.message}`, icon: 'error' });
-              btn.classList.remove('loading');
+              showToast({ text: `Error: ${error.message}`, icon: "error" });
+              btn.classList.remove("loading");
               btn.disabled = false;
             }
           }
@@ -870,20 +1344,26 @@ import "../../styles/grid-principal/benefit-card.css";
     }
 
     // Botón Nuevo Dominio
-    const addDomainBtn = document.getElementById('add-domain-btn') as HTMLButtonElement;
+    const addDomainBtn = document.getElementById(
+      "add-domain-btn",
+    ) as HTMLButtonElement;
     if (addDomainBtn) {
-      addDomainBtn.addEventListener('click', async () => {
+      addDomainBtn.addEventListener("click", async () => {
         const result: any = await showCreateDomainModal();
         if (result) {
           addDomainBtn.disabled = true;
-          addDomainBtn.innerHTML = '<span class="spinner" style="width:20px;height:20px;border-width:2px;margin-right:8px;"></span> Guardando...';
+          addDomainBtn.innerHTML =
+            '<span class="spinner" style="width:20px;height:20px;border-width:2px;margin-right:8px;"></span> Guardando...';
           try {
             await addDomain(result.domain);
-            showToast({ text: `Dominio "${result.domain}" agregado con éxito.`, icon: 'success' });
+            showToast({
+              text: `Dominio "${result.domain}" agregado con éxito.`,
+              icon: "success",
+            });
             domainsLoaded = false;
             loadDomains();
           } catch (error: any) {
-            showToast({ text: `Error: ${error.message}`, icon: 'error' });
+            showToast({ text: `Error: ${error.message}`, icon: "error" });
           } finally {
             addDomainBtn.disabled = false;
             addDomainBtn.innerHTML = `
@@ -900,69 +1380,77 @@ import "../../styles/grid-principal/benefit-card.css";
     // ──────────────────────────────────────────────────────────
 
     // ── Gestión de Empresas ──────────────────────────────────────
-    const loadingStateEmpresas = document.getElementById('loading-state-empresas');
-    const empresasTable        = document.getElementById('empresas-table');
-    const empresasTbody        = document.getElementById('empresas-tbody');
-    const emptyStateEmpresas   = document.getElementById('empty-state-empresas');
-    const searchEmpresaInput   = document.getElementById('search-empresa') as HTMLInputElement;
+    const loadingStateEmpresas = document.getElementById(
+      "loading-state-empresas",
+    );
+    const empresasTable = document.getElementById("empresas-table");
+    const empresasTbody = document.getElementById("empresas-tbody");
+    const emptyStateEmpresas = document.getElementById("empty-state-empresas");
+    const searchEmpresaInput = document.getElementById(
+      "search-empresa",
+    ) as HTMLInputElement;
 
     let allEmpresas: any[] = [];
 
     if (searchEmpresaInput) {
-      searchEmpresaInput.addEventListener('input', () => {
+      searchEmpresaInput.addEventListener("input", () => {
         if (allEmpresas.length > 0) renderEmpresas(allEmpresas);
       });
     }
 
     async function loadEmpresas() {
-      if (!loadingStateEmpresas || !empresasTable || !emptyStateEmpresas) return;
-      loadingStateEmpresas.style.display = 'flex';
-      empresasTable.style.display = 'none';
-      emptyStateEmpresas.style.display = 'none';
+      if (!loadingStateEmpresas || !empresasTable || !emptyStateEmpresas)
+        return;
+      loadingStateEmpresas.style.display = "flex";
+      empresasTable.style.display = "none";
+      emptyStateEmpresas.style.display = "none";
       try {
         allEmpresas = await getCompanies();
         if (!allEmpresas.length) {
-          emptyStateEmpresas.style.display = 'block';
+          emptyStateEmpresas.style.display = "block";
         } else {
           renderEmpresas(allEmpresas);
-          empresasTable.style.display = 'table';
+          empresasTable.style.display = "table";
         }
       } catch (e: any) {
-        emptyStateEmpresas.style.display = 'block';
+        emptyStateEmpresas.style.display = "block";
         emptyStateEmpresas.innerHTML = `<p>Error al cargar empresas: ${e.message}</p>`;
       } finally {
-        loadingStateEmpresas.style.display = 'none';
+        loadingStateEmpresas.style.display = "none";
       }
     }
 
     function renderEmpresas(empresas: any[]) {
       if (!empresasTbody) return;
-      const q = (searchEmpresaInput?.value || '').toLowerCase();
+      const q = (searchEmpresaInput?.value || "").toLowerCase();
       const filtered = empresas.filter((e: any) =>
-        (e.name || '').toLowerCase().includes(q)
+        (e.name || "").toLowerCase().includes(q),
       );
-      empresasTbody.innerHTML = '';
+      empresasTbody.innerHTML = "";
       if (!filtered.length) {
-        empresasTbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:3rem;color:#64748b;">No se encontraron empresas.</td></tr>';
+        empresasTbody.innerHTML =
+          '<tr><td colspan="5" style="text-align:center;padding:3rem;color:#64748b;">No se encontraron empresas.</td></tr>';
         return;
       }
       filtered.forEach((e: any) => {
-        const tr = document.createElement('tr');
+        const tr = document.createElement("tr");
         tr.innerHTML = `
           <td data-label="Logo">
-            ${e.logo_url
-              ? `<img src="${e.logo_url}" alt="Logo ${e.name}" style="height:40px;max-width:100px;object-fit:contain;border-radius:6px;border:1px solid #e2e8f0;background:#f8fafc;padding:3px;">`
-              : `<div style="width:50px;height:40px;background:#f1f5f9;border-radius:6px;border:1px solid #e2e8f0;display:flex;align-items:center;justify-content:center;"><svg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='#94a3b8' stroke-width='2'><rect x='2' y='7' width='20' height='14' rx='2'/><path d='M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16'/></svg></div>`}
+            ${
+              e.logo_url
+                ? `<img src="${e.logo_url}" alt="Logo ${e.name}" style="height:40px;max-width:100px;object-fit:contain;border-radius:6px;border:1px solid #e2e8f0;background:#f8fafc;padding:3px;">`
+                : `<div style="width:50px;height:40px;background:#f1f5f9;border-radius:6px;border:1px solid #e2e8f0;display:flex;align-items:center;justify-content:center;"><svg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='#94a3b8' stroke-width='2'><rect x='2' y='7' width='20' height='14' rx='2'/><path d='M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16'/></svg></div>`
+            }
           </td>
           <td data-label="Nombre"><span class="font-medium">${e.name}</span></td>
-          <td data-label="Cupones"><span class="text-gray" style="font-size:0.85rem;">${e.coupon_count ? `${e.coupon_count} cupón${e.coupon_count !== 1 ? 'es' : ''}` : 'Sin cupones'}</span></td>
+          <td data-label="Cupones"><span class="text-gray" style="font-size:0.85rem;">${e.coupon_count ? `${e.coupon_count} cupón${e.coupon_count !== 1 ? "es" : ""}` : "Sin cupones"}</span></td>
           <td data-label="Fecha de Registro"><span class="text-gray">${formatDate(e.created_at)}</span></td>
           <td data-label="Acciones" class="actions-cell">
             <div style="display:flex;gap:0.5rem;justify-content:flex-end;">
               <button class="btn-icon btn-edit-empresa" data-id="${e.id}" title="Editar empresa">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
               </button>
-              <button class="btn-icon btn-delete-empresa" data-id="${e.id}" data-name="${(e.name || '').replace(/"/g, '&quot;')}" title="Eliminar empresa">
+              <button class="btn-icon btn-delete-empresa" data-id="${e.id}" data-name="${(e.name || "").replace(/"/g, "&quot;")}" title="Eliminar empresa">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
               </button>
             </div>
@@ -972,87 +1460,115 @@ import "../../styles/grid-principal/benefit-card.css";
       });
 
       // Listeners editar
-      empresasTbody.querySelectorAll('.btn-edit-empresa').forEach(el => {
-        el.addEventListener('click', () => {
-          const id = parseInt((el as HTMLButtonElement).getAttribute('data-id')!);
+      empresasTbody.querySelectorAll(".btn-edit-empresa").forEach((el) => {
+        el.addEventListener("click", () => {
+          const id = parseInt(
+            (el as HTMLButtonElement).getAttribute("data-id")!,
+          );
           const emp = allEmpresas.find((x: any) => x.id === id);
           if (emp) openEmpresaModal(emp);
         });
       });
 
       // Listeners eliminar
-      empresasTbody.querySelectorAll('.btn-delete-empresa').forEach(el => {
-        el.addEventListener('click', async () => {
-          const btn  = el as HTMLButtonElement;
-          const id   = parseInt(btn.getAttribute('data-id')!);
-          const name = btn.getAttribute('data-name');
-          const ok   = await showConfirm({
-            title: '¿Eliminar empresa?',
+      empresasTbody.querySelectorAll(".btn-delete-empresa").forEach((el) => {
+        el.addEventListener("click", async () => {
+          const btn = el as HTMLButtonElement;
+          const id = parseInt(btn.getAttribute("data-id")!);
+          const name = btn.getAttribute("data-name");
+          const ok = await showConfirm({
+            title: "¿Eliminar empresa?",
             text: `¿Deseas eliminar la empresa "${name}"? También se eliminarán sus cupones asociados.`,
-            confirmButtonText: 'Sí, eliminar',
-            cancelButtonText: 'Cancelar',
+            confirmButtonText: "Sí, eliminar",
+            cancelButtonText: "Cancelar",
           });
           if (!ok) return;
-          btn.classList.add('loading'); btn.disabled = true;
+          btn.classList.add("loading");
+          btn.disabled = true;
           try {
             await deleteCompany(id);
-            showToast({ text: `Empresa "${name}" eliminada.`, icon: 'success' });
-            empresasLoaded = false; loadEmpresas();
+            showToast({
+              text: `Empresa "${name}" eliminada.`,
+              icon: "success",
+            });
+            empresasLoaded = false;
+            loadEmpresas();
             // Invalidar caché de cupones y empresas para el select
-            cuponesLoaded = false; allCompanies = [];
+            cuponesLoaded = false;
+            allCompanies = [];
           } catch (e: any) {
-            showToast({ text: `Error: ${e.message}`, icon: 'error' });
-            btn.classList.remove('loading'); btn.disabled = false;
+            showToast({ text: `Error: ${e.message}`, icon: "error" });
+            btn.classList.remove("loading");
+            btn.disabled = false;
           }
         });
       });
     }
 
     // ── Modal Empresa ────────────────────────────────────────────
-    const emOverlay    = document.getElementById('em-overlay');
-    const emModalTitle = document.getElementById('em-modal-title');
-    const emNameInput  = document.getElementById('em-name')      as HTMLInputElement;
-    const emLogoInput  = document.getElementById('em-logo-url')  as HTMLInputElement;
-    const emLogoFile   = document.getElementById('em-logo-file') as HTMLInputElement;
-    const emDropzone   = document.getElementById('em-dropzone');
-    const emDropInner  = document.getElementById('em-drop-inner');
-    const emLogoPreview= document.getElementById('em-logo-preview');
-    const emLogoImg    = document.getElementById('em-logo-img')  as HTMLImageElement;
-    const emLogoClear  = document.getElementById('em-logo-clear');
-    const emTabUrl     = document.getElementById('em-tab-url')   as HTMLButtonElement;
-    const emTabFile    = document.getElementById('em-tab-file')  as HTMLButtonElement;
-    const emPanelUrl   = document.getElementById('em-panel-url');
-    const emPanelFile  = document.getElementById('em-panel-file');
-    const emSaveBtn    = document.getElementById('em-save-btn')  as HTMLButtonElement;
-    const emCancelBtn  = document.getElementById('em-cancel-btn') as HTMLButtonElement;
-    const emCloseBtn   = document.getElementById('em-close-btn') as HTMLButtonElement;
+    const emOverlay = document.getElementById("em-overlay");
+    const emModalTitle = document.getElementById("em-modal-title");
+    const emNameInput = document.getElementById("em-name") as HTMLInputElement;
+    const emLogoInput = document.getElementById(
+      "em-logo-url",
+    ) as HTMLInputElement;
+    const emLogoFile = document.getElementById(
+      "em-logo-file",
+    ) as HTMLInputElement;
+    const emDropzone = document.getElementById("em-dropzone");
+    const emDropInner = document.getElementById("em-drop-inner");
+    const emLogoPreview = document.getElementById("em-logo-preview");
+    const emLogoImg = document.getElementById(
+      "em-logo-img",
+    ) as HTMLImageElement;
+    const emLogoClear = document.getElementById("em-logo-clear");
+    const emTabUrl = document.getElementById("em-tab-url") as HTMLButtonElement;
+    const emTabFile = document.getElementById(
+      "em-tab-file",
+    ) as HTMLButtonElement;
+    const emPanelUrl = document.getElementById("em-panel-url");
+    const emPanelFile = document.getElementById("em-panel-file");
+    const emSaveBtn = document.getElementById(
+      "em-save-btn",
+    ) as HTMLButtonElement;
+    const emCancelBtn = document.getElementById(
+      "em-cancel-btn",
+    ) as HTMLButtonElement;
+    const emCloseBtn = document.getElementById(
+      "em-close-btn",
+    ) as HTMLButtonElement;
     let editingEmpresaId: number | null = null;
     let selectedLogoFile: File | null = null;
-    let currentLogoMode: 'url' | 'file' = 'url';
+    let currentLogoMode: "url" | "file" = "url";
 
     // Helpers preview
     function showLogoPreview(src: string) {
       if (!emLogoImg || !emLogoPreview) return;
       emLogoImg.src = src;
-      emLogoPreview.style.display = 'flex';
-      emLogoImg.onerror = () => { emLogoPreview.style.display = 'none'; };
+      emLogoPreview.style.display = "flex";
+      emLogoImg.onerror = () => {
+        emLogoPreview.style.display = "none";
+      };
     }
     function hideLogoPreview() {
-      if (emLogoPreview) emLogoPreview.style.display = 'none';
-      if (emLogoImg) emLogoImg.src = '';
+      if (emLogoPreview) emLogoPreview.style.display = "none";
+      if (emLogoImg) emLogoImg.src = "";
     }
 
     // Tab logo: URL ↔ Archivo
-    function switchLogoTab(mode: 'url' | 'file') {
+    function switchLogoTab(mode: "url" | "file") {
       currentLogoMode = mode;
-      emTabUrl?.classList.toggle('active', mode === 'url');
-      emTabFile?.classList.toggle('active', mode === 'file');
-      if (emPanelUrl)  emPanelUrl.style.display  = mode === 'url'  ? 'flex' : 'none';
-      if (emPanelFile) emPanelFile.style.display = mode === 'file' ? 'flex' : 'none';
+      emTabUrl?.classList.toggle("active", mode === "url");
+      emTabFile?.classList.toggle("active", mode === "file");
+      if (emPanelUrl)
+        emPanelUrl.style.display = mode === "url" ? "flex" : "none";
+      if (emPanelFile)
+        emPanelFile.style.display = mode === "file" ? "flex" : "none";
       // Limpiar el otro modo
-      if (mode === 'url') {
+      if (mode === "url") {
         selectedLogoFile = null;
-        if (emDropInner) emDropInner.innerHTML = `
+        if (emDropInner)
+          emDropInner.innerHTML = `
           <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
           <span>Arrastra o haz clic para seleccionar</span>
           <span class="em-hint-text">PNG, JPG, WEBP, SVG</span>`;
@@ -1063,23 +1579,29 @@ import "../../styles/grid-principal/benefit-card.css";
       hideLogoPreview();
     }
 
-    emTabUrl?.addEventListener('click',  () => switchLogoTab('url'));
-    emTabFile?.addEventListener('click', () => switchLogoTab('file'));
+    emTabUrl?.addEventListener("click", () => switchLogoTab("url"));
+    emTabFile?.addEventListener("click", () => switchLogoTab("file"));
 
     // URL input → preview
-    emLogoInput?.addEventListener('input', () => {
+    emLogoInput?.addEventListener("input", () => {
       const url = emLogoInput.value.trim();
       url ? showLogoPreview(url) : hideLogoPreview();
     });
 
     // File input → preview
     function handleFileSelect(file: File) {
-      if (!file.type.startsWith('image/')) {
-        showToast({ text: 'Solo se aceptan imágenes (PNG, JPG, WEBP, SVG).', icon: 'error' }); return;
+      if (!file.type.startsWith("image/")) {
+        showToast({
+          text: "Solo se aceptan imágenes (PNG, JPG, WEBP, SVG).",
+          icon: "error",
+        });
+        return;
       }
       selectedLogoFile = file;
       const reader = new FileReader();
-      reader.onload = (ev) => { showLogoPreview(ev.target?.result as string); };
+      reader.onload = (ev) => {
+        showLogoPreview(ev.target?.result as string);
+      };
       reader.readAsDataURL(file);
       if (emDropInner) {
         emDropInner.innerHTML = `
@@ -1089,78 +1611,97 @@ import "../../styles/grid-principal/benefit-card.css";
       }
     }
 
-    emLogoFile?.addEventListener('change', () => {
+    emLogoFile?.addEventListener("change", () => {
       if (emLogoFile.files?.[0]) handleFileSelect(emLogoFile.files[0]);
     });
 
     // Drag & drop
-    emDropzone?.addEventListener('dragover',  (e) => { e.preventDefault(); emDropzone.classList.add('drag-over'); });
-    emDropzone?.addEventListener('dragleave', ()  => { emDropzone.classList.remove('drag-over'); });
-    emDropzone?.addEventListener('drop',      (e: DragEvent) => {
-      e.preventDefault(); emDropzone.classList.remove('drag-over');
+    emDropzone?.addEventListener("dragover", (e) => {
+      e.preventDefault();
+      emDropzone.classList.add("drag-over");
+    });
+    emDropzone?.addEventListener("dragleave", () => {
+      emDropzone.classList.remove("drag-over");
+    });
+    emDropzone?.addEventListener("drop", (e: DragEvent) => {
+      e.preventDefault();
+      emDropzone.classList.remove("drag-over");
       const file = e.dataTransfer?.files[0];
       if (file) handleFileSelect(file);
     });
 
     // Botón limpiar preview
-    emLogoClear?.addEventListener('click', () => {
+    emLogoClear?.addEventListener("click", () => {
       selectedLogoFile = null;
-      if (emLogoInput) emLogoInput.value = '';
+      if (emLogoInput) emLogoInput.value = "";
       hideLogoPreview();
-      if (emDropInner) emDropInner.innerHTML = `
+      if (emDropInner)
+        emDropInner.innerHTML = `
         <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
         <span>Arrastra o haz clic para seleccionar</span>
         <span class="em-hint-text">PNG, JPG, WEBP, SVG</span>`;
     });
 
     function closeEmpresaModal() {
-      if (emOverlay) emOverlay.style.display = 'none';
-      document.body.style.overflow = '';
+      if (emOverlay) emOverlay.style.display = "none";
+      document.body.style.overflow = "";
       editingEmpresaId = null;
       selectedLogoFile = null;
     }
 
     function openEmpresaModal(empresa: any = null) {
       editingEmpresaId = empresa ? empresa.id : null;
-      if (emModalTitle) emModalTitle.textContent = empresa ? 'Editar Empresa' : 'Nueva Empresa';
-      if (emNameInput)  emNameInput.value = empresa?.name ?? '';
+      if (emModalTitle)
+        emModalTitle.textContent = empresa ? "Editar Empresa" : "Nueva Empresa";
+      if (emNameInput) emNameInput.value = empresa?.name ?? "";
       selectedLogoFile = null;
       // Arrancar siempre en modo archivo
-      switchLogoTab('file');
-      if (emLogoInput) emLogoInput.value = empresa?.logo_url ?? '';
+      switchLogoTab("file");
+      if (emLogoInput) emLogoInput.value = empresa?.logo_url ?? "";
       if (empresa?.logo_url) showLogoPreview(empresa.logo_url);
-      if (emOverlay) emOverlay.style.display = 'flex';
-      document.body.style.overflow = 'hidden';
+      if (emOverlay) emOverlay.style.display = "flex";
+      document.body.style.overflow = "hidden";
       emNameInput?.focus();
     }
 
     async function saveEmpresa() {
       if (!emNameInput?.value.trim()) {
-        showToast({ text: 'El nombre de la empresa es obligatorio.', icon: 'error' }); return;
+        showToast({
+          text: "El nombre de la empresa es obligatorio.",
+          icon: "error",
+        });
+        return;
       }
-      if (emSaveBtn) { emSaveBtn.disabled = true; emSaveBtn.textContent = 'Guardando...'; }
+      if (emSaveBtn) {
+        emSaveBtn.disabled = true;
+        emSaveBtn.textContent = "Guardando...";
+      }
       try {
         let logo_url: string | null = emLogoInput?.value.trim() || null;
 
         // Si hay archivo seleccionado, subirlo primero
         if (selectedLogoFile) {
-          if (emSaveBtn) emSaveBtn.textContent = 'Subiendo imagen...';
+          if (emSaveBtn) emSaveBtn.textContent = "Subiendo imagen...";
           logo_url = await uploadCompanyLogo(selectedLogoFile);
         }
 
         const payload = { name: emNameInput.value.trim(), logo_url };
         if (editingEmpresaId) {
           await updateCompany(editingEmpresaId, payload);
-          showToast({ text: 'Empresa actualizada correctamente.', icon: 'success' });
+          showToast({
+            text: "Empresa actualizada correctamente.",
+            icon: "success",
+          });
         } else {
           await createCompany(payload);
-          showToast({ text: 'Empresa creada correctamente.', icon: 'success' });
+          showToast({ text: "Empresa creada correctamente.", icon: "success" });
         }
         closeEmpresaModal();
-        empresasLoaded = false; loadEmpresas();
+        empresasLoaded = false;
+        loadEmpresas();
         allCompanies = [];
       } catch (e: any) {
-        showToast({ text: `Error: ${e.message}`, icon: 'error' });
+        showToast({ text: `Error: ${e.message}`, icon: "error" });
       } finally {
         if (emSaveBtn) {
           emSaveBtn.disabled = false;
@@ -1169,78 +1710,88 @@ import "../../styles/grid-principal/benefit-card.css";
       }
     }
 
-    [emCloseBtn, emCancelBtn].forEach(btn => btn?.addEventListener('click', closeEmpresaModal));
-    emOverlay?.addEventListener('click', (e) => { if (e.target === emOverlay) closeEmpresaModal(); });
-    emSaveBtn?.addEventListener('click', saveEmpresa);
-    document.getElementById('add-empresa-btn')?.addEventListener('click', () => openEmpresaModal());
+    [emCloseBtn, emCancelBtn].forEach((btn) =>
+      btn?.addEventListener("click", closeEmpresaModal),
+    );
+    emOverlay?.addEventListener("click", (e) => {
+      if (e.target === emOverlay) closeEmpresaModal();
+    });
+    emSaveBtn?.addEventListener("click", saveEmpresa);
+    document
+      .getElementById("add-empresa-btn")
+      ?.addEventListener("click", () => openEmpresaModal());
     // ──────────────────────────────────────────────────────────
 
     // ── Gestión de Cupones ──────────────────────────────────────
-    const loadingStateCupons = document.getElementById('loading-state-cupons');
-    const cuponsTable        = document.getElementById('cupons-table');
-    const cuponsTbody        = document.getElementById('cupons-tbody');
-    const emptyStateCupons   = document.getElementById('empty-state-cupons');
-    const searchCuponInput   = document.getElementById('search-cupon') as HTMLInputElement;
+    const loadingStateCupons = document.getElementById("loading-state-cupons");
+    const cuponsTable = document.getElementById("cupons-table");
+    const cuponsTbody = document.getElementById("cupons-tbody");
+    const emptyStateCupons = document.getElementById("empty-state-cupons");
+    const searchCuponInput = document.getElementById(
+      "search-cupon",
+    ) as HTMLInputElement;
 
-    let allCupons: any[]    = [];
+    let allCupons: any[] = [];
     let allCompanies: any[] = [];
     let editingCouponId: number | null = null;
 
     if (searchCuponInput) {
-      searchCuponInput.addEventListener('input', () => {
+      searchCuponInput.addEventListener("input", () => {
         if (allCupons.length > 0) renderCupons(allCupons);
       });
     }
 
     async function loadCupons() {
       if (!loadingStateCupons || !cuponsTable || !emptyStateCupons) return;
-      loadingStateCupons.style.display = 'flex';
-      cuponsTable.style.display = 'none';
-      emptyStateCupons.style.display = 'none';
+      loadingStateCupons.style.display = "flex";
+      cuponsTable.style.display = "none";
+      emptyStateCupons.style.display = "none";
       try {
         allCupons = await getAdminCoupons();
         if (!allCupons.length) {
-          emptyStateCupons.style.display = 'block';
+          emptyStateCupons.style.display = "block";
         } else {
           renderCupons(allCupons);
-          cuponsTable.style.display = 'table';
+          cuponsTable.style.display = "table";
         }
       } catch (e: any) {
-        emptyStateCupons.style.display = 'block';
+        emptyStateCupons.style.display = "block";
         emptyStateCupons.innerHTML = `<p>Error al cargar cupones: ${e.message}</p>`;
       } finally {
-        loadingStateCupons.style.display = 'none';
+        loadingStateCupons.style.display = "none";
       }
     }
 
     function renderCupons(cupons: any[]) {
       if (!cuponsTbody) return;
-      const q = (searchCuponInput?.value || '').toLowerCase();
-      const filtered = cupons.filter((c: any) =>
-        (c.title || '').toLowerCase().includes(q) ||
-        (c.companies?.name || '').toLowerCase().includes(q)
+      const q = (searchCuponInput?.value || "").toLowerCase();
+      const filtered = cupons.filter(
+        (c: any) =>
+          (c.title || "").toLowerCase().includes(q) ||
+          (c.companies?.name || "").toLowerCase().includes(q),
       );
-      cuponsTbody.innerHTML = '';
+      cuponsTbody.innerHTML = "";
       if (!filtered.length) {
-        cuponsTbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:3rem;color:#64748b;">No se encontraron cupones.</td></tr>';
+        cuponsTbody.innerHTML =
+          '<tr><td colspan="6" style="text-align:center;padding:3rem;color:#64748b;">No se encontraron cupones.</td></tr>';
         return;
       }
       filtered.forEach((c: any) => {
         const co = c.companies ?? {};
-        const tr = document.createElement('tr');
+        const tr = document.createElement("tr");
         tr.innerHTML = `
           <td data-label="Empresa">
             <div style="display:flex;align-items:center;gap:0.7rem;">
-              ${co.logo_url ? `<img src="${co.logo_url}" alt="" style="width:36px;height:36px;object-fit:contain;border-radius:8px;border:1px solid #e2e8f0;background:#f8fafc;padding:3px;">` : ''}
-              <span class="text-gray" style="font-size:0.85rem;">${co.name || '—'}</span>
+              ${co.logo_url ? `<img src="${co.logo_url}" alt="" style="width:36px;height:36px;object-fit:contain;border-radius:8px;border:1px solid #e2e8f0;background:#f8fafc;padding:3px;">` : ""}
+              <span class="text-gray" style="font-size:0.85rem;">${co.name || "—"}</span>
             </div>
           </td>
-          <td data-label="Título"><span class="font-medium" style="font-size:0.95rem;">${c.title || '—'}</span></td>
-          <td data-label="Vigencia"><span class="text-gray" style="font-size:0.85rem;">${c.vigencia || '—'}</span></td>
-          <td data-label="Tipo"><span class="text-gray" style="font-size:0.85rem;">${c.tipo_descuento || '—'}</span></td>
+          <td data-label="Título"><span class="font-medium" style="font-size:0.95rem;">${c.title || "—"}</span></td>
+          <td data-label="Vigencia"><span class="text-gray" style="font-size:0.85rem;">${c.vigencia || "—"}</span></td>
+          <td data-label="Tipo"><span class="text-gray" style="font-size:0.85rem;">${c.tipo_descuento || "—"}</span></td>
           <td data-label="Estado" style="text-align:center;">
-            <label class="cm-toggle" style="margin: 0 auto;" title="${c.active ? 'Desactivar' : 'Activar'}">
-              <input type="checkbox" class="cm-status-btn" data-id="${c.id}" data-active="${c.active}" ${c.active ? 'checked' : ''}>
+            <label class="cm-toggle" style="margin: 0 auto;" title="${c.active ? "Desactivar" : "Activar"}">
+              <input type="checkbox" class="cm-status-btn" data-id="${c.id}" data-active="${c.active}" ${c.active ? "checked" : ""}>
               <span class="cm-toggle-slider"></span>
             </label>
           </td>
@@ -1249,7 +1800,7 @@ import "../../styles/grid-principal/benefit-card.css";
               <button class="btn-icon btn-edit-cupon" data-id="${c.id}" title="Editar cupón">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
               </button>
-              <button class="btn-icon btn-delete-cupon" data-id="${c.id}" data-title="${(c.title || '').replace(/"/g, '&quot;')}" title="Eliminar cupón">
+              <button class="btn-icon btn-delete-cupon" data-id="${c.id}" data-title="${(c.title || "").replace(/"/g, "&quot;")}" title="Eliminar cupón">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
               </button>
             </div>
@@ -1259,173 +1810,244 @@ import "../../styles/grid-principal/benefit-card.css";
       });
 
       // Toggle activo/inactivo
-      cuponsTbody.querySelectorAll('.cm-status-btn').forEach(el => {
-        el.addEventListener('click', async (e) => {
+      cuponsTbody.querySelectorAll(".cm-status-btn").forEach((el) => {
+        el.addEventListener("click", async (e) => {
           e.preventDefault();
-          const btn     = el as HTMLInputElement;
-          const id      = parseInt(btn.getAttribute('data-id')!);
-          const current = btn.getAttribute('data-active') === 'true';
-          btn.disabled  = true;
+          const btn = el as HTMLInputElement;
+          const id = parseInt(btn.getAttribute("data-id")!);
+          const current = btn.getAttribute("data-active") === "true";
+          btn.disabled = true;
           try {
             await toggleCouponActive(id, !current);
-            showToast({ text: `Cupón ${!current ? 'activado' : 'desactivado'} correctamente.`, icon: 'success' });
-            cuponesLoaded = false; loadCupons();
+            showToast({
+              text: `Cupón ${!current ? "activado" : "desactivado"} correctamente.`,
+              icon: "success",
+            });
+            cuponesLoaded = false;
+            loadCupons();
           } catch (err: any) {
-            showToast({ text: `Error: ${err.message}`, icon: 'error' });
+            showToast({ text: `Error: ${err.message}`, icon: "error" });
             btn.disabled = false;
           }
         });
       });
 
       // Eliminar
-      cuponsTbody.querySelectorAll('.btn-delete-cupon').forEach(el => {
-        el.addEventListener('click', async () => {
-          const btn   = el as HTMLButtonElement;
-          const id    = parseInt(btn.getAttribute('data-id')!);
-          const title = btn.getAttribute('data-title');
-          const ok    = await showConfirm({
-            title: '¿Eliminar cupón?',
+      cuponsTbody.querySelectorAll(".btn-delete-cupon").forEach((el) => {
+        el.addEventListener("click", async () => {
+          const btn = el as HTMLButtonElement;
+          const id = parseInt(btn.getAttribute("data-id")!);
+          const title = btn.getAttribute("data-title");
+          const ok = await showConfirm({
+            title: "¿Eliminar cupón?",
             text: `¿Deseas eliminar permanentemente el cupón "${title}"?`,
-            confirmButtonText: 'Sí, eliminar',
-            cancelButtonText: 'Cancelar',
+            confirmButtonText: "Sí, eliminar",
+            cancelButtonText: "Cancelar",
           });
           if (!ok) return;
-          btn.classList.add('loading'); btn.disabled = true;
+          btn.classList.add("loading");
+          btn.disabled = true;
           try {
             await deleteCoupon(id);
-            showToast({ text: 'Cupón eliminado correctamente.', icon: 'success' });
-            cuponesLoaded = false; loadCupons();
+            showToast({
+              text: "Cupón eliminado correctamente.",
+              icon: "success",
+            });
+            cuponesLoaded = false;
+            loadCupons();
           } catch (e: any) {
-            showToast({ text: `Error: ${e.message}`, icon: 'error' });
-            btn.classList.remove('loading'); btn.disabled = false;
+            showToast({ text: `Error: ${e.message}`, icon: "error" });
+            btn.classList.remove("loading");
+            btn.disabled = false;
           }
         });
       });
 
       // Editar
-      cuponsTbody.querySelectorAll('.btn-edit-cupon').forEach(el => {
-        el.addEventListener('click', () => {
-          const id  = parseInt((el as HTMLButtonElement).getAttribute('data-id')!);
-          const c   = allCupons.find((x: any) => x.id === id);
+      cuponsTbody.querySelectorAll(".btn-edit-cupon").forEach((el) => {
+        el.addEventListener("click", () => {
+          const id = parseInt(
+            (el as HTMLButtonElement).getAttribute("data-id")!,
+          );
+          const c = allCupons.find((x: any) => x.id === id);
           if (c) openCouponModal(c);
         });
       });
     }
 
     // ── Modal Cupón ─────────────────────────────────────────────
-    const cmOverlay       = document.getElementById('cm-overlay');
-    const cmModalTitle    = document.getElementById('cm-modal-title');
-    const cmCompanyId     = document.getElementById('cm-company-id')     as HTMLSelectElement;
-    const cmSortOrder     = document.getElementById('cm-sort-order')     as HTMLInputElement;
-    const cmActiveChk     = document.getElementById('cm-active')         as HTMLInputElement;
-    const cmActiveLabel   = document.getElementById('cm-active-label');
-    const cmTitleInput    = document.getElementById('cm-title')          as HTMLInputElement;
-    const cmDescription   = document.getElementById('cm-description')   as HTMLTextAreaElement;
-    const cmVigencia      = document.getElementById('cm-vigencia')       as HTMLInputElement;
-    const cmTipoDesc      = document.getElementById('cm-tipo-descuento') as HTMLSelectElement;
-    const cmDiscountAmt   = document.getElementById('cm-discount-amount') as HTMLInputElement;
-    const cmDiscountLbl   = document.getElementById('cm-discount-label') as HTMLInputElement;
-    const cmCodeLabel     = document.getElementById('cm-code-label')    as HTMLInputElement;
-    const cmDiscountCode  = document.getElementById('cm-discount-code') as HTMLInputElement;
-    const cmBenefitText   = document.getElementById('cm-benefit-text')  as HTMLTextAreaElement;
-    const cmTerms         = document.getElementById('cm-terms')         as HTMLTextAreaElement;
-    const cmSaveBtn       = document.getElementById('cm-save-btn')      as HTMLButtonElement;
-    const cmCancelBtn     = document.getElementById('cm-cancel-btn')    as HTMLButtonElement;
-    const cmCloseBtn      = document.getElementById('cm-close-btn')     as HTMLButtonElement;
+    const cmOverlay = document.getElementById("cm-overlay");
+    const cmModalTitle = document.getElementById("cm-modal-title");
+    const cmCompanyId = document.getElementById(
+      "cm-company-id",
+    ) as HTMLSelectElement;
+    const cmSortOrder = document.getElementById(
+      "cm-sort-order",
+    ) as HTMLInputElement;
+    const cmActiveChk = document.getElementById(
+      "cm-active",
+    ) as HTMLInputElement;
+    const cmActiveLabel = document.getElementById("cm-active-label");
+    const cmTitleInput = document.getElementById(
+      "cm-title",
+    ) as HTMLInputElement;
+    const cmDescription = document.getElementById(
+      "cm-description",
+    ) as HTMLTextAreaElement;
+    const cmVigencia = document.getElementById(
+      "cm-vigencia",
+    ) as HTMLInputElement;
+    const cmTipoDesc = document.getElementById(
+      "cm-tipo-descuento",
+    ) as HTMLSelectElement;
+    const cmDiscountAmt = document.getElementById(
+      "cm-discount-amount",
+    ) as HTMLInputElement;
+    const cmDiscountLbl = document.getElementById(
+      "cm-discount-label",
+    ) as HTMLInputElement;
+    const cmCodeLabel = document.getElementById(
+      "cm-code-label",
+    ) as HTMLInputElement;
+    const cmDiscountCode = document.getElementById(
+      "cm-discount-code",
+    ) as HTMLInputElement;
+    const cmBenefitText = document.getElementById(
+      "cm-benefit-text",
+    ) as HTMLTextAreaElement;
+    const cmTerms = document.getElementById("cm-terms") as HTMLTextAreaElement;
+    const cmSaveBtn = document.getElementById(
+      "cm-save-btn",
+    ) as HTMLButtonElement;
+    const cmCancelBtn = document.getElementById(
+      "cm-cancel-btn",
+    ) as HTMLButtonElement;
+    const cmCloseBtn = document.getElementById(
+      "cm-close-btn",
+    ) as HTMLButtonElement;
 
     // Toggle label en tiempo real
     if (cmActiveChk && cmActiveLabel) {
-      cmActiveChk.addEventListener('change', () => {
-        cmActiveLabel.textContent = cmActiveChk.checked ? 'Activo (visible en home)' : 'Inactivo (oculto en home)';
+      cmActiveChk.addEventListener("change", () => {
+        cmActiveLabel.textContent = cmActiveChk.checked
+          ? "Activo (visible en home)"
+          : "Inactivo (oculto en home)";
       });
     }
 
     function closeCouponModal() {
-      if (cmOverlay) cmOverlay.style.display = 'none';
-      document.body.style.overflow = '';
+      if (cmOverlay) cmOverlay.style.display = "none";
+      document.body.style.overflow = "";
       editingCouponId = null;
     }
 
     async function populateCompanies() {
       if (!cmCompanyId) return;
       if (!allCompanies.length) {
-        try { allCompanies = await getCompaniesForSelect(); } catch { allCompanies = []; }
+        try {
+          allCompanies = await getCompaniesForSelect();
+        } catch {
+          allCompanies = [];
+        }
       }
       const currentVal = cmCompanyId.value;
-      cmCompanyId.innerHTML = '<option value="">— Selecciona una empresa —</option>' +
-        allCompanies.map((co: any) => `<option value="${co.id}">${co.name}</option>`).join('');
+      cmCompanyId.innerHTML =
+        '<option value="">— Selecciona una empresa —</option>' +
+        allCompanies
+          .map((co: any) => `<option value="${co.id}">${co.name}</option>`)
+          .join("");
       if (currentVal) cmCompanyId.value = currentVal;
     }
 
     async function openCouponModal(coupon: any = null) {
       editingCouponId = coupon ? coupon.id : null;
-      if (cmModalTitle) cmModalTitle.textContent = coupon ? 'Editar Cupón' : 'Nuevo Cupón';
+      if (cmModalTitle)
+        cmModalTitle.textContent = coupon ? "Editar Cupón" : "Nuevo Cupón";
       await populateCompanies();
 
       // Llenar o limpiar campos
-      if (cmCompanyId)    cmCompanyId.value    = coupon?.company_id    ?? '';
-      if (cmSortOrder)    cmSortOrder.value    = coupon?.sort_order    ?? '0';
-      if (cmActiveChk)  { cmActiveChk.checked  = coupon ? coupon.active : true; }
-      if (cmActiveLabel)  cmActiveLabel.textContent = (coupon ? coupon.active : true) ? 'Activo (visible en home)' : 'Inactivo (oculto en home)';
-      if (cmTitleInput)   cmTitleInput.value   = coupon?.title         ?? '';
-      if (cmDescription)  cmDescription.value  = coupon?.description   ?? '';
-      if (cmVigencia)     cmVigencia.value      = coupon?.vigencia      ?? '';
-      if (cmTipoDesc)     cmTipoDesc.value      = coupon?.tipo_descuento ?? 'Descuento porcentual';
-      if (cmDiscountAmt)  cmDiscountAmt.value   = coupon?.discount_amount ?? 'XXXX';
-      if (cmDiscountLbl)  cmDiscountLbl.value   = coupon?.discount_label  ?? 'DE DESCUENTO';
-      if (cmCodeLabel)    cmCodeLabel.value     = coupon?.code_label      ?? 'Usando el código';
-      if (cmDiscountCode) cmDiscountCode.value  = coupon?.discount_code   ?? 'XXXXXXXXXX';
-      if (cmBenefitText)  cmBenefitText.value   = coupon?.benefit_text    ?? '';
-      if (cmTerms)        cmTerms.value         = coupon?.terms           ?? '';
+      if (cmCompanyId) cmCompanyId.value = coupon?.company_id ?? "";
+      if (cmSortOrder) cmSortOrder.value = coupon?.sort_order ?? "0";
+      if (cmActiveChk) {
+        cmActiveChk.checked = coupon ? coupon.active : true;
+      }
+      if (cmActiveLabel)
+        cmActiveLabel.textContent = (coupon ? coupon.active : true)
+          ? "Activo (visible en home)"
+          : "Inactivo (oculto en home)";
+      if (cmTitleInput) cmTitleInput.value = coupon?.title ?? "";
+      if (cmDescription) cmDescription.value = coupon?.description ?? "";
+      if (cmVigencia) cmVigencia.value = coupon?.vigencia ?? "";
+      if (cmTipoDesc)
+        cmTipoDesc.value = coupon?.tipo_descuento ?? "Descuento porcentual";
+      if (cmDiscountAmt)
+        cmDiscountAmt.value = coupon?.discount_amount ?? "XXXX";
+      if (cmDiscountLbl)
+        cmDiscountLbl.value = coupon?.discount_label ?? "DE DESCUENTO";
+      if (cmCodeLabel)
+        cmCodeLabel.value = coupon?.code_label ?? "Usando el código";
+      if (cmDiscountCode)
+        cmDiscountCode.value = coupon?.discount_code ?? "XXXXXXXXXX";
+      if (cmBenefitText) cmBenefitText.value = coupon?.benefit_text ?? "";
+      if (cmTerms) cmTerms.value = coupon?.terms ?? "";
 
-      if (cmOverlay) cmOverlay.style.display = 'flex';
-      document.body.style.overflow = 'hidden';
+      if (cmOverlay) cmOverlay.style.display = "flex";
+      document.body.style.overflow = "hidden";
       // Resetear flip a "Frente" y actualizar preview
-      document.getElementById('cm-prev-front')?.classList.remove('hidden');
-      document.getElementById('cm-prev-back')?.classList.add('hidden');
-      document.getElementById('cm-prev-front-btn')?.classList.add('active');
-      document.getElementById('cm-prev-back-btn')?.classList.remove('active');
+      document.getElementById("cm-prev-front")?.classList.remove("hidden");
+      document.getElementById("cm-prev-back")?.classList.add("hidden");
+      document.getElementById("cm-prev-front-btn")?.classList.add("active");
+      document.getElementById("cm-prev-back-btn")?.classList.remove("active");
       updatePreview();
       cmTitleInput?.focus();
     }
 
     async function saveCoupon() {
       if (!cmTitleInput?.value.trim()) {
-        showToast({ text: 'El título es obligatorio.', icon: 'error' }); return;
+        showToast({ text: "El título es obligatorio.", icon: "error" });
+        return;
       }
       if (!cmCompanyId?.value) {
-        showToast({ text: 'Debes seleccionar una empresa.', icon: 'error' }); return;
+        showToast({ text: "Debes seleccionar una empresa.", icon: "error" });
+        return;
       }
 
       const payload = {
-        company_id:      parseInt(cmCompanyId.value),
-        sort_order:      parseInt(cmSortOrder?.value || '0'),
-        active:          cmActiveChk?.checked ?? true,
-        title:           cmTitleInput.value.trim(),
-        description:     cmDescription?.value  ?? '',
-        vigencia:        cmVigencia?.value      ?? '',
-        tipo_descuento:  cmTipoDesc?.value      ?? '',
-        discount_amount: cmDiscountAmt?.value   || 'XXXX',
-        discount_label:  cmDiscountLbl?.value   || 'DE DESCUENTO',
-        code_label:      cmCodeLabel?.value     || 'Usando el código',
-        discount_code:   cmDiscountCode?.value  || 'XXXXXXXXXX',
-        benefit_text:    cmBenefitText?.value   ?? '',
-        terms:           cmTerms?.value         ?? '',
+        company_id: parseInt(cmCompanyId.value),
+        sort_order: parseInt(cmSortOrder?.value || "0"),
+        active: cmActiveChk?.checked ?? true,
+        title: cmTitleInput.value.trim(),
+        description: cmDescription?.value ?? "",
+        vigencia: cmVigencia?.value ?? "",
+        tipo_descuento: cmTipoDesc?.value ?? "",
+        discount_amount: cmDiscountAmt?.value || "XXXX",
+        discount_label: cmDiscountLbl?.value || "DE DESCUENTO",
+        code_label: cmCodeLabel?.value || "Usando el código",
+        discount_code: cmDiscountCode?.value || "XXXXXXXXXX",
+        benefit_text: cmBenefitText?.value ?? "",
+        terms: cmTerms?.value ?? "",
       };
 
-      if (cmSaveBtn) { cmSaveBtn.disabled = true; cmSaveBtn.textContent = 'Guardando...'; }
+      if (cmSaveBtn) {
+        cmSaveBtn.disabled = true;
+        cmSaveBtn.textContent = "Guardando...";
+      }
       try {
         if (editingCouponId) {
           await updateCoupon(editingCouponId, payload);
-          showToast({ text: 'Cupón actualizado correctamente.', icon: 'success' });
+          showToast({
+            text: "Cupón actualizado correctamente.",
+            icon: "success",
+          });
         } else {
           await createCoupon(payload);
-          showToast({ text: 'Cupón creado correctamente.', icon: 'success' });
+          showToast({ text: "Cupón creado correctamente.", icon: "success" });
         }
         closeCouponModal();
-        cuponesLoaded = false; loadCupons();
+        cuponesLoaded = false;
+        loadCupons();
       } catch (e: any) {
-        showToast({ text: `Error: ${e.message}`, icon: 'error' });
+        showToast({ text: `Error: ${e.message}`, icon: "error" });
       } finally {
         if (cmSaveBtn) {
           cmSaveBtn.disabled = false;
@@ -1434,43 +2056,55 @@ import "../../styles/grid-principal/benefit-card.css";
       }
     }
 
-    [cmCloseBtn, cmCancelBtn].forEach(btn => btn?.addEventListener('click', closeCouponModal));
-    cmOverlay?.addEventListener('click', (e) => { if (e.target === cmOverlay) closeCouponModal(); });
-    cmSaveBtn?.addEventListener('click', saveCoupon);
-    document.getElementById('add-cupon-btn')?.addEventListener('click', () => openCouponModal());
+    [cmCloseBtn, cmCancelBtn].forEach((btn) =>
+      btn?.addEventListener("click", closeCouponModal),
+    );
+    cmOverlay?.addEventListener("click", (e) => {
+      if (e.target === cmOverlay) closeCouponModal();
+    });
+    cmSaveBtn?.addEventListener("click", saveCoupon);
+    document
+      .getElementById("add-cupon-btn")
+      ?.addEventListener("click", () => openCouponModal());
 
     // ── Vista previa en tiempo real ─────────────────────────────
     function escPrev(str: unknown): string {
-      if (str == null) return '';
+      if (str == null) return "";
       return String(str)
-        .replace(/&/g, '&amp;').replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
     }
 
     function updatePreview(): void {
-      const prevFront = document.getElementById('cm-prev-front');
-      const prevBack  = document.getElementById('cm-prev-back');
+      const prevFront = document.getElementById("cm-prev-front");
+      const prevBack = document.getElementById("cm-prev-back");
       if (!prevFront || !prevBack) return;
 
-      const co          = allCompanies.find((c: any) => String(c.id) === cmCompanyId?.value);
-      const logoSrc     = co?.logo_url  ?? '';
-      const companyName = co?.name      ?? '';
-      const title       = cmTitleInput?.value  || '(Sin título)';
-      const description = cmDescription?.value || '';
-      const vigencia    = cmVigencia?.value     || '—';
-      const tipoDesc    = cmTipoDesc?.value     || '—';
-      const discAmt     = cmDiscountAmt?.value  || 'XXXX';
-      const discLbl     = cmDiscountLbl?.value  || 'DE DESCUENTO';
-      const codeLbl     = cmCodeLabel?.value    || 'Usando el código';
-      const discCode    = cmDiscountCode?.value || 'XXXXXXXXXX';
-      const benefitText = cmBenefitText?.value  || '';
-      const terms       = cmTerms?.value        || '';
+      const co = allCompanies.find(
+        (c: any) => String(c.id) === cmCompanyId?.value,
+      );
+      const logoSrc = co?.logo_url ?? "";
+      const companyName = co?.name ?? "";
+      const title = cmTitleInput?.value || "(Sin título)";
+      const description = cmDescription?.value || "";
+      const vigencia = cmVigencia?.value || "—";
+      const tipoDesc = cmTipoDesc?.value || "—";
+      const discAmt = cmDiscountAmt?.value || "XXXX";
+      const discLbl = cmDiscountLbl?.value || "DE DESCUENTO";
+      const codeLbl = cmCodeLabel?.value || "Usando el código";
+      const discCode = cmDiscountCode?.value || "XXXXXXXXXX";
+      const benefitText = cmBenefitText?.value || "";
+      const terms = cmTerms?.value || "";
 
       prevFront.innerHTML = `
         <div class="card-header">
-          ${logoSrc
-            ? `<img src="${escPrev(logoSrc)}" alt="Logo" class="brand-logo">`
-            : `<div class="brand-logo" style="width:80px;height:40px;background:#f1f5f9;border-radius:4px;"></div>`}
+          ${
+            logoSrc
+              ? `<img src="${escPrev(logoSrc)}" alt="Logo" class="brand-logo">`
+              : `<div class="brand-logo" style="width:80px;height:40px;background:#f1f5f9;border-radius:4px;"></div>`
+          }
           <button type="button" class="btn-benefit" style="pointer-events:none;">Ver beneficio</button>
         </div>
         <div class="card-body">
@@ -1497,32 +2131,41 @@ import "../../styles/grid-principal/benefit-card.css";
         </div>
         <div class="back-body">
           <p class="code-text">${escPrev(codeLbl)} <strong>${escPrev(discCode)}</strong></p>
-          ${benefitText ? `<p class="benefit-text">${benefitText}</p>` : ''}
+          ${benefitText ? `<p class="benefit-text">${benefitText}</p>` : ""}
           <h4>Términos y condiciones</h4>
           <p class="terms-text">${terms}</p>
         </div>`;
     }
 
     // Escuchar cambios en todos los campos del formulario
-    [cmTitleInput, cmDescription, cmVigencia, cmDiscountAmt, cmDiscountLbl,
-     cmCodeLabel, cmDiscountCode, cmBenefitText, cmTerms, cmTipoDesc
-    ].forEach(el => el?.addEventListener('input', updatePreview));
-    cmCompanyId?.addEventListener('change', updatePreview);
+    [
+      cmTitleInput,
+      cmDescription,
+      cmVigencia,
+      cmDiscountAmt,
+      cmDiscountLbl,
+      cmCodeLabel,
+      cmDiscountCode,
+      cmBenefitText,
+      cmTerms,
+      cmTipoDesc,
+    ].forEach((el) => el?.addEventListener("input", updatePreview));
+    cmCompanyId?.addEventListener("change", updatePreview);
 
     // Botones flip de la preview
-    const prevFrontBtn = document.getElementById('cm-prev-front-btn');
-    const prevBackBtn  = document.getElementById('cm-prev-back-btn');
-    prevFrontBtn?.addEventListener('click', () => {
-      document.getElementById('cm-prev-front')?.classList.remove('hidden');
-      document.getElementById('cm-prev-back')?.classList.add('hidden');
-      prevFrontBtn.classList.add('active');
-      prevBackBtn?.classList.remove('active');
+    const prevFrontBtn = document.getElementById("cm-prev-front-btn");
+    const prevBackBtn = document.getElementById("cm-prev-back-btn");
+    prevFrontBtn?.addEventListener("click", () => {
+      document.getElementById("cm-prev-front")?.classList.remove("hidden");
+      document.getElementById("cm-prev-back")?.classList.add("hidden");
+      prevFrontBtn.classList.add("active");
+      prevBackBtn?.classList.remove("active");
     });
-    prevBackBtn?.addEventListener('click', () => {
-      document.getElementById('cm-prev-front')?.classList.add('hidden');
-      document.getElementById('cm-prev-back')?.classList.remove('hidden');
-      prevBackBtn.classList.add('active');
-      prevFrontBtn?.classList.remove('active');
+    prevBackBtn?.addEventListener("click", () => {
+      document.getElementById("cm-prev-front")?.classList.add("hidden");
+      document.getElementById("cm-prev-back")?.classList.remove("hidden");
+      prevBackBtn.classList.add("active");
+      prevFrontBtn?.classList.remove("active");
     });
     // ──────────────────────────────────────────────────────────
 
@@ -1530,8 +2173,8 @@ import "../../styles/grid-principal/benefit-card.css";
     async function init() {
       try {
         const profile = await getUserProfile();
-        
-        if (!profile || profile.role !== 'admin') {
+
+        if (!profile || profile.role !== "admin") {
           // Redirigir si no es admin o no está logueado
           window.location.href = "/home";
           return;
@@ -1560,7 +2203,11 @@ import "../../styles/grid-principal/benefit-card.css";
     max-width: 100%;
     margin: 0 auto;
     padding: 2.5rem 5% 2rem;
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-family:
+      "Inter",
+      system-ui,
+      -apple-system,
+      sans-serif;
     font-size: 0.9rem;
   }
 
@@ -1742,12 +2389,12 @@ import "../../styles/grid-principal/benefit-card.css";
     width: 250px;
     transition: all 0.2s;
     outline: none;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.02);
   }
 
   .search-box input:focus {
     border-color: #94a3b8;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
   }
 
   .btn-success {
@@ -1781,7 +2428,7 @@ import "../../styles/grid-principal/benefit-card.css";
     font-weight: 600;
     font-size: 0.85rem;
     animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
   }
 
   .status-message.success {
@@ -1859,7 +2506,7 @@ import "../../styles/grid-principal/benefit-card.css";
 
   .users-table tbody tr:hover {
     background-color: #fefeff;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
     transform: scale(1.001) translateY(-1px);
     position: relative;
     z-index: 10;
@@ -1970,13 +2617,15 @@ import "../../styles/grid-principal/benefit-card.css";
     box-shadow: 0 4px 10px rgba(2, 132, 199, 0.2);
   }
 
-  .btn-delete.loading, .btn-edit.loading {
+  .btn-delete.loading,
+  .btn-edit.loading {
     opacity: 0.5;
     cursor: not-allowed;
     transform: scale(1);
   }
 
-  .loading-state, .empty-state {
+  .loading-state,
+  .empty-state {
     padding: 6rem 2rem;
     text-align: center;
     color: #64748b;
@@ -1998,60 +2647,153 @@ import "../../styles/grid-principal/benefit-card.css";
   }
 
   @keyframes spin {
-    to { transform: rotate(360deg); }
+    to {
+      transform: rotate(360deg);
+    }
   }
 
   @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-10px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
   @media (max-width: 768px) {
-    .admin-container { padding: 1.5rem 1rem; }
-    .admin-header { flex-direction: column; align-items: flex-start; gap: 1rem; padding: 1.5rem; }
-    .title-row { flex-direction: column; align-items: flex-start; gap: 0.8rem; flex-wrap: wrap; }
-    .admin-container .header-actions { flex-direction: column; width: 100%; }
-    .search-box, .search-box input, .btn-success { width: 100%; }
-    .admin-header h1 { font-size: 1.5rem; }
-    .admin-tabs { width: 100%; }
-    .tab-btn { flex: 1; justify-content: center; }
-    .users-table, .users-table tbody, .users-table tr, .users-table td { display: block; width: 100%; }
-    .users-table thead { display: none; }
-    .users-table tr { margin-bottom: 1.5rem; border: 1px solid #e2e8f0; border-radius: 12px; background-color: #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
-    .users-table td { text-align: right; padding: 1.2rem; position: relative; border-bottom: 1px solid #f1f5f9; }
-    .users-table td:last-child { border-bottom: none; }
-    .users-table td::before { content: attr(data-label); position: absolute; left: 1.2rem; top: 50%; transform: translateY(-50%); font-weight: 700; color: #64748b; font-size: 0.85rem; text-transform: uppercase; }
-    .user-info { justify-content: flex-end; }
+    .admin-container {
+      padding: 1.5rem 1rem;
+    }
+    .admin-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: 1.5rem;
+    }
+    .title-row {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+    }
+    .admin-container .header-actions {
+      flex-direction: column;
+      width: 100%;
+    }
+    .search-box,
+    .search-box input,
+    .btn-success {
+      width: 100%;
+    }
+    .admin-header h1 {
+      font-size: 1.5rem;
+    }
+    .admin-tabs {
+      width: 100%;
+    }
+    .tab-btn {
+      flex: 1;
+      justify-content: center;
+    }
+    .users-table,
+    .users-table tbody,
+    .users-table tr,
+    .users-table td {
+      display: block;
+      width: 100%;
+    }
+    .users-table thead {
+      display: none;
+    }
+    .users-table tr {
+      margin-bottom: 1.5rem;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      background-color: #fff;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
+    }
+    .users-table td {
+      text-align: right;
+      padding: 1.2rem;
+      position: relative;
+      border-bottom: 1px solid #f1f5f9;
+    }
+    .users-table td:last-child {
+      border-bottom: none;
+    }
+    .users-table td::before {
+      content: attr(data-label);
+      position: absolute;
+      left: 1.2rem;
+      top: 50%;
+      transform: translateY(-50%);
+      font-weight: 700;
+      color: #64748b;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+    }
+    .user-info {
+      justify-content: flex-end;
+    }
   }
 
   /* ── Modal Cupón ───────────────────────────────────────── */
   .cm-overlay {
-    position: fixed; inset: 0;
-    background: rgba(15,23,42,0.55);
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.55);
     backdrop-filter: blur(4px);
-    display: flex; align-items: center; justify-content: center;
-    z-index: 1000; padding: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 1rem;
   }
   .cm-dialog {
-    background: #fff; border-radius: 20px;
-    box-shadow: 0 25px 60px rgba(0,0,0,0.18);
-    width: 100%; max-width: 1100px;
-    max-height: 90vh; display: flex; flex-direction: column;
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.18);
+    width: 100%;
+    max-width: 1100px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
     overflow: hidden;
   }
   .cm-header {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 1.4rem 1.8rem; border-bottom: 1px solid #f1f5f9;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.4rem 1.8rem;
+    border-bottom: 1px solid #f1f5f9;
     flex-shrink: 0;
   }
-  .cm-header h2 { font-size: 1.3rem; font-weight: 800; color: #0f172a; margin: 0; }
-  .cm-close-btn {
-    background: #f1f5f9; border: none; border-radius: 8px;
-    width: 36px; height: 36px; cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    color: #64748b; transition: all 0.2s;
+  .cm-header h2 {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: #0f172a;
+    margin: 0;
   }
-  .cm-close-btn:hover { background: #fee2e2; color: #ef4444; }
+  .cm-close-btn {
+    background: #f1f5f9;
+    border: none;
+    border-radius: 8px;
+    width: 36px;
+    height: 36px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #64748b;
+    transition: all 0.2s;
+  }
+  .cm-close-btn:hover {
+    background: #fee2e2;
+    color: #ef4444;
+  }
   .cm-body {
     display: grid;
     grid-template-columns: 1fr 400px;
@@ -2062,49 +2804,71 @@ import "../../styles/grid-principal/benefit-card.css";
   .cm-form-col {
     overflow-y: auto;
     padding: 1.4rem 1.8rem;
-    display: flex; flex-direction: column; gap: 1.4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.4rem;
   }
   /* Columna preview */
   .cm-preview-col {
     background: #f8fafc;
     border-left: 1px solid #e2e8f0;
     padding: 1.4rem 1.2rem;
-    display: flex; flex-direction: column; gap: 0.8rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
     overflow-y: auto;
     min-width: 0;
   }
   .cm-preview-label {
-    font-size: 0.78rem; font-weight: 700; color: #94a3b8;
-    text-transform: uppercase; letter-spacing: 0.06em; margin: 0;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin: 0;
   }
   .cm-prev-flip {
-    display: flex; gap: 0.4rem;
-    background: #e2e8f0; border-radius: 9px; padding: 0.25rem;
+    display: flex;
+    gap: 0.4rem;
+    background: #e2e8f0;
+    border-radius: 9px;
+    padding: 0.25rem;
     width: fit-content;
   }
   .cm-prev-btn {
-    padding: 0.35rem 0.9rem; border: none; border-radius: 7px;
-    background: transparent; color: #64748b;
-    font-family: inherit; font-size: 0.82rem; font-weight: 600;
-    cursor: pointer; transition: all 0.2s;
+    padding: 0.35rem 0.9rem;
+    border: none;
+    border-radius: 7px;
+    background: transparent;
+    color: #64748b;
+    font-family: inherit;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
   }
   .cm-prev-btn.active {
-    background: #fff; color: #0f172a;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    background: #fff;
+    color: #0f172a;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
   }
   .cm-preview-wrap {
-    flex: 1; overflow-y: auto;
-    display: flex; align-items: flex-start; justify-content: center;
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
     padding: 0.4rem 0;
   }
   .cm-preview-card {
-    width: 100%; max-width: 340px;
+    width: 100%;
+    max-width: 340px;
     transform-style: flat !important;
     cursor: default !important;
   }
   .cm-preview-card:hover {
-    border-color: #DADADA !important;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05) !important;
+    border-color: #dadada !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05) !important;
   }
   .cm-preview-card .card-front,
   .cm-preview-card .card-back {
@@ -2118,154 +2882,336 @@ import "../../styles/grid-principal/benefit-card.css";
     display: none;
   }
   .cm-section {
-    background: #f8fafc; border: 1px solid #e2e8f0;
-    border-radius: 14px; padding: 1.2rem 1.4rem;
-    display: flex; flex-direction: column; gap: 0.9rem;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 1.2rem 1.4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
   }
   .cm-section-title {
-    display: flex; align-items: center; gap: 0.5rem;
-    font-size: 0.85rem; font-weight: 700; color: #475569;
-    text-transform: uppercase; letter-spacing: 0.05em;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #475569;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
     margin: 0;
   }
-  .cm-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem; }
-  .cm-field { display: flex; flex-direction: column; gap: 0.4rem; }
+  .cm-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.9rem;
+  }
+  .cm-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
   .cm-field label {
-    font-size: 0.82rem; font-weight: 600; color: #475569;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #475569;
   }
-  .cm-hint { font-weight: 400; color: #94a3b8; font-size: 0.78rem; }
+  .cm-hint {
+    font-weight: 400;
+    color: #94a3b8;
+    font-size: 0.78rem;
+  }
   .cm-input {
-    width: 100%; box-sizing: border-box;
-    padding: 0.7rem 0.9rem; border-radius: 9px;
-    border: 1px solid #e2e8f0; background: #fff;
-    font-family: inherit; font-size: 0.92rem;
-    transition: border-color 0.2s, box-shadow 0.2s; outline: none; color: #0f172a;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0.7rem 0.9rem;
+    border-radius: 9px;
+    border: 1px solid #e2e8f0;
+    background: #fff;
+    font-family: inherit;
+    font-size: 0.92rem;
+    transition:
+      border-color 0.2s,
+      box-shadow 0.2s;
+    outline: none;
+    color: #0f172a;
   }
-  .cm-input:focus { border-color: #94a3b8; box-shadow: 0 0 0 3px rgba(148,163,184,0.2); }
-  .cm-select { cursor: pointer; appearance: none;
+  .cm-input:focus {
+    border-color: #94a3b8;
+    box-shadow: 0 0 0 3px rgba(148, 163, 184, 0.2);
+  }
+  .cm-select {
+    cursor: pointer;
+    appearance: none;
     background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-    background-repeat: no-repeat; background-position: right 0.8rem center; background-size: 1em;
+    background-repeat: no-repeat;
+    background-position: right 0.8rem center;
+    background-size: 1em;
     padding-right: 2.2rem;
   }
-  .cm-textarea { resize: vertical; min-height: 80px; line-height: 1.5; }
-  .cm-field-toggle { flex-direction: row; align-items: center; gap: 0.8rem; flex-wrap: wrap; }
-  .cm-field-toggle label:first-child { min-width: 100%; }
+  .cm-textarea {
+    resize: vertical;
+    min-height: 80px;
+    line-height: 1.5;
+  }
+  .cm-field-toggle {
+    flex-direction: row;
+    align-items: center;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+  }
+  .cm-field-toggle label:first-child {
+    min-width: 100%;
+  }
   /* Toggle switch */
-  .cm-toggle { position: relative; display: inline-block; width: 44px; height: 24px; flex-shrink: 0; }
-  .cm-toggle input { opacity: 0; width: 0; height: 0; }
+  .cm-toggle {
+    position: relative;
+    display: inline-block;
+    width: 44px;
+    height: 24px;
+    flex-shrink: 0;
+  }
+  .cm-toggle input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
   .cm-toggle-slider {
-    position: absolute; inset: 0; background: #cbd5e1;
-    border-radius: 24px; cursor: pointer; transition: 0.3s;
+    position: absolute;
+    inset: 0;
+    background: #cbd5e1;
+    border-radius: 24px;
+    cursor: pointer;
+    transition: 0.3s;
   }
   .cm-toggle-slider::before {
-    content: ''; position: absolute;
-    width: 18px; height: 18px; left: 3px; bottom: 3px;
-    background: white; border-radius: 50%; transition: 0.3s;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+    content: "";
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    left: 3px;
+    bottom: 3px;
+    background: white;
+    border-radius: 50%;
+    transition: 0.3s;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
   }
-  .cm-toggle input:checked + .cm-toggle-slider { background: #10b981; }
-  .cm-toggle input:checked + .cm-toggle-slider::before { transform: translateX(20px); }
-  .cm-toggle-text { font-size: 0.88rem; font-weight: 600; color: #475569; }
+  .cm-toggle input:checked + .cm-toggle-slider {
+    background: #10b981;
+  }
+  .cm-toggle input:checked + .cm-toggle-slider::before {
+    transform: translateX(20px);
+  }
+  .cm-toggle-text {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: #475569;
+  }
   .cm-footer {
-    display: flex; justify-content: flex-end; gap: 0.8rem;
-    padding: 1.2rem 1.8rem; border-top: 1px solid #f1f5f9; flex-shrink: 0;
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.8rem;
+    padding: 1.2rem 1.8rem;
+    border-top: 1px solid #f1f5f9;
+    flex-shrink: 0;
   }
   .cm-btn-cancel {
-    padding: 0.75rem 1.4rem; border-radius: 10px; font-weight: 600;
-    font-size: 0.95rem; cursor: pointer; font-family: inherit;
-    background: #f1f5f9; border: 1px solid #e2e8f0; color: #475569;
+    padding: 0.75rem 1.4rem;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    font-family: inherit;
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    color: #475569;
     transition: all 0.2s;
   }
-  .cm-btn-cancel:hover { background: #e2e8f0; }
-  .cm-btn-save {
-    padding: 0.75rem 1.6rem; border-radius: 10px; font-weight: 700;
-    font-size: 0.95rem; cursor: pointer; font-family: inherit;
-    background: #0f172a; border: none; color: #fff;
-    display: flex; align-items: center; gap: 0.5rem;
-    transition: all 0.2s; box-shadow: 0 4px 12px rgba(15,23,42,0.2);
+  .cm-btn-cancel:hover {
+    background: #e2e8f0;
   }
-  .cm-btn-save:hover { background: #1e293b; transform: translateY(-1px); }
-  .cm-btn-save:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+  .cm-btn-save {
+    padding: 0.75rem 1.6rem;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    cursor: pointer;
+    font-family: inherit;
+    background: #0f172a;
+    border: none;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.2);
+  }
+  .cm-btn-save:hover {
+    background: #1e293b;
+    transform: translateY(-1px);
+  }
+  .cm-btn-save:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
   /* Status badge toggle */
   .cm-status-btn {
-    padding: 0.35rem 0.9rem; border-radius: 9999px;
-    font-size: 0.78rem; font-weight: 700; cursor: pointer;
-    border: none; transition: all 0.2s; letter-spacing: 0.03em;
+    padding: 0.35rem 0.9rem;
+    border-radius: 9999px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+    letter-spacing: 0.03em;
     text-transform: uppercase;
   }
   .cm-status-btn.active {
-    background: #dcfce7; color: #15803d;
+    background: #dcfce7;
+    color: #15803d;
   }
-  .cm-status-btn.active:hover { background: #bbf7d0; }
+  .cm-status-btn.active:hover {
+    background: #bbf7d0;
+  }
   .cm-status-btn.inactive {
-    background: #fee2e2; color: #b91c1c;
+    background: #fee2e2;
+    color: #b91c1c;
   }
-  .cm-status-btn.inactive:hover { background: #fecaca; }
-  .cm-status-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .cm-status-btn.inactive:hover {
+    background: #fecaca;
+  }
+  .cm-status-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
 
   /* ── Modal Empresa ──────────────────────────────────────── */
-  .em-dialog { max-width: 480px !important; }
+  .em-dialog {
+    max-width: 480px !important;
+  }
   .em-body {
     padding: 1.4rem 1.8rem;
-    display: flex; flex-direction: column; gap: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
     overflow-y: auto;
   }
   /* Tabs URL / Archivo */
   .em-logo-tabs {
-    display: flex; gap: 0.3rem;
-    background: #f1f5f9; border-radius: 9px; padding: 0.25rem;
-    width: fit-content; margin-top: 0.3rem;
+    display: flex;
+    gap: 0.3rem;
+    background: #f1f5f9;
+    border-radius: 9px;
+    padding: 0.25rem;
+    width: fit-content;
+    margin-top: 0.3rem;
   }
   .em-logo-tab {
-    padding: 0.35rem 1rem; border: none; border-radius: 7px;
-    background: transparent; color: #64748b;
-    font-family: inherit; font-size: 0.85rem; font-weight: 600;
-    cursor: pointer; transition: all 0.18s;
+    padding: 0.35rem 1rem;
+    border: none;
+    border-radius: 7px;
+    background: transparent;
+    color: #64748b;
+    font-family: inherit;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.18s;
   }
   .em-logo-tab.active {
-    background: #fff; color: #0f172a;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    background: #fff;
+    color: #0f172a;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
   }
   /* Dropzone */
   .em-dropzone {
-    display: flex; align-items: center; justify-content: center;
-    width: 100%; min-height: 110px;
-    border: 2px dashed #cbd5e1; border-radius: 12px;
-    background: #f8fafc; cursor: pointer;
-    transition: border-color 0.2s, background 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 110px;
+    border: 2px dashed #cbd5e1;
+    border-radius: 12px;
+    background: #f8fafc;
+    cursor: pointer;
+    transition:
+      border-color 0.2s,
+      background 0.2s;
   }
-  .em-dropzone:hover, .em-dropzone.drag-over {
-    border-color: #94a3b8; background: #f1f5f9;
+  .em-dropzone:hover,
+  .em-dropzone.drag-over {
+    border-color: #94a3b8;
+    background: #f1f5f9;
   }
   .em-drop-inner {
-    display: flex; flex-direction: column; align-items: center; gap: 0.35rem;
-    pointer-events: none; color: #64748b; font-size: 0.88rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.35rem;
+    pointer-events: none;
+    color: #64748b;
+    font-size: 0.88rem;
   }
-  .em-hint-text { font-size: 0.75rem; color: #94a3b8; }
+  .em-hint-text {
+    font-size: 0.75rem;
+    color: #94a3b8;
+  }
   /* Preview */
   .em-logo-preview {
     position: relative;
-    display: flex; align-items: center; justify-content: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     padding: 0.8rem;
-    background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
   }
   .em-logo-img {
-    max-height: 60px; max-width: 180px; object-fit: contain;
+    max-height: 60px;
+    max-width: 180px;
+    object-fit: contain;
   }
   .em-logo-clear {
-    position: absolute; top: 6px; right: 6px;
-    width: 22px; height: 22px; border-radius: 50%;
-    background: #fee2e2; border: none; cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    color: #ef4444; transition: background 0.2s;
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #fee2e2;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ef4444;
+    transition: background 0.2s;
   }
-  .em-logo-clear:hover { background: #fecaca; }
+  .em-logo-clear:hover {
+    background: #fecaca;
+  }
   @media (max-width: 600px) {
-    .cm-row { grid-template-columns: 1fr; }
-    .cm-dialog { border-radius: 16px; }
-    .cm-body { grid-template-columns: 1fr; }
-    .cm-preview-col { border-left: none; border-top: 1px solid #e2e8f0; }
-    .cm-form-col { padding: 1rem; }
-    .cm-header, .cm-footer { padding: 1rem; }
+    .cm-row {
+      grid-template-columns: 1fr;
+    }
+    .cm-dialog {
+      border-radius: 16px;
+    }
+    .cm-body {
+      grid-template-columns: 1fr;
+    }
+    .cm-preview-col {
+      border-left: none;
+      border-top: 1px solid #e2e8f0;
+    }
+    .cm-form-col {
+      padding: 1rem;
+    }
+    .cm-header,
+    .cm-footer {
+      padding: 1rem;
+    }
   }
 </style>
