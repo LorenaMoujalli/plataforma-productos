@@ -13,5 +13,10 @@
     "@supabase/supabase-js": "^2.106.0",
     "astro": "^5.17.1",
     "sweetalert2": "^11.26.24"
+  },
+  "overrides": {
+    "@astrojs/node": {
+      "astro": "$astro"
+    }
   }
 }
