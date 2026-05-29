@@ -1,0 +1,50 @@
+---
+import DashboardLayout from "../layouts/DashboardLayout.astro";
+---
+
+<DashboardLayout title="Perfil">
+	<!-- Espacio en blanco para que agregues el contenido de tu perfil aquí -->
+	<div class="profile-container">
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+	</div>
+</DashboardLayout>
+
+<script>
+	import { supabase } from "../lib/supabase.js";
+
+	// Verificar si el usuario tiene una sesión activa, si no, redirigir a /login
+	const {
+		data: { session },
+	} = await supabase.auth.getSession();
+
+	if (!session) {
+		window.location.href = "/login";
+	}
+</script>
+
+<style>
+	.profile-container {
+		min-height: 400px;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		color: #64748b;
+	}
+</style>

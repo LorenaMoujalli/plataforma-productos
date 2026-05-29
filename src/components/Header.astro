@@ -23,6 +23,13 @@ const currentPath = pathname.replace(/\/$/, '') || '/';
             </svg>
             <span>Administrar</span>
         </a>
+        <a href="/perfil" id="profile-btn" class="profile-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-user">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            <span>Perfil</span>
+        </a>
         <a href="#" id="logout-btn" class="logout-btn">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-log-out">
                 <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
@@ -135,7 +142,7 @@ const currentPath = pathname.replace(/\/$/, '') || '/';
     gap: 1rem;
 }
 
-.logout-btn, .admin-btn {
+.logout-btn, .admin-btn, .profile-btn {
     text-decoration: none;
     font-family: 'Inter', sans-serif;
     font-weight: 600;
@@ -156,13 +163,13 @@ const currentPath = pathname.replace(/\/$/, '') || '/';
     background-color: #f1f5f9;
 }
 
-.admin-btn {
+.admin-btn, .profile-btn {
     color: #020617;
     background-color: #f8fafc;
     border: 1px solid #e2e8f0;
 }
 
-.admin-btn:hover {
+.admin-btn:hover, .profile-btn:hover {
     background-color: #f1f5f9;
     border-color: #cbd5e1;
     transform: translateY(-1px);
@@ -203,7 +210,7 @@ const currentPath = pathname.replace(/\/$/, '') || '/';
         height: 48px; /* Aumentado para mayor presencia */
     }
 
-    .logout-btn, .admin-btn {
+    .logout-btn, .admin-btn, .profile-btn {
         font-size: 0.85rem;
         gap: 0.4rem;
         padding: 0.4rem 0.5rem;
@@ -232,7 +239,7 @@ const currentPath = pathname.replace(/\/$/, '') || '/';
         height: 44px;
     }
     
-    .logout-btn span, .admin-btn span {
+    .logout-btn span, .admin-btn span, .profile-btn span {
         display: none; /* Ocultar texto para dar espacio a los logos en móviles muy pequeños */
     }
 }
