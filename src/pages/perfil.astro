@@ -4,6 +4,23 @@ import DashboardLayout from "../layouts/DashboardLayout.astro";
 
 <DashboardLayout title="Perfil">
 	<div class="profile-container">
+		 <a href="/home" class="back-link">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+      </svg>
+      Volver
+    </a>
 		<!-- CONTENEDOR PRINCIPAL DE LA SECCIÓN PERFIL -->
 		<div
 			class="profile-section-container"
@@ -228,6 +245,98 @@ import DashboardLayout from "../layouts/DashboardLayout.astro";
 				</div>
 			</div>
 
+			<!-- MODAL DE REESTABLECER CONTRASEÑA -->
+			<div
+				id="reset-password-modal-overlay"
+				class="modal-overlay"
+				style="display: none;"
+			>
+				<div class="modal-dialog">
+					<div class="modal-header">
+						<span class="modal-title">Cambiar contraseña</span>
+						<button
+							id="btn-close-reset-modal"
+							class="modal-close-btn"
+							type="button"
+							aria-label="Cerrar modal"
+						>
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								width="16"
+								height="16"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+								stroke-width="3"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+							>
+								<line x1="18" y1="6" x2="6" y2="18"></line>
+								<line x1="6" y1="6" x2="18" y2="18"></line>
+							</svg>
+						</button>
+					</div>
+					<form id="reset-password-form" class="modal-body">
+						<!-- Campo: Email (Deshabilitado) -->
+						<div class="modal-field">
+							<label for="input-reset-email">Email</label>
+							<input
+								id="input-reset-email"
+								type="email"
+								disabled
+								style="opacity: 0.6; cursor: not-allowed;"
+							/>
+						</div>
+
+						<!-- Campo: Nueva Contraseña -->
+						<div class="modal-field">
+							<label for="input-new-password">Nueva contraseña</label>
+							<div class="password-wrapper" style="position: relative;">
+								<input
+									id="input-new-password"
+									type="password"
+									placeholder="Mínimo 6 caracteres"
+									required
+									style="padding-right: 45px;"
+								/>
+								<button type="button" class="toggle-password-btn" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: #757575;">
+									<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="eye-open"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+									<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="eye-closed" style="display: none;"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
+								</button>
+							</div>
+						</div>
+
+						<!-- Campo: Confirmar Contraseña -->
+						<div class="modal-field">
+							<label for="input-confirm-password">Confirmar contraseña</label>
+							<div class="password-wrapper" style="position: relative;">
+								<input
+									id="input-confirm-password"
+									type="password"
+									placeholder="Repite tu nueva contraseña"
+									required
+									style="padding-right: 45px;"
+								/>
+								<button type="button" class="toggle-password-btn" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: #757575;">
+									<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="eye-open"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+									<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="eye-closed" style="display: none;"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
+								</button>
+							</div>
+						</div>
+
+						<div style="margin-top: 30px;">
+							<button
+								id="btn-confirm-reset"
+								type="submit"
+								class="modal-submit-btn"
+							>
+								Cambiar contraseña
+							</button>
+						</div>
+					</form>
+				</div>
+			</div>
+
 			<!-- ESTILOS PARA COMPORTAMIENTO MÓVIL Y HOVERS -->
 			<style>
 				.profile-section-container a:hover {
@@ -394,6 +503,26 @@ import DashboardLayout from "../layouts/DashboardLayout.astro";
 					background-color: #9c9c9c;
 					cursor: not-allowed;
 				}
+				/* ── Resto de estilos existentes ── */
+  .back-link {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #64748b;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .back-link:hover {
+    color: #0f172a;
+    transform: translateX(-4px);
+  }
+
 			</style>
 		</div>
 	</div>
@@ -403,8 +532,8 @@ import DashboardLayout from "../layouts/DashboardLayout.astro";
 	import { supabase } from "../lib/supabase.js";
 	import { getCompaniesForSelect } from "../services/coupons-admin.js";
 	import { getAllowedDomainNames } from "../services/domains.js";
-	import { showToast, showAlert } from "../utils/notifications.js";
-	import { signOutUser } from "../services/auth.js";
+	import { showToast, showAlert, showConfirm } from "../utils/notifications.js";
+	import { signOutUser, updateAuthEmail, directResetPassword } from "../services/auth.js";
 
 	// --- Referencias UI ---
 	const displayNameEl = document.getElementById("profile-display-name")!;
@@ -424,7 +553,7 @@ import DashboardLayout from "../layouts/DashboardLayout.astro";
 		"btn-logout",
 	) as HTMLButtonElement;
 
-	// Elementos Modal
+	// Elementos Modal Edición
 	const editModalOverlay = document.getElementById(
 		"edit-modal-overlay",
 	) as HTMLDivElement;
@@ -443,6 +572,29 @@ import DashboardLayout from "../layouts/DashboardLayout.astro";
 	) as HTMLSelectElement;
 	const btnSaveProfile = document.getElementById(
 		"btn-save-profile",
+	) as HTMLButtonElement;
+
+	// Elementos Modal Reset Contraseña
+	const resetModalOverlay = document.getElementById(
+		"reset-password-modal-overlay",
+	) as HTMLDivElement;
+	const btnCloseResetModal = document.getElementById(
+		"btn-close-reset-modal",
+	) as HTMLButtonElement;
+	const resetPasswordForm = document.getElementById(
+		"reset-password-form",
+	) as HTMLFormElement;
+	const inputResetEmail = document.getElementById(
+		"input-reset-email",
+	) as HTMLInputElement;
+	const inputNewPassword = document.getElementById(
+		"input-new-password",
+	) as HTMLInputElement;
+	const inputConfirmPassword = document.getElementById(
+		"input-confirm-password",
+	) as HTMLInputElement;
+	const btnConfirmReset = document.getElementById(
+		"btn-confirm-reset",
 	) as HTMLButtonElement;
 
 	// --- Cargar Sesión y Validar ---
@@ -518,6 +670,11 @@ import DashboardLayout from "../layouts/DashboardLayout.astro";
 			} else {
 				selectCompany.value = "";
 			}
+
+			// Llenar email en modal de reset
+			if (inputResetEmail) {
+				inputResetEmail.value = emailVal;
+			}
 		} catch (err: any) {
 			console.error("Error al cargar la información del perfil:", err);
 			showToast({
@@ -532,7 +689,7 @@ import DashboardLayout from "../layouts/DashboardLayout.astro";
 		await loadAllData();
 	}
 
-	// --- Manejo de la Modal ---
+	// --- Manejo de la Modal Edición ---
 	btnEditInfo.addEventListener("click", () => {
 		editModalOverlay.style.display = "flex";
 	});
@@ -547,7 +704,47 @@ import DashboardLayout from "../layouts/DashboardLayout.astro";
 			closeModal();
 		}
 	});
- 
+
+	// --- Manejo de la Modal Reset Contraseña ---
+	btnResetPassword.addEventListener("click", () => {
+		resetModalOverlay.style.display = "flex";
+		inputNewPassword.value = "";
+		inputConfirmPassword.value = "";
+	});
+
+	function closeResetModal() {
+		resetModalOverlay.style.display = "none";
+	}
+
+	btnCloseResetModal.addEventListener("click", closeResetModal);
+	resetModalOverlay.addEventListener("click", (e) => {
+		if (e.target === resetModalOverlay) {
+			closeResetModal();
+		}
+	});
+
+	// --- Toggle Password Visibility ---
+	document.querySelectorAll('.toggle-password-btn').forEach(btn => {
+		btn.addEventListener('click', () => {
+			const wrapper = btn.closest('.password-wrapper');
+			const input = wrapper?.querySelector('input');
+			const eyeOpen = btn.querySelector('.eye-open') as HTMLElement;
+			const eyeClosed = btn.querySelector('.eye-closed') as HTMLElement;
+
+			if (input) {
+				if (input.type === 'password') {
+					input.type = 'text';
+					eyeOpen.style.display = 'none';
+					eyeClosed.style.display = 'block';
+				} else {
+					input.type = 'password';
+					eyeOpen.style.display = 'block';
+					eyeClosed.style.display = 'none';
+				}
+			}
+		});
+	});
+
 	// --- Validación de Dominio ---
 	function isDomainAllowed(email: string) {
 		const domain = email.split("@")[1];
@@ -558,7 +755,7 @@ import DashboardLayout from "../layouts/DashboardLayout.astro";
 		);
 	}
 
-	// --- Guardar Cambios ---
+	// --- Guardar Cambios Perfil ---
 	editProfileForm.addEventListener("submit", async (e) => {
 		e.preventDefault();
 		const newName = inputName.value.trim();
@@ -617,43 +814,59 @@ import DashboardLayout from "../layouts/DashboardLayout.astro";
 		}
 	});
 
-	// --- Acciones Adicionales ---
-	btnResetPassword.addEventListener("click", async () => {
-		const email = userProfile?.email || session?.user?.email;
-		if (!email) {
-			showToast({
-				text: "No se encontró el correo del usuario.",
-				icon: "error",
-			});
+	// --- Acción Reset Contraseña ---
+	resetPasswordForm.addEventListener("submit", async (e) => {
+		e.preventDefault();
+		const email = inputResetEmail.value;
+		const newPassword = inputNewPassword.value;
+		const confirmPassword = inputConfirmPassword.value;
+
+		if (newPassword !== confirmPassword) {
+			showToast({ text: "Las contraseñas no coinciden.", icon: "error" });
 			return;
 		}
 
-		btnResetPassword.disabled = true;
+		if (newPassword.length < 6) {
+			showToast({ text: "La contraseña debe tener al menos 6 caracteres.", icon: "error" });
+			return;
+		}
+
+		btnConfirmReset.disabled = true;
+		btnConfirmReset.textContent = "Cambiando...";
+
 		try {
-			const { error } = await supabase.auth.resetPasswordForEmail(email, {
-				redirectTo: window.location.origin + "/recuperar_clave",
-			});
-			if (error) throw error;
+			const success = await directResetPassword(email, newPassword);
+			if (!success) {
+				showToast({ text: "Ocurrió un error al intentar actualizar la contraseña.", icon: "error" });
+				return;
+			}
 
 			await showAlert({
-				title: "Correo enviado",
-				text: "Se ha enviado un correo para restablecer tu contraseña.",
+				title: "¡Contraseña Cambiada!",
+				text: "Tu contraseña ha sido actualizada correctamente.",
 				icon: "success",
-				confirmButtonText: "Entendido",
+				confirmButtonText: "Aceptar",
 			});
+
+			closeResetModal();
 		} catch (err: any) {
-			showToast({
-				text:
-					err.message ||
-					"Error al enviar el correo de restablecimiento.",
-				icon: "error",
-			});
+			showToast({ text: err.message || "Error al cambiar la contraseña.", icon: "error" });
 		} finally {
-			btnResetPassword.disabled = false;
+			btnConfirmReset.disabled = false;
+			btnConfirmReset.textContent = "Cambiar contraseña";
 		}
 	});
 
 	btnLogout.addEventListener("click", async () => {
+		const ok = await showConfirm({
+			title: "¿Está seguro de que quiere cerrar sesión?",
+			text: "",
+			confirmButtonText: "Cerrar",
+			cancelButtonText: "Cancelar",
+		});
+
+		if (!ok) return;
+
 		try {
 			await signOutUser();
 			window.location.href = "/login";
@@ -665,6 +878,7 @@ import DashboardLayout from "../layouts/DashboardLayout.astro";
 
 <style>
 	.profile-container {
+		position: relative;
 		min-height: 400px;
 		display: flex;
 		flex-direction: column;
