@@ -3,32 +3,449 @@ import DashboardLayout from "../layouts/DashboardLayout.astro";
 ---
 
 <DashboardLayout title="Perfil">
-	<!-- Espacio en blanco para que agregues el contenido de tu perfil aquí -->
 	<div class="profile-container">
-		
+		<!-- CONTENEDOR PRINCIPAL DE LA SECCIÓN PERFIL -->
+		<div
+			class="profile-section-container"
+			style="max-width: 1200px; width: 100%; margin: 0 auto; padding: 40px 20px; font-family: 'Inter', Arial, sans-serif; background-color: #ffffff; color: #000000; box-sizing: border-box;"
+		>
+			<!-- CABECERA: TÍTULO Y BOTÓN "VER TARJETA" -->
+			<div
+				style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;"
+			>
+				<h1
+					style="font-size: 42px; font-weight: 800; color: #d32f2f; margin: 0; font-family: inherit;"
+				>
+					Perfil
+				</h1>
+				<a
+					href="#"
+					style="text-decoration: none; color: #000000; font-size: 14px; font-weight: 700; border: 1px solid #d32f2f; padding: 10px 24px; border-radius: 8px; background-color: transparent; transition: all 0.3s ease;"
+				>
+					Ver tarjeta
+				</a>
+			</div>
 
+			<!-- MALLA PRINCIPAL REBALANCEADA -->
+			<div
+				class="profile-grid"
+				style="display: flex; gap: 30px; width: 100%; box-sizing: border-box;"
+			>
+				<!-- TARJETA IZQUIERDA: INFORMACIÓN GENERAL -->
+				<div
+					style="flex: 2.3; border: 1px solid #e0e0e0; border-radius: 20px; padding: 40px; background-color: #fbfbfb; box-sizing: border-box;"
+				>
+					<h2
+						id="profile-display-name"
+						style="font-size: 28px; font-weight: 700; margin: 0 0 6px 0;"
+					>
+						Cargando...
+					</h2>
+					<p
+						style="font-size: 14px; color: #757575; font-style: italic; margin: 0 0 40px 0;"
+					>
+						Información general
+					</p>
 
+					<!-- CONTENEDOR DE CAMPOS EN DOS COLUMNAS ANCHAS -->
+					<div
+						class="profile-fields-inputs"
+						style="display: flex; flex-wrap: wrap; gap: 30px 24px;"
+					>
+						<!-- Campo: Email -->
+						<div
+							style="width: calc(50% - 12px); min-width: 260px; box-sizing: border-box;"
+						>
+							<label
+								style="display: block; font-size: 13px; font-weight: 600; color: #000000; margin-bottom: 10px;"
+								>Email</label
+							>
+							<div
+								id="profile-display-email"
+								style="background-color: #f0f0f0; padding: 14px 16px; border-radius: 4px; font-size: 14px; color: #212121; box-sizing: border-box; word-break: break-all;"
+							>
+								Cargando...
+							</div>
+						</div>
+						<!-- Campo: Fecha de unión -->
+						<div
+							style="width: calc(50% - 12px); min-width: 260px; box-sizing: border-box;"
+						>
+							<label
+								style="display: block; font-size: 13px; font-weight: 600; color: #000000; margin-bottom: 10px;"
+								>Fecha de unión</label
+							>
+							<div
+								id="profile-display-joined"
+								style="background-color: #f0f0f0; padding: 14px 16px; border-radius: 4px; font-size: 14px; color: #212121; box-sizing: border-box;"
+							>
+								Cargando...
+							</div>
+						</div>
+						<!-- Campo: Empresa -->
+						<div
+							style="width: calc(50% - 12px); min-width: 260px; box-sizing: border-box;"
+						>
+							<label
+								style="display: block; font-size: 13px; font-weight: 600; color: #000000; margin-bottom: 10px;"
+								>Empresa</label
+							>
+							<div
+								id="profile-display-company"
+								style="background-color: #f0f0f0; padding: 14px 16px; border-radius: 4px; font-size: 14px; color: #212121; box-sizing: border-box;"
+							>
+								Cargando...
+							</div>
+						</div>
+						<!-- Botón: Editar Información -->
+						<div
+							style="width: calc(50% - 12px); min-width: 260px; display: flex; align-items: flex-end; box-sizing: border-box;"
+						>
+							<button
+								id="btn-edit-info"
+								type="button"
+								style="width: 100%; background-color: #da291c; color: #ffffff; border: none; padding: 14px; border-radius: 4px; font-size: 15px; font-weight: 700; cursor: pointer; transition: background-color 0.2s; height: 48px; font-family: inherit;"
+							>
+								Editar información
+							</button>
+						</div>
+					</div>
+				</div>
 
+				<!-- COLUMNA DERECHA: ACCIONES ACCESORIAS -->
+				<div
+					class="profile-sidebar"
+					style="flex: 1; min-width: 300px; display: flex; flex-direction: column; gap: 24px; box-sizing: border-box;"
+				>
+					<!-- TARJETA: CONTRASEÑA -->
+					<div
+						style="border: 1px solid #e0e0e0; border-radius: 20px; padding: 35px 30px; background-color: #fbfbfb; text-align: center; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; align-items: center; flex: 1;"
+					>
+						<h3
+							style="font-size: 19px; font-weight: 700; margin: 0 0 20px 0; max-width: 220px; line-height: 1.3;"
+						>
+							¿Olvidaste tu contraseña?
+						</h3>
+						<button
+							id="btn-reset-password"
+							type="button"
+							style="width: 100%; max-width: 240px; background-color: #da291c; color: #ffffff; border: none; padding: 12px 20px; border-radius: 4px; font-size: 14px; font-weight: 700; cursor: pointer; transition: background-color 0.2s; font-family: inherit;"
+						>
+							Reestablecer contraseña
+						</button>
+					</div>
 
+					<!-- TARJETA: CIERRE DE SESIÓN -->
+					<div
+						style="border: 1px solid #e0e0e0; border-radius: 20px; padding: 35px 30px; background-color: #fbfbfb; text-align: center; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; align-items: center; flex: 1;"
+					>
+						<h3
+							style="font-size: 19px; font-weight: 700; margin: 0 0 20px 0; line-height: 1.3;"
+						>
+							Cierre de sesión
+						</h3>
+						<button
+							id="btn-logout"
+							type="button"
+							style="width: 100%; max-width: 240px; background-color: #da291c; color: #ffffff; border: none; padding: 12px 20px; border-radius: 4px; font-size: 14px; font-weight: 700; cursor: pointer; transition: background-color 0.2s; font-family: inherit;"
+						>
+							Cerrar
+						</button>
+					</div>
+				</div>
+			</div>
 
+			<!-- MODAL DE EDICIÓN DE INFORMACIÓN (MODAL OVERLAY Y DIALOG) -->
+			<div
+				id="edit-modal-overlay"
+				class="modal-overlay"
+				style="display: none;"
+			>
+				<div class="modal-dialog">
+					<div class="modal-header">
+						<span class="modal-title">Editar información</span>
+						<button
+							id="btn-close-modal"
+							class="modal-close-btn"
+							type="button"
+							aria-label="Cerrar modal"
+						>
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								width="16"
+								height="16"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+								stroke-width="3"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+							>
+								<line x1="18" y1="6" x2="6" y2="18"></line>
+								<line x1="6" y1="6" x2="18" y2="18"></line>
+							</svg>
+						</button>
+					</div>
+					<form id="edit-profile-form" class="modal-body">
+						<!-- Campo: Nombre -->
+						<div class="modal-field">
+							<label for="input-name">Nombre</label>
+							<input
+								id="input-name"
+								type="text"
+								placeholder="Ingresa tu nombre"
+							/>
+						</div>
 
+						<!-- Campo: Email -->
+						<div class="modal-field">
+							<label for="input-email">Email</label>
+							<input
+								id="input-email"
+								type="email"
+								placeholder="Ingresa tu email"
+							/>
+						</div>
 
+						<!-- Campo: Empresa -->
+						<div class="modal-field">
+							<label for="select-company">Empresa</label>
+							<select id="select-company">
+								<option value="">Selecciona una empresa</option>
+							</select>
+						</div>
 
+						<div style="margin-top: 30px;">
+							<button
+								id="btn-save-profile"
+								type="submit"
+								class="modal-submit-btn"
+							>
+								Guardar cambios
+							</button>
+						</div>
+					</form>
+				</div>
+			</div>
 
+			<!-- ESTILOS PARA COMPORTAMIENTO MÓVIL Y HOVERS -->
+			<style>
+				.profile-section-container a:hover {
+					background-color: #d32f2f !important;
+					color: #ffffff !important;
+				}
+				.profile-section-container button:hover {
+					background-color: #b71c1c !important;
+				}
 
+				@media (max-width: 992px) {
+					.profile-grid {
+						flex-direction: column !important;
+					}
+					.profile-sidebar {
+						flex-direction: row !important;
+					}
+					.profile-sidebar > div {
+						flex: 1;
+					}
+				}
 
+				@media (max-width: 680px) {
+					.profile-fields-inputs > div {
+						width: 100% !important;
+					}
+					.profile-sidebar {
+						flex-direction: column !important;
+					}
+				}
 
+				/* --- ESTILOS DE LA MODAL --- */
+				.modal-overlay {
+					position: fixed;
+					top: 0;
+					left: 0;
+					width: 100vw;
+					height: 100vh;
+					background-color: rgba(0, 0, 0, 0.6);
+					display: flex;
+					justify-content: center;
+					align-items: center;
+					z-index: 1000;
+					backdrop-filter: blur(4px);
+					box-sizing: border-box;
+				}
 
+				.modal-dialog {
+					background-color: #ffffff;
+					width: 90%;
+					max-width: 480px;
+					border-radius: 40px; /* Bordes redondeados muy amplios según mockup */
+					padding: 40px;
+					box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+					box-sizing: border-box;
+					animation: modalFadeIn 0.3s ease-out;
+				}
 
+				@keyframes modalFadeIn {
+					from {
+						opacity: 0;
+						transform: translateY(20px);
+					}
+					to {
+						opacity: 1;
+						transform: translateY(0);
+					}
+				}
 
-        
+				.modal-header {
+					display: flex;
+					justify-content: space-between;
+					align-items: center;
+					margin-bottom: 30px;
+				}
+
+				.modal-title {
+					font-size: 32px;
+					font-weight: 800;
+					color: #000000;
+					font-family: inherit;
+				}
+
+				.modal-close-btn {
+					background-color: #e53935; /* Rojo brillante */
+					color: #ffffff;
+					border: none;
+					width: 32px;
+					height: 32px;
+					border-radius: 50%;
+					display: flex;
+					align-items: center;
+					justify-content: center;
+					cursor: pointer;
+					transition:
+						background-color 0.2s,
+						transform 0.1s;
+					padding: 0;
+				}
+
+				.modal-close-btn:hover {
+					background-color: #b71c1c;
+					transform: scale(1.05);
+				}
+
+				.modal-body {
+					display: flex;
+					flex-direction: column;
+					gap: 24px;
+				}
+
+				.modal-field {
+					display: flex;
+					flex-direction: column;
+					gap: 10px;
+				}
+
+				.modal-field label {
+					font-size: 14px;
+					font-weight: 600;
+					color: #000000;
+					text-align: left;
+				}
+
+				.modal-field input,
+				.modal-field select {
+					background-color: #e0e0e0; /* Fondo gris según mockup */
+					border: none;
+					border-radius: 4px;
+					padding: 16px;
+					font-size: 16px;
+					color: #212121;
+					font-family: inherit;
+					outline: none;
+					width: 100%;
+					box-sizing: border-box;
+					transition: background-color 0.2s;
+				}
+
+				.modal-field input:focus,
+				.modal-field select:focus {
+					background-color: #d6d6d6;
+				}
+
+				.modal-submit-btn {
+					width: 100%;
+					background-color: #da291c;
+					color: #ffffff;
+					border: none;
+					padding: 16px;
+					border-radius: 4px;
+					font-size: 16px;
+					font-weight: 700;
+					cursor: pointer;
+					transition: background-color 0.2s;
+					font-family: inherit;
+				}
+
+				.modal-submit-btn:hover {
+					background-color: #b71c1c;
+				}
+
+				.modal-submit-btn:disabled {
+					background-color: #9c9c9c;
+					cursor: not-allowed;
+				}
+			</style>
+		</div>
 	</div>
 </DashboardLayout>
 
 <script>
 	import { supabase } from "../lib/supabase.js";
+	import { getCompaniesForSelect } from "../services/coupons-admin.js";
+	import { getAllowedDomainNames } from "../services/domains.js";
+	import { showToast, showAlert } from "../utils/notifications.js";
+	import { signOutUser } from "../services/auth.js";
 
-	// Verificar si el usuario tiene una sesión activa, si no, redirigir a /login
+	// --- Referencias UI ---
+	const displayNameEl = document.getElementById("profile-display-name")!;
+	const displayEmailEl = document.getElementById("profile-display-email")!;
+	const displayJoinedEl = document.getElementById("profile-display-joined")!;
+	const displayCompanyEl = document.getElementById(
+		"profile-display-company",
+	)!;
+
+	const btnEditInfo = document.getElementById(
+		"btn-edit-info",
+	) as HTMLButtonElement;
+	const btnResetPassword = document.getElementById(
+		"btn-reset-password",
+	) as HTMLButtonElement;
+	const btnLogout = document.getElementById(
+		"btn-logout",
+	) as HTMLButtonElement;
+
+	// Elementos Modal
+	const editModalOverlay = document.getElementById(
+		"edit-modal-overlay",
+	) as HTMLDivElement;
+	const btnCloseModal = document.getElementById(
+		"btn-close-modal",
+	) as HTMLButtonElement;
+	const editProfileForm = document.getElementById(
+		"edit-profile-form",
+	) as HTMLFormElement;
+	const inputName = document.getElementById("input-name") as HTMLInputElement;
+	const inputEmail = document.getElementById(
+		"input-email",
+	) as HTMLInputElement;
+	const selectCompany = document.getElementById(
+		"select-company",
+	) as HTMLSelectElement;
+	const btnSaveProfile = document.getElementById(
+		"btn-save-profile",
+	) as HTMLButtonElement;
+
+	// --- Cargar Sesión y Validar ---
 	const {
 		data: { session },
 	} = await supabase.auth.getSession();
@@ -36,6 +453,214 @@ import DashboardLayout from "../layouts/DashboardLayout.astro";
 	if (!session) {
 		window.location.href = "/login";
 	}
+
+	const userId = session?.user?.id;
+	let allowedDomains: string[] = [];
+	let companiesList: Array<{ id: number; name: string }> = [];
+	let userProfile: any = null;
+
+	// --- Funciones de Carga de Datos ---
+	async function loadAllData() {
+		try {
+			// 1. Obtener Dominios Permitidos
+			allowedDomains = await getAllowedDomainNames().catch(() => []);
+
+			// 2. Obtener Listado de Empresas
+			companiesList = await getCompaniesForSelect().catch(() => []);
+
+			// Llenar select de la modal
+			selectCompany.innerHTML =
+				'<option value="">Selecciona una empresa</option>';
+			companiesList.forEach((c) => {
+				const option = document.createElement("option");
+				option.value = c.id.toString();
+				option.textContent = c.name;
+				selectCompany.appendChild(option);
+			});
+
+			// 3. Obtener Perfil del Usuario
+			const { data, error } = await supabase
+				.from("profiles")
+				.select("*, companies(id, name)")
+				.eq("id", userId)
+				.maybeSingle();
+
+			if (error) throw error;
+			userProfile = data;
+
+			// Actualizar UI principal
+			const nameVal =
+				userProfile?.name ||
+				session?.user?.user_metadata?.name ||
+				"Sin nombre";
+			const emailVal =
+				userProfile?.email || session?.user?.email || "Sin email";
+			const joinedVal = new Date(
+				userProfile?.created_at || session?.user?.created_at,
+			).toLocaleDateString("es-ES", {
+				day: "2-digit",
+				month: "2-digit",
+				year: "numeric",
+			});
+			const companyVal =
+				userProfile?.companies?.name || "Sin empresa asignada";
+
+			displayNameEl.textContent = nameVal;
+			displayEmailEl.textContent = emailVal;
+			displayJoinedEl.textContent = `Se unió el ${joinedVal}`;
+			displayCompanyEl.textContent = companyVal;
+
+			// Llenar inputs de modal
+			inputName.value = nameVal;
+			inputEmail.value = emailVal;
+			if (userProfile?.company_id) {
+				selectCompany.value = userProfile.company_id.toString();
+			} else {
+				selectCompany.value = "";
+			}
+		} catch (err: any) {
+			console.error("Error al cargar la información del perfil:", err);
+			showToast({
+				text: "Error al cargar la información del perfil.",
+				icon: "error",
+			});
+		}
+	}
+
+	// Cargar al inicializar
+	if (userId) {
+		await loadAllData();
+	}
+
+	// --- Manejo de la Modal ---
+	btnEditInfo.addEventListener("click", () => {
+		editModalOverlay.style.display = "flex";
+	});
+
+	function closeModal() {
+		editModalOverlay.style.display = "none";
+	}
+
+	btnCloseModal.addEventListener("click", closeModal);
+	editModalOverlay.addEventListener("click", (e) => {
+		if (e.target === editModalOverlay) {
+			closeModal();
+		}
+	});
+ 
+	// --- Validación de Dominio ---
+	function isDomainAllowed(email: string) {
+		const domain = email.split("@")[1];
+		return (
+			domain &&
+			(allowedDomains.length === 0 ||
+				allowedDomains.includes(domain.toLowerCase()))
+		);
+	}
+
+	// --- Guardar Cambios ---
+	editProfileForm.addEventListener("submit", async (e) => {
+		e.preventDefault();
+		const newName = inputName.value.trim();
+		const newEmail = inputEmail.value.trim();
+		const newCompanyId = selectCompany.value
+			? parseInt(selectCompany.value)
+			: null;
+
+		if (newEmail && !isDomainAllowed(newEmail)) {
+			showToast({
+				text: "Solo se permiten correos electrónicos de dominios autorizados.",
+				icon: "error",
+			});
+			return;
+		}
+
+		btnSaveProfile.disabled = true;
+		btnSaveProfile.textContent = "Guardando...";
+
+		try {
+			// 1. Actualizar perfil en public.profiles (nombre, email de contacto, empresa)
+			const { error: rpcError } = await supabase.rpc('update_own_profile', {
+				p_name: newName,
+				p_email: newEmail,
+				p_company_id: newCompanyId
+			});
+			if (rpcError) throw rpcError;
+
+			// 2. Si el email cambió, actualizar también en auth.users directamente (sin rate limit ni confirmación)
+			const currentEmail = userProfile?.email || session?.user?.email || '';
+			if (newEmail && newEmail !== currentEmail) {
+				const { error: emailError } = await supabase.rpc('update_own_email', {
+					p_email: newEmail
+				});
+				if (emailError) throw emailError;
+			}
+ 
+			await showAlert({
+				title: "¡Perfil Actualizado!",
+				text: "La información de tu perfil ha sido modificada correctamente.",
+				icon: "success",
+				confirmButtonText: "Aceptar",
+			});
+
+			closeModal();
+			await loadAllData();
+		} catch (err: any) {
+			console.error("Error al actualizar perfil:", err);
+			showToast({
+				text: err.message || "Error al guardar los cambios.",
+				icon: "error",
+			});
+		} finally {
+			btnSaveProfile.disabled = false;
+			btnSaveProfile.textContent = "Guardar cambios";
+		}
+	});
+
+	// --- Acciones Adicionales ---
+	btnResetPassword.addEventListener("click", async () => {
+		const email = userProfile?.email || session?.user?.email;
+		if (!email) {
+			showToast({
+				text: "No se encontró el correo del usuario.",
+				icon: "error",
+			});
+			return;
+		}
+
+		btnResetPassword.disabled = true;
+		try {
+			const { error } = await supabase.auth.resetPasswordForEmail(email, {
+				redirectTo: window.location.origin + "/recuperar_clave",
+			});
+			if (error) throw error;
+
+			await showAlert({
+				title: "Correo enviado",
+				text: "Se ha enviado un correo para restablecer tu contraseña.",
+				icon: "success",
+				confirmButtonText: "Entendido",
+			});
+		} catch (err: any) {
+			showToast({
+				text:
+					err.message ||
+					"Error al enviar el correo de restablecimiento.",
+				icon: "error",
+			});
+		} finally {
+			btnResetPassword.disabled = false;
+		}
+	});
+
+	btnLogout.addEventListener("click", async () => {
+		try {
+			await signOutUser();
+			window.location.href = "/login";
+		} catch (err: any) {
+			showToast({ text: "Error al cerrar sesión.", icon: "error" });
+		}
+	});
 </script>
 
 <style>

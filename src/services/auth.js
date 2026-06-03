@@ -232,6 +232,40 @@ export async function adminCreateUser(email, password, name, role = 'user') {
 }
 
 /**
+ * Actualiza el perfil del usuario activo en la tabla public.profiles.
+ * 
+ * @param {string} userId
+ * @param {object} profileData { name, email, company_id }
+ * @returns {Promise<any>}
+ */
+export async function updateUserProfile(userId, profileData) {
+  const { data, error } = await supabase
+    .from('profiles')
+    .update(profileData)
+    .eq('id', userId)
+    .select()
+    .single();
+
+  if (error) throw error;
+  return data;
+}
+
+/**
+ * Actualiza el email del usuario en auth.users y public.profiles.
+ * 
+ * @param {string} newEmail
+ * @returns {Promise<any>}
+ */
+export async function updateAuthEmail(newEmail) {
+  const { data, error } = await supabase.auth.updateUser({
+    email: newEmail
+  });
+
+  if (error) throw error;
+  return data;
+}
+
+/**
  * Actualiza los datos de un usuario desde el panel de admin (incluyendo email y password).
  * 
  * @param {string} userId
