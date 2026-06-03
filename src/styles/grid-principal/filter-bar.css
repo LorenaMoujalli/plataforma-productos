@@ -32,6 +32,103 @@
   background-color: #8c0c02;
 }
 
+/* Dropdown Container */
+.filter-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.filter-dropdown .dropdown-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.filter-dropdown .chevron-icon {
+  transition: transform 0.2s ease;
+}
+
+.filter-dropdown.open .chevron-icon {
+  transform: rotate(180deg);
+}
+
+/* Dropdown Menu */
+.filter-dropdown .dropdown-menu {
+  position: absolute;
+  top: calc(100% + 5px);
+  left: 0;
+  min-width: 220px;
+  max-height: 280px;
+  overflow-y: auto;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  padding: 8px 0;
+  z-index: 100;
+  opacity: 0;
+  transform: translateY(-10px);
+  pointer-events: none;
+  transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1), transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid #f1f5f9;
+}
+
+.filter-dropdown.open .dropdown-menu {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+/* Dropdown Scrollbar */
+.filter-dropdown .dropdown-menu::-webkit-scrollbar {
+  width: 6px;
+}
+
+.filter-dropdown .dropdown-menu::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.filter-dropdown .dropdown-menu::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+.filter-dropdown .dropdown-menu::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Dropdown Item */
+.filter-dropdown .dropdown-item {
+  padding: 10px 16px;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  color: #334155;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: background-color 0.15s ease, color 0.15s ease;
+  text-align: left;
+}
+
+.filter-dropdown .dropdown-item:hover {
+  background-color: #f1f5f9;
+  color: #0f172a;
+}
+
+.filter-dropdown .dropdown-item.active {
+  background-color: #fef2f2;
+  color: #DA291C;
+  font-weight: 600;
+}
+
+.filter-dropdown .dropdown-loading {
+  padding: 12px 16px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  color: #64748b;
+  text-align: center;
+}
+
 @media (max-width: 600px) {
   .filter-bar {
     display: grid;
@@ -39,10 +136,20 @@
     gap: 10px;
   }
   
+  .filter-dropdown {
+    width: 100%;
+  }
+
   .filter-btn {
     width: 100%;
     padding: 10px 5px;
     font-size: 13px;
     text-align: center;
+    justify-content: center;
+  }
+
+  .filter-dropdown .dropdown-menu {
+    width: 100%;
+    min-width: 100%;
   }
 }

@@ -28,7 +28,8 @@ import DashboardLayout from "../layouts/DashboardLayout.astro";
 		>
 			<!-- CABECERA: TÍTULO Y BOTÓN "VER TARJETA" -->
 			<div
-				style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;"
+				class="profile-header"
+				style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; flex-wrap: wrap; gap: 20px;"
 			>
 				<h1
 					style="font-size: 42px; font-weight: 800; color: #d32f2f; margin: 0; font-family: inherit;"
@@ -37,7 +38,9 @@ import DashboardLayout from "../layouts/DashboardLayout.astro";
 				</h1>
 				<a
 					href="#"
-					style="text-decoration: none; color: #000000; font-size: 14px; font-weight: 700; border: 1px solid #d32f2f; padding: 10px 24px; border-radius: 8px; background-color: transparent; transition: all 0.3s ease;"
+					id="btn-view-card"
+					class="btn-view-card-mobile"
+					style="text-decoration: none; color: #000000; font-size: 14px; font-weight: 700; border: 1px solid #d32f2f; padding: 10px 24px; border-radius: 8px; background-color: transparent; transition: all 0.3s ease; text-align: center;"
 				>
 					Ver tarjeta
 				</a>
@@ -337,15 +340,96 @@ import DashboardLayout from "../layouts/DashboardLayout.astro";
 				</div>
 			</div>
 
+			<!-- MODAL DE LA TARJETA DE IDENTIFICACIÓN -->
+			<div
+				id="card-modal-overlay"
+				class="modal-overlay"
+				style="display: none;"
+			>
+				<div 
+					class="card-dialog" 
+					style="background-color: #ffffff; width: 95%; max-width: 360px; border-radius: 28px; padding: 40px 30px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3); border: 2px solid #000000; box-sizing: border-box; text-align: center; position: relative; animation: modalFadeIn 0.3s ease-out;"
+				>
+					<button
+						id="btn-close-card-modal"
+						class="modal-close-btn"
+						type="button"
+						aria-label="Cerrar modal"
+						style="position: absolute; top: 15px; right: 15px;"
+					>
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							width="16"
+							height="16"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="3"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+						>
+							<line x1="18" y1="6" x2="6" y2="18"></line>
+							<line x1="6" y1="6" x2="18" y2="18"></line>
+						</svg>
+					</button>
+
+					<div style="margin-top: 10px;">
+						<p style="font-size: 16px; font-weight: 700; color: #000000; margin: 0 0 25px 0; font-family: inherit; text-transform: none;">Tarjeta de identificación</p>
+						
+						<h2 
+							id="card-display-name" 
+							style="font-size: 32px; font-weight: 800; color: #da291c; margin: 0 0 5px 0; font-family: inherit;"
+						>
+							Cargando...
+						</h2>
+						
+						<p 
+							id="card-display-company" 
+							style="font-size: 14px; font-style: italic; color: #757575; margin: 0 0 40px 0; font-family: inherit;"
+						>
+							Cargando...
+						</p>
+						
+						<!-- Espacio reservado para el QR -->
+						<div style="height: 120px; margin-bottom: 30px; display: flex; align-items: center; justify-content: center;">
+							<span style="font-size: 14px; color: #b5b5b5; font-style: italic;">[Espacio para código QR]</span>
+						</div>
+
+						<div style="margin-bottom: 25px;">
+							<p style="font-size: 14px; color: #757575; margin: 0 0 5px 0; font-family: inherit;">Email:</p>
+							<p 
+								id="card-display-email" 
+								style="font-size: 16px; font-weight: 700; color: #000000; margin: 0; font-family: inherit; word-break: break-all;"
+							>
+								Cargando...
+							</p>
+						</div>
+
+						<div>
+							<p style="font-size: 14px; color: #757575; margin: 0 0 5px 0; font-family: inherit;">Fecha de unión:</p>
+							<p 
+								id="card-display-joined" 
+								style="font-size: 16px; font-weight: 700; color: #000000; margin: 0; font-family: inherit;"
+							>
+								Cargando...
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+
 			<!-- ESTILOS PARA COMPORTAMIENTO MÓVIL Y HOVERS -->
 			<style>
 				.profile-section-container a:hover {
 					background-color: #d32f2f !important;
 					color: #ffffff !important;
 				}
-				.profile-section-container button:hover {
+				.profile-section-container button:not(.toggle-password-btn):not(.modal-close-btn):hover {
 					background-color: #b71c1c !important;
 				}
+                .toggle-password-btn:hover {
+                    background-color: transparent !important;
+                }
 
 				@media (max-width: 992px) {
 					.profile-grid {
@@ -360,6 +444,15 @@ import DashboardLayout from "../layouts/DashboardLayout.astro";
 				}
 
 				@media (max-width: 680px) {
+					.profile-section-container {
+						padding: 20px 15px !important;
+					}
+					.profile-header h1 {
+						font-size: 32px !important;
+					}
+					.btn-view-card-mobile {
+						width: 100%;
+					}
 					.profile-fields-inputs > div {
 						width: 100% !important;
 					}
@@ -504,9 +597,13 @@ import DashboardLayout from "../layouts/DashboardLayout.astro";
 					cursor: not-allowed;
 				}
 				/* ── Resto de estilos existentes ── */
+  .profile-container {
+    position: relative;
+    padding-top: 50px;
+  }
   .back-link {
     position: absolute;
-    top: 0;
+    top: 5px;
     left: 0;
     display: inline-flex;
     align-items: center;
@@ -514,7 +611,7 @@ import DashboardLayout from "../layouts/DashboardLayout.astro";
     color: #64748b;
     text-decoration: none;
     font-weight: 600;
-    font-size: 0.9rem;
+    font-size: 16px;
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
@@ -662,6 +759,24 @@ import DashboardLayout from "../layouts/DashboardLayout.astro";
 			displayJoinedEl.textContent = `Se unió el ${joinedVal}`;
 			displayCompanyEl.textContent = companyVal;
 
+			// Actualizar los datos de la tarjeta de identificación
+			const cardDisplayNameEl = document.getElementById("card-display-name");
+			const cardDisplayCompanyEl = document.getElementById("card-display-company");
+			const cardDisplayEmailEl = document.getElementById("card-display-email");
+			const cardDisplayJoinedEl = document.getElementById("card-display-joined");
+
+			if (cardDisplayNameEl) cardDisplayNameEl.textContent = nameVal;
+			if (cardDisplayCompanyEl) cardDisplayCompanyEl.textContent = companyVal;
+			if (cardDisplayEmailEl) cardDisplayEmailEl.textContent = emailVal;
+
+			const joinedDateObj = new Date(userProfile?.created_at || session?.user?.created_at);
+			const joinedValLong = joinedDateObj.toLocaleDateString("es-ES", {
+				day: "numeric",
+				month: "long",
+				year: "numeric",
+			});
+			if (cardDisplayJoinedEl) cardDisplayJoinedEl.textContent = joinedValLong;
+
 			// Llenar inputs de modal
 			inputName.value = nameVal;
 			inputEmail.value = emailVal;
@@ -722,6 +837,34 @@ import DashboardLayout from "../layouts/DashboardLayout.astro";
 			closeResetModal();
 		}
 	});
+
+	// --- Manejo del Modal de Tarjeta de Identificación ---
+	const btnViewCard = document.getElementById("btn-view-card") as HTMLAnchorElement;
+	const cardModalOverlay = document.getElementById("card-modal-overlay") as HTMLDivElement;
+	const btnCloseCardModal = document.getElementById("btn-close-card-modal") as HTMLButtonElement;
+
+	if (btnViewCard && cardModalOverlay) {
+		btnViewCard.addEventListener("click", (e) => {
+			e.preventDefault();
+			cardModalOverlay.style.display = "flex";
+		});
+	}
+
+	function closeCardModal() {
+		if (cardModalOverlay) cardModalOverlay.style.display = "none";
+	}
+
+	if (btnCloseCardModal) {
+		btnCloseCardModal.addEventListener("click", closeCardModal);
+	}
+
+	if (cardModalOverlay) {
+		cardModalOverlay.addEventListener("click", (e) => {
+			if (e.target === cardModalOverlay) {
+				closeCardModal();
+			}
+		});
+	}
 
 	// --- Toggle Password Visibility ---
 	document.querySelectorAll('.toggle-password-btn').forEach(btn => {

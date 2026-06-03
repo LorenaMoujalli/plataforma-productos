@@ -11,8 +11,14 @@ export async function getCoupons() {
     .select(`
       *,
       companies (
+        id,
         name,
-        logo_url
+        logo_url,
+        sector_id,
+        sectors (
+          id,
+          name
+        )
       )
     `)
     .eq("active", true)

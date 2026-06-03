@@ -3,8 +3,56 @@ import "../../styles/grid-principal/filter-bar.css";
 ---
 <p class="search-filter-title">Filtro de búsqueda</p>
 <div class="filter-bar">
-  <button class="filter-btn">Empresas</button>
-  <button class="filter-btn">Sector</button>
-  <button class="filter-btn">Descuento</button>
-  <button class="filter-btn">Promociones activas</button>
+  <!-- Dropdown Empresa -->
+  <div class="filter-dropdown" id="dropdown-empresa">
+    <button class="filter-btn dropdown-toggle" type="button" aria-expanded="false">
+      <span class="selected-label">Empresas</span>
+      <svg class="chevron-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>
+    </button>
+    <div class="dropdown-menu" id="menu-empresa">
+      <div class="dropdown-loading">Cargando empresas...</div>
+    </div>
+  </div>
+
+  <!-- Dropdown Sector -->
+  <div class="filter-dropdown" id="dropdown-sector">
+    <button class="filter-btn dropdown-toggle" type="button" aria-expanded="false">
+      <span class="selected-label">Sector</span>
+      <svg class="chevron-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>
+    </button>
+    <div class="dropdown-menu" id="menu-sector">
+      <div class="dropdown-loading">Cargando sectores...</div>
+    </div>
+  </div>
+
+  <!-- Dropdown Descuento -->
+  <div class="filter-dropdown" id="dropdown-descuento">
+    <button class="filter-btn dropdown-toggle" type="button" aria-expanded="false">
+      <span class="selected-label">Descuento</span>
+      <svg class="chevron-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>
+    </button>
+    <div class="dropdown-menu" id="menu-descuento">
+      <div class="dropdown-loading">Cargando descuentos...</div>
+    </div>
+  </div>
+
+  <!-- Dropdown Promociones -->
+  <div class="filter-dropdown" id="dropdown-promociones">
+    <button class="filter-btn dropdown-toggle" type="button" aria-expanded="false">
+      <span class="selected-label">Promociones</span>
+      <svg class="chevron-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>
+    </button>
+    <div class="dropdown-menu" id="menu-promociones">
+      <div class="dropdown-item active" data-value="all">Todas las promociones</div>
+      <div class="dropdown-item" data-value="vigentes">Solo vigentes</div>
+    </div>
+  </div>
 </div>

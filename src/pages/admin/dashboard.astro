@@ -1118,7 +1118,7 @@ import "../../styles/grid-principal/benefit-card.css";
           if (!userDataRaw) return;
 
           const user = JSON.parse(userDataRaw);
-          
+
           // Obtener lista de empresas para el select
           let companies: any[] = [];
           try {
@@ -1127,26 +1127,30 @@ import "../../styles/grid-principal/benefit-card.css";
             console.error("Error al cargar empresas para el modal:", e);
           }
 
-          const newValues: any = await showEditUserModal(user, allowedDomains, companies);
+          const newValues: any = await showEditUserModal(
+            user,
+            allowedDomains,
+            companies,
+          );
 
           if (newValues) {
             btn.classList.add("loading");
             try {
               // Actualizar todos los datos del usuario en una sola llamada RPC
-              await supabase.rpc('admin_update_user_full', {
+              await supabase.rpc("admin_update_user_full", {
                 p_user_id: user.id,
                 p_name: newValues.name,
                 p_role: newValues.role,
                 p_email: newValues.email,
                 p_password: newValues.password || null,
-                p_company_id: newValues.company_id
+                p_company_id: newValues.company_id,
               });
 
-              showToast({ 
+              showToast({
                 text: `Usuario actualizado correctamente.`,
                 icon: "success",
               });
-              loadUsers(); 
+              loadUsers();
             } catch (error: any) {
               console.error("Error actualizando usuario:", error);
               showToast({ text: `Error: ${error.message}`, icon: "error" });
@@ -1168,10 +1172,16 @@ import "../../styles/grid-principal/benefit-card.css";
         try {
           companies = await getCompaniesForSelect();
         } catch (e) {
-          console.error("Error al cargar empresas para el modal de creación:", e);
+          console.error(
+            "Error al cargar empresas para el modal de creación:",
+            e,
+          );
         }
 
-        const userData: any = await showCreateUserModal(allowedDomains, companies);
+        const userData: any = await showCreateUserModal(
+          allowedDomains,
+          companies,
+        );
         if (userData) {
           try {
             addUserBtn.disabled = true;
@@ -1188,9 +1198,9 @@ import "../../styles/grid-principal/benefit-card.css";
 
             // 2. Asignar empresa al perfil recién creado
             if (newUser && newUser.id) {
-              await supabase.rpc('admin_update_user_company', {
+              await supabase.rpc("admin_update_user_company", {
                 p_user_id: newUser.id,
-                p_company_id: userData.company_id
+                p_company_id: userData.company_id,
               });
             }
 
@@ -1473,7 +1483,7 @@ import "../../styles/grid-principal/benefit-card.css";
             }
           </td>
           <td data-label="Nombre"><span class="font-medium">${e.name}</span></td>
-          <td data-label="Sector"><span class="text-gray" style="font-size:0.85rem;">${e.sector_name ?? '—'}</span></td>
+          <td data-label="Sector"><span class="text-gray" style="font-size:0.85rem;">${e.sector_name ?? "—"}</span></td>
           <td data-label="Cupones"><span class="text-gray" style="font-size:0.85rem;">${e.coupon_count ? `${e.coupon_count} cupón${e.coupon_count !== 1 ? "es" : ""}` : "Sin cupones"}</span></td>
           <td data-label="Fecha de Registro"><span class="text-gray">${formatDate(e.created_at)}</span></td>
           <td data-label="Acciones" class="actions-cell">
@@ -1540,7 +1550,9 @@ import "../../styles/grid-principal/benefit-card.css";
     const emOverlay = document.getElementById("em-overlay");
     const emModalTitle = document.getElementById("em-modal-title");
     const emNameInput = document.getElementById("em-name") as HTMLInputElement;
-    const emSectorSelect = document.getElementById("em-sector") as HTMLSelectElement;
+    const emSectorSelect = document.getElementById(
+      "em-sector",
+    ) as HTMLSelectElement;
     const emLogoInput = document.getElementById(
       "em-logo-url",
     ) as HTMLInputElement;
@@ -1679,15 +1691,16 @@ import "../../styles/grid-principal/benefit-card.css";
       if (!emSectorSelect) return;
       try {
         const sectors = await getSectors();
-        emSectorSelect.innerHTML = '<option value="">Sin sector asignado</option>';
+        emSectorSelect.innerHTML =
+          '<option value="">Sin sector asignado</option>';
         sectors.forEach((s: any) => {
-          const opt = document.createElement('option');
+          const opt = document.createElement("option");
           opt.value = s.id;
           opt.textContent = s.name;
           emSectorSelect.appendChild(opt);
         });
       } catch (e) {
-        console.error('Error cargando sectores:', e);
+        console.error("Error cargando sectores:", e);
       }
     }
     loadSectorsIntoSelect();
@@ -1704,7 +1717,10 @@ import "../../styles/grid-principal/benefit-card.css";
       if (emModalTitle)
         emModalTitle.textContent = empresa ? "Editar Empresa" : "Nueva Empresa";
       if (emNameInput) emNameInput.value = empresa?.name ?? "";
-      if (emSectorSelect) emSectorSelect.value = empresa?.sector_id ? String(empresa.sector_id) : "";
+      if (emSectorSelect)
+        emSectorSelect.value = empresa?.sector_id
+          ? String(empresa.sector_id)
+          : "";
       selectedLogoFile = null;
       // Arrancar siempre en modo archivo
       switchLogoTab("file");
@@ -1736,8 +1752,14 @@ import "../../styles/grid-principal/benefit-card.css";
           logo_url = await uploadCompanyLogo(selectedLogoFile);
         }
 
-        const sectorId = emSectorSelect?.value ? parseInt(emSectorSelect.value) : null;
-        const payload = { name: emNameInput.value.trim(), logo_url, sector_id: sectorId };
+        const sectorId = emSectorSelect?.value
+          ? parseInt(emSectorSelect.value)
+          : null;
+        const payload = {
+          name: emNameInput.value.trim(),
+          logo_url,
+          sector_id: sectorId,
+        };
         if (editingEmpresaId) {
           await updateCompany(editingEmpresaId, payload);
           showToast({
@@ -2293,13 +2315,13 @@ import "../../styles/grid-principal/benefit-card.css";
     margin-bottom: 0.3rem;
   }
 
-  /* ── Tabs ── */
   .admin-tabs {
     display: flex;
     gap: 0.25rem;
     background: #f1f5f9;
-    border-radius: 10px;
+    border-radius: 0px;
     padding: 0.25rem;
+    border: 1px solid #e2e8f0;
   }
 
   .tab-btn {
@@ -2327,7 +2349,8 @@ import "../../styles/grid-principal/benefit-card.css";
   .tab-btn.tab-active {
     background: #ffffff;
     color: #0f172a;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    box-shadow: none;
+    border: 1px solid #e2e8f0;
   }
 
   .tab-panel {
@@ -2343,16 +2366,16 @@ import "../../styles/grid-principal/benefit-card.css";
     gap: 1rem;
     padding: 5rem 2rem;
     background: white;
-    border-radius: 20px;
-    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.08);
-    border: 1px solid #f1f5f9;
+    border-radius: 0px;
+    box-shadow: none;
+    border: 1px solid #e2e8f0;
     text-align: center;
   }
 
   .placeholder-icon {
     width: 90px;
     height: 90px;
-    border-radius: 22px;
+    border-radius: 0px;
     background: #f8fafc;
     border: 1px solid #e2e8f0;
     display: flex;
@@ -2377,7 +2400,7 @@ import "../../styles/grid-principal/benefit-card.css";
     background: #f1f5f9;
     color: #64748b;
     border: 1px solid #e2e8f0;
-    border-radius: 9999px;
+    border-radius: 0px;
     padding: 0.35rem 1rem;
     font-size: 0.82rem;
     font-weight: 700;
@@ -2396,7 +2419,7 @@ import "../../styles/grid-principal/benefit-card.css";
     color: #64748b;
     text-decoration: none;
     font-weight: 600;
-    font-size: 0.9rem;
+    font-size: 16px;
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
@@ -2434,26 +2457,26 @@ import "../../styles/grid-principal/benefit-card.css";
 
   .search-box input {
     padding: 0.55rem 1rem 0.55rem 2.4rem;
-    border-radius: 8px;
+    border-radius: 0px;
     border: 1px solid #e2e8f0;
     font-family: inherit;
     font-size: 0.85rem;
     width: 250px;
     transition: all 0.2s;
     outline: none;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.02);
+    box-shadow: none;
   }
 
   .search-box input:focus {
     border-color: #94a3b8;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    box-shadow: none;
   }
 
   .btn-success {
-    background-color: #10b981;
+    background-color: #da291c;
     color: white;
     border: none;
-    border-radius: 8px;
+    border-radius: 0px;
     padding: 0.55rem 1.1rem;
     font-weight: 600;
     font-size: 0.85rem;
@@ -2462,15 +2485,15 @@ import "../../styles/grid-principal/benefit-card.css";
     align-items: center;
     gap: 0.4rem;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+    box-shadow: none;
     position: relative;
     z-index: 1;
   }
 
   .btn-success:hover {
-    background-color: #059669;
-    transform: translateY(-3px);
-    box-shadow: 0 8px 16px rgba(16, 185, 129, 0.35);
+    background-color: #b71c1c;
+  
+    box-shadow: none;
   }
 
   .status-message {
@@ -2499,12 +2522,13 @@ import "../../styles/grid-principal/benefit-card.css";
 
   .table-container {
     background-color: white;
-    border-radius: 20px;
-    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.08);
-    border: 1px solid #f1f5f9;
+    border-radius: 0px;
+    box-shadow: none;
+    border: 1px solid #e2e8f0;
     overflow: hidden;
     max-height: 600px;
     overflow-y: auto;
+    overflow-x: auto;
   }
 
   .table-container::-webkit-scrollbar {
@@ -2513,11 +2537,11 @@ import "../../styles/grid-principal/benefit-card.css";
   }
   .table-container::-webkit-scrollbar-track {
     background: #f1f5f9;
-    border-radius: 10px;
+    border-radius: 0px;
   }
   .table-container::-webkit-scrollbar-thumb {
     background: #cbd5e1;
-    border-radius: 10px;
+    border-radius: 0px;
   }
   .table-container::-webkit-scrollbar-thumb:hover {
     background: #94a3b8;
@@ -2525,6 +2549,7 @@ import "../../styles/grid-principal/benefit-card.css";
 
   .users-table {
     width: 100%;
+    min-width: 800px;
     border-collapse: separate;
     border-spacing: 0;
     text-align: left;
@@ -2558,7 +2583,7 @@ import "../../styles/grid-principal/benefit-card.css";
 
   .users-table tbody tr:hover {
     background-color: #fefeff;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+    box-shadow: none;
     transform: scale(1.001) translateY(-1px);
     position: relative;
     z-index: 10;
@@ -2646,29 +2671,24 @@ import "../../styles/grid-principal/benefit-card.css";
     color: #64748b;
     cursor: pointer;
     padding: 0.45rem;
-    border-radius: 8px;
+    border-radius: 0px;
     transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     display: inline-flex;
     align-items: center;
     justify-content: center;
   }
 
-  .btn-delete:hover {
-    background-color: #fee2e2;
-    color: #ef4444;
-    border-color: #fecaca;
-    transform: scale(1.1) rotate(2deg);
-    box-shadow: 0 4px 10px rgba(239, 68, 68, 0.2);
+  .btn-icon:hover {
+  
+    border-color: #ccd2d7;
   }
 
   .btn-edit:hover {
-    background-color: #e0f2fe;
-    color: #0284c7;
-    border-color: #bae6fd;
-    transform: scale(1.1);
-    box-shadow: 0 4px 10px rgba(2, 132, 199, 0.2);
+    border-color: #ccd2d7;
   }
 
+
+ 
   .btn-delete.loading,
   .btn-edit.loading {
     opacity: 0.5;
@@ -2722,18 +2742,26 @@ import "../../styles/grid-principal/benefit-card.css";
     .admin-header {
       flex-direction: column;
       align-items: flex-start;
-      gap: 1rem;
-      padding: 1.5rem;
+      gap: 1.5rem;
+      padding: 0 0 1.5rem 0;
+    }
+    .header-titles {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+      width: 100%;
     }
     .title-row {
       flex-direction: column;
       align-items: flex-start;
-      gap: 0.8rem;
+      gap: 1.5rem;
       flex-wrap: wrap;
+      width: 100%;
     }
     .admin-container .header-actions {
       flex-direction: column;
       width: 100%;
+      gap: 1.2rem;
     }
     .search-box,
     .search-box input,
@@ -2745,47 +2773,12 @@ import "../../styles/grid-principal/benefit-card.css";
     }
     .admin-tabs {
       width: 100%;
+      flex-wrap: wrap;
     }
     .tab-btn {
-      flex: 1;
+      flex: 1 1 calc(50% - 0.5rem);
       justify-content: center;
-    }
-    .users-table,
-    .users-table tbody,
-    .users-table tr,
-    .users-table td {
-      display: block;
-      width: 100%;
-    }
-    .users-table thead {
-      display: none;
-    }
-    .users-table tr {
-      margin-bottom: 1.5rem;
-      border: 1px solid #e2e8f0;
-      border-radius: 12px;
-      background-color: #fff;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
-    }
-    .users-table td {
-      text-align: right;
-      padding: 1.2rem;
-      position: relative;
-      border-bottom: 1px solid #f1f5f9;
-    }
-    .users-table td:last-child {
-      border-bottom: none;
-    }
-    .users-table td::before {
-      content: attr(data-label);
-      position: absolute;
-      left: 1.2rem;
-      top: 50%;
-      transform: translateY(-50%);
-      font-weight: 700;
-      color: #64748b;
-      font-size: 0.85rem;
-      text-transform: uppercase;
+      padding: 0.6rem 0.5rem;
     }
     .user-info {
       justify-content: flex-end;
@@ -2806,8 +2799,9 @@ import "../../styles/grid-principal/benefit-card.css";
   }
   .cm-dialog {
     background: #fff;
-    border-radius: 20px;
-    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.18);
+    border-radius: 0px;
+    box-shadow: none;
+    border: 1px solid #e2e8f0;
     width: 100%;
     max-width: 1100px;
     max-height: 90vh;
@@ -2832,7 +2826,7 @@ import "../../styles/grid-principal/benefit-card.css";
   .cm-close-btn {
     background: #f1f5f9;
     border: none;
-    border-radius: 8px;
+    border-radius: 0px;
     width: 36px;
     height: 36px;
     cursor: pointer;
@@ -2883,14 +2877,14 @@ import "../../styles/grid-principal/benefit-card.css";
     display: flex;
     gap: 0.4rem;
     background: #e2e8f0;
-    border-radius: 9px;
+    border-radius: 0px;
     padding: 0.25rem;
     width: fit-content;
   }
   .cm-prev-btn {
     padding: 0.35rem 0.9rem;
     border: none;
-    border-radius: 7px;
+    border-radius: 0px;
     background: transparent;
     color: #64748b;
     font-family: inherit;
@@ -2902,7 +2896,8 @@ import "../../styles/grid-principal/benefit-card.css";
   .cm-prev-btn.active {
     background: #fff;
     color: #0f172a;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: none;
+    border: 1px solid #e2e8f0;
   }
   .cm-preview-wrap {
     flex: 1;
@@ -2936,7 +2931,7 @@ import "../../styles/grid-principal/benefit-card.css";
   .cm-section {
     background: #f8fafc;
     border: 1px solid #e2e8f0;
-    border-radius: 14px;
+    border-radius: 0px;
     padding: 1.2rem 1.4rem;
     display: flex;
     flex-direction: column;
@@ -2977,7 +2972,7 @@ import "../../styles/grid-principal/benefit-card.css";
     width: 100%;
     box-sizing: border-box;
     padding: 0.7rem 0.9rem;
-    border-radius: 9px;
+    border-radius: 0px;
     border: 1px solid #e2e8f0;
     background: #fff;
     font-family: inherit;
@@ -3069,7 +3064,7 @@ import "../../styles/grid-principal/benefit-card.css";
   }
   .cm-btn-cancel {
     padding: 0.75rem 1.4rem;
-    border-radius: 10px;
+    border-radius: 0px;
     font-weight: 600;
     font-size: 0.95rem;
     cursor: pointer;
@@ -3084,24 +3079,21 @@ import "../../styles/grid-principal/benefit-card.css";
   }
   .cm-btn-save {
     padding: 0.75rem 1.6rem;
-    border-radius: 10px;
+    border-radius: 0px;
     font-weight: 700;
     font-size: 0.95rem;
     cursor: pointer;
     font-family: inherit;
-    background: #0f172a;
+    background: #da291c;
     border: none;
     color: #fff;
     display: flex;
     align-items: center;
     gap: 0.5rem;
     transition: all 0.2s;
-    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.2);
+    box-shadow: none;
   }
-  .cm-btn-save:hover {
-    background: #1e293b;
-    transform: translateY(-1px);
-  }
+ 
   .cm-btn-save:disabled {
     opacity: 0.6;
     cursor: not-allowed;
@@ -3110,7 +3102,7 @@ import "../../styles/grid-principal/benefit-card.css";
   /* Status badge toggle */
   .cm-status-btn {
     padding: 0.35rem 0.9rem;
-    border-radius: 9999px;
+    border-radius: 0px;
     font-size: 0.78rem;
     font-weight: 700;
     cursor: pointer;
@@ -3154,7 +3146,7 @@ import "../../styles/grid-principal/benefit-card.css";
     display: flex;
     gap: 0.3rem;
     background: #f1f5f9;
-    border-radius: 9px;
+    border-radius: 0px;
     padding: 0.25rem;
     width: fit-content;
     margin-top: 0.3rem;
@@ -3162,7 +3154,7 @@ import "../../styles/grid-principal/benefit-card.css";
   .em-logo-tab {
     padding: 0.35rem 1rem;
     border: none;
-    border-radius: 7px;
+    border-radius: 0px;
     background: transparent;
     color: #64748b;
     font-family: inherit;
@@ -3174,7 +3166,8 @@ import "../../styles/grid-principal/benefit-card.css";
   .em-logo-tab.active {
     background: #fff;
     color: #0f172a;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: none;
+    border: 1px solid #e2e8f0;
   }
   /* Dropzone */
   .em-dropzone {
@@ -3184,7 +3177,7 @@ import "../../styles/grid-principal/benefit-card.css";
     width: 100%;
     min-height: 110px;
     border: 2px dashed #cbd5e1;
-    border-radius: 12px;
+    border-radius: 0px;
     background: #f8fafc;
     cursor: pointer;
     transition:
@@ -3265,5 +3258,19 @@ import "../../styles/grid-principal/benefit-card.css";
     .cm-footer {
       padding: 1rem;
     }
+  }
+
+  /* ── SweetAlert Overrides para alinear con la Cámara de Comercio ── */
+  .swal2-popup {
+    border-radius: 0px !important;
+  }
+  .swal2-confirm {
+    border-radius: 0px !important;
+    background-color: #da291c !important;
+    color: white !important;
+    border: none !important;
+  }
+  .swal2-cancel, .swal2-deny {
+    border-radius: 0px !important;
   }
 </style>

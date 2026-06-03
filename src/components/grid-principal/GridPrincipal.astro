@@ -18,6 +18,13 @@ import Pagination from "./Pagination.astro";
 <script>
   import { getCoupons } from "../../services/coupons.js";
 
+  // ── State variables ──────────────────────────────────────────
+  let allCoupons: any[] = [];
+  let selectedCompanyId = "";
+  let selectedSectorId = "";
+  let selectedDiscount = "";
+  let selectedPromoFilter = "all";
+
   // ── Helpers ──────────────────────────────────────────────────
   function esc(str: unknown): string {
     if (str == null) return "";
@@ -102,9 +109,14 @@ import Pagination from "./Pagination.astro";
     const cards = document.querySelectorAll<HTMLElement>(".benefit-card");
     const paginationContainer = document.getElementById("pagination-container");
 
-    if (!paginationContainer || cards.length === 0) return;
+    if (!paginationContainer) return;
 
-    // Reasignamos a const para que TypeScript sepa que ya no es null
+    if (cards.length === 0) {
+      paginationContainer.style.display = "none";
+      return;
+    }
+
+    paginationContainer.style.display = "flex";
     const container = paginationContainer;
 
     const itemsPerPage = 6;
@@ -159,16 +171,272 @@ import Pagination from "./Pagination.astro";
     });
   }
 
+  // ── Aplicar Filtros ──────────────────────────────────────────
+  function applyFilters(): void {
+    const grid = document.getElementById("benefits-grid");
+    if (!grid) return;
+
+    console.log("Filtros seleccionados - Empresa ID:", selectedCompanyId, "Sector ID:", selectedSectorId);
+    if (allCoupons.length > 0) {
+      console.log("Ejemplo de cupón (companies):", allCoupons[0].companies);
+    }
+
+    let filtered = allCoupons;
+    if (selectedCompanyId) {
+      filtered = filtered.filter(c => c.companies && String(c.companies.id) === String(selectedCompanyId));
+    }
+    if (selectedSectorId) {
+      filtered = filtered.filter(c => c.companies && String(c.companies.sector_id) === String(selectedSectorId));
+    }
+    if (selectedDiscount) {
+      filtered = filtered.filter(c => c.discount_amount && String(c.discount_amount) === String(selectedDiscount));
+    }
+    if (selectedPromoFilter === "vigentes") {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      
+      filtered = filtered.filter(c => {
+        if (!c.vigencia) return true; // Si no tiene fecha de vigencia, asumimos que sigue activo
+        
+        // Función interna para parsear la fecha de finalización
+        let targetStr = c.vigencia;
+        if (targetStr.includes(" - ")) {
+          const parts = targetStr.split(" - ");
+          targetStr = parts[1] || parts[0];
+        } else if (targetStr.includes("-") && !targetStr.match(/^\d{4}-\d{2}-\d{2}$/)) {
+          const parts = targetStr.split("-");
+          targetStr = parts[parts.length - 1];
+        }
+        
+        targetStr = targetStr.trim();
+        
+        // Intentar parsear formato DD/MM/YY o DD/MM/YYYY
+        const slashMatch = targetStr.match(/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})$/);
+        if (slashMatch) {
+          const day = parseInt(slashMatch[1], 10);
+          const month = parseInt(slashMatch[2], 10) - 1;
+          let year = parseInt(slashMatch[3], 10);
+          if (year < 100) year += 2000;
+          const expDate = new Date(year, month, day);
+          expDate.setHours(0, 0, 0, 0);
+          return expDate >= today;
+        }
+        
+        // Intentar parsear formato YYYY-MM-DD
+        const isoMatch = targetStr.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+        if (isoMatch) {
+          const year = parseInt(isoMatch[1], 10);
+          const month = parseInt(isoMatch[2], 10) - 1;
+          const day = parseInt(isoMatch[3], 10);
+          const expDate = new Date(year, month, day);
+          expDate.setHours(0, 0, 0, 0);
+          return expDate >= today;
+        }
+        
+        // Fallback nativo
+        const parsed = new Date(targetStr);
+        if (!isNaN(parsed.getTime())) {
+          parsed.setHours(0, 0, 0, 0);
+          return parsed >= today;
+        }
+        
+        return true; // Si no se reconoce el formato, lo dejamos visible por precaución
+      });
+    }
+
+    console.log("Cupones filtrados:", filtered.length);
+
+    if (filtered.length === 0) {
+      grid.innerHTML = '<p style="color:#64748b;padding:4rem;text-align:center;width:100%;grid-column:1/-1;">No se encontraron beneficios con los filtros seleccionados.</p>';
+      const container = document.getElementById("pagination-container");
+      if (container) container.style.display = "none";
+    } else {
+      grid.innerHTML = filtered.map(renderCard).join("");
+      initPagination();
+    }
+  }
+
+  // ── Gestión de Dropdowns ──────────────────────────────────────
+  function initDropdowns(): void {
+    const dropdowns = document.querySelectorAll(".filter-dropdown");
+
+    dropdowns.forEach(dropdown => {
+      const toggle = dropdown.querySelector(".dropdown-toggle");
+      if (!toggle) return;
+
+      toggle.addEventListener("click", (e) => {
+        e.stopPropagation();
+        
+        // Cerrar todos los demás dropdowns
+        dropdowns.forEach(d => {
+          if (d !== dropdown) d.classList.remove("open");
+        });
+
+        dropdown.classList.toggle("open");
+      });
+    });
+
+    // Cerrar al hacer click fuera
+    document.addEventListener("click", () => {
+      dropdowns.forEach(d => d.classList.remove("open"));
+    });
+  }
+
+  // ── Popula los dropdowns de forma dinámica desde los cupones cargados ──
+  function populateFilters(): void {
+    const menuEmpresa = document.getElementById("menu-empresa");
+    const menuSector = document.getElementById("menu-sector");
+    const menuDescuento = document.getElementById("menu-descuento");
+
+    // 1. POPULAR EMPRESAS
+    if (menuEmpresa) {
+      const companyMap = new Map<string, { id: string, name: string }>();
+      allCoupons.forEach(c => {
+        if (c.companies && c.companies.id) {
+          companyMap.set(String(c.companies.id), {
+            id: String(c.companies.id),
+            name: String(c.companies.name)
+          });
+        }
+      });
+      const uniqueCompanies = Array.from(companyMap.values()).sort((a, b) => a.name.localeCompare(b.name));
+
+      menuEmpresa.innerHTML = `
+        <div class="dropdown-item active" data-id="">Todas las empresas</div>
+        ${uniqueCompanies.map(c => `<div class="dropdown-item" data-id="${esc(c.id)}">${esc(c.name)}</div>`).join("")}
+      `;
+
+      menuEmpresa.querySelectorAll(".dropdown-item").forEach(item => {
+        item.addEventListener("click", (e) => {
+          const id = (item as HTMLElement).dataset.id || "";
+          selectedCompanyId = id;
+          
+          menuEmpresa.querySelectorAll(".dropdown-item").forEach(el => el.classList.remove("active"));
+          item.classList.add("active");
+
+          const label = document.querySelector("#dropdown-empresa .selected-label");
+          if (label) {
+            label.textContent = id ? item.textContent : "Empresas";
+          }
+
+          applyFilters();
+        });
+      });
+    }
+
+    // 2. POPULAR SECTORES
+    if (menuSector) {
+      const sectorMap = new Map<string, { id: string, name: string }>();
+      allCoupons.forEach(c => {
+        const sector = c.companies?.sectors;
+        if (sector && sector.id) {
+          sectorMap.set(String(sector.id), {
+            id: String(sector.id),
+            name: String(sector.name)
+          });
+        } else if (c.companies?.sector_id) {
+          sectorMap.set(String(c.companies.sector_id), {
+            id: String(c.companies.sector_id),
+            name: `Sector ${c.companies.sector_id}`
+          });
+        }
+      });
+      const uniqueSectors = Array.from(sectorMap.values()).sort((a, b) => a.name.localeCompare(b.name));
+
+      menuSector.innerHTML = `
+        <div class="dropdown-item active" data-id="">Todos los sectores</div>
+        ${uniqueSectors.map(s => `<div class="dropdown-item" data-id="${esc(s.id)}">${esc(s.name)}</div>`).join("")}
+      `;
+
+      menuSector.querySelectorAll(".dropdown-item").forEach(item => {
+        item.addEventListener("click", (e) => {
+          const id = (item as HTMLElement).dataset.id || "";
+          selectedSectorId = id;
+          
+          menuSector.querySelectorAll(".dropdown-item").forEach(el => el.classList.remove("active"));
+          item.classList.add("active");
+
+          const label = document.querySelector("#dropdown-sector .selected-label");
+          if (label) {
+            label.textContent = id ? item.textContent : "Sector";
+          }
+
+          applyFilters();
+        });
+      });
+    }
+
+    // 3. POPULAR DESCUENTOS
+    if (menuDescuento) {
+      const uniqueAmounts = [...new Set(allCoupons.map(c => c.discount_amount).filter(Boolean))];
+      uniqueAmounts.sort((a, b) => {
+        const numA = parseFloat(a);
+        const numB = parseFloat(b);
+        if (!isNaN(numA) && !isNaN(numB)) {
+          return numA - numB;
+        }
+        return String(a).localeCompare(String(b));
+      });
+
+      menuDescuento.innerHTML = `
+        <div class="dropdown-item active" data-value="">Todos los descuentos</div>
+        ${uniqueAmounts.map(amount => `<div class="dropdown-item" data-value="${esc(amount)}">${esc(amount)}</div>`).join("")}
+      `;
+
+      menuDescuento.querySelectorAll(".dropdown-item").forEach(item => {
+        item.addEventListener("click", (e) => {
+          const val = (item as HTMLElement).dataset.value || "";
+          selectedDiscount = val;
+
+          menuDescuento.querySelectorAll(".dropdown-item").forEach(el => el.classList.remove("active"));
+          item.classList.add("active");
+
+          const label = document.querySelector("#dropdown-descuento .selected-label");
+          if (label) {
+            label.textContent = val ? val : "Descuento";
+          }
+
+          applyFilters();
+        });
+      });
+    }
+  }
+
+  // ── Inicializa el filtro de promociones ──────────────────────
+  function initPromoFilter(): void {
+    const menuPromociones = document.getElementById("menu-promociones");
+    if (!menuPromociones) return;
+
+    menuPromociones.querySelectorAll(".dropdown-item").forEach(item => {
+      item.addEventListener("click", (e) => {
+        const val = (item as HTMLElement).dataset.value || "all";
+        selectedPromoFilter = val;
+
+        // Actualizar clase activa
+        menuPromociones.querySelectorAll(".dropdown-item").forEach(el => el.classList.remove("active"));
+        item.classList.add("active");
+
+        // Actualizar etiqueta del botón
+        const label = document.querySelector("#dropdown-promociones .selected-label");
+        if (label) {
+          label.textContent = val === "vigentes" ? "Solo vigentes" : "Promociones";
+        }
+
+        applyFilters();
+      });
+    });
+  }
+
   // ── Carga principal ──────────────────────────────────────────
   async function loadCoupons(): Promise<void> {
     const grid = document.getElementById("benefits-grid");
     if (!grid) return;
 
     try {
-      const coupons = await getCoupons();
-      grid.innerHTML = coupons.map(renderCard).join("");
+      allCoupons = await getCoupons();
+      populateFilters();
+      applyFilters();
       setupFlip(grid);
-      initPagination();
     } catch (err) {
       console.error("Error cargando cupones:", err);
       grid.innerHTML =
@@ -176,5 +444,8 @@ import Pagination from "./Pagination.astro";
     }
   }
 
+  // Inicializar todo
+  initDropdowns();
+  initPromoFilter();
   loadCoupons();
 </script>
