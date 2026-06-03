@@ -90,15 +90,21 @@ export async function showConfirm({ title, text, confirmButtonText = 'Sí, elimi
 }
 
 /**
- * Muestra un formulario modal complejo para crear un usuario.
+ * Muestra un formulario modal para crear un nuevo usuario.
  * @param {string[]} allowedDomains - Lista de dominios permitidos para validación.
- * @returns {Promise<Object|null>} Los datos del usuario o null si cancela.
+ * @param {Array<{id: number, name: string}>} companies - Lista de empresas para el select.
+ * @returns {Promise<Object|null>} Los datos del nuevo usuario o null si cancela.
  */
-export async function showCreateUserModal(allowedDomains = []) {
+export async function showCreateUserModal(allowedDomains = [], companies = []) {
   const Swal = (await import('sweetalert2')).default;
   const domainsHint = allowedDomains.length > 0
     ? allowedDomains.map(d => `@${d}`).join(', ')
     : 'dominios autorizados';
+
+  // Generar opciones de empresas
+  const companyOptions = companies.map(c => 
+    `<option value="${c.id}">${c.name}</option>`
+  ).join('');
   
   const { value: formValues } = await Swal.fire({
     title: 'Registrar Nuevo Usuario',
@@ -112,18 +118,14 @@ export async function showCreateUserModal(allowedDomains = []) {
         .swal-select-custom { appearance: none; background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e"); background-repeat: no-repeat; background-position: right 1rem center; background-size: 1em; cursor: pointer; }
       </style>
       <div class="swal-form-group">
-        <label for="swal-name">Nombre y Apellido</label>
-        <input id="swal-name" class="swal-input-custom" placeholder="Ej. Juan Pérez">
+        <label for="swal-new-email">Correo Electrónico (${domainsHint})</label>
+        <input id="swal-new-email" type="email" class="swal-input-custom" placeholder="usuario@dominio.com">
       </div>
       <div class="swal-form-group">
-        <label for="swal-email">Correo Electrónico (${domainsHint})</label>
-        <input id="swal-email" type="email" class="swal-input-custom" placeholder="usuario@dominio.com">
-      </div>
-      <div class="swal-form-group">
-        <label for="swal-password">Contraseña (Mínimo 6 caracteres)</label>
+        <label for="swal-new-password">Contraseña Provisional</label>
         <div style="position: relative;">
-          <input id="swal-password" type="password" class="swal-input-custom" placeholder="••••••••" style="padding-right: 2.5rem;">
-          <button type="button" tabindex="-1" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: #64748b; padding: 0; display: flex;" onclick="const input = document.getElementById('swal-password'); const icon = this.querySelector('svg'); if(input.type === 'password'){ input.type='text'; icon.innerHTML='<path d=\\'M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24\\'></path><line x1=\\'1\\' y1=\\'1\\' x2=\\'23\\' y2=\\'23\\'></line>'; } else { input.type='password'; icon.innerHTML='<path d=\\'M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z\\'></path><circle cx=\\'12\\' cy=\\'12\\' r=\\'3\\'></circle>'; }">
+          <input id="swal-new-password" type="password" class="swal-input-custom" placeholder="••••••••" style="padding-right: 2.5rem;">
+          <button type="button" tabindex="-1" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: #64748b; padding: 0; display: flex;" onclick="const input = document.getElementById('swal-new-password'); const icon = this.querySelector('svg'); if(input.type === 'password'){ input.type='text'; icon.innerHTML='<path d=\\'M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24\\'></path><line x1=\\'1\\' y1=\\'1\\' x2=\\'23\\' y2=\\'23\\'></line>'; } else { input.type='password'; icon.innerHTML='<path d=\\'M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z\\'></path><circle cx=\\'12\\' cy=\\'12\\' r=\\'3\\'></circle>'; }">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
               <circle cx="12" cy="12" r="3"></circle>
@@ -132,8 +134,19 @@ export async function showCreateUserModal(allowedDomains = []) {
         </div>
       </div>
       <div class="swal-form-group">
-        <label for="swal-role">Rol en la plataforma</label>
-        <select id="swal-role" class="swal-input-custom swal-select-custom">
+        <label for="swal-new-name">Nombre y Apellido</label>
+        <input id="swal-new-name" class="swal-input-custom" placeholder="Ej. Juan Pérez">
+      </div>
+      <div class="swal-form-group">
+        <label for="swal-new-company">Empresa</label>
+        <select id="swal-new-company" class="swal-input-custom swal-select-custom">
+          <option value="">Sin empresa asignada</option>
+          ${companyOptions}
+        </select>
+      </div>
+      <div class="swal-form-group">
+        <label for="swal-new-role">Rol en la plataforma</label>
+        <select id="swal-new-role" class="swal-input-custom swal-select-custom">
           <option value="user">Usuario (Normal)</option>
           <option value="admin">Administrador</option>
         </select>
@@ -141,7 +154,7 @@ export async function showCreateUserModal(allowedDomains = []) {
     `,
     focusConfirm: false,
     showCancelButton: true,
-    confirmButtonText: 'Registrar',
+    confirmButtonText: 'Crear Usuario',
     cancelButtonText: 'Cancelar',
     confirmButtonColor: '#10b981',
     cancelButtonColor: '#64748b',
@@ -151,16 +164,17 @@ export async function showCreateUserModal(allowedDomains = []) {
       popup: 'premium-popup',
     },
     preConfirm: () => {
-      const name = document.getElementById('swal-name').value;
-      const email = document.getElementById('swal-email').value.trim().toLowerCase();
-      const password = document.getElementById('swal-password').value;
-      const role = document.getElementById('swal-role').value;
+      const email = document.getElementById('swal-new-email').value.trim().toLowerCase();
+      const password = document.getElementById('swal-new-password').value;
+      const name = document.getElementById('swal-new-name').value;
+      const role = document.getElementById('swal-new-role').value;
+      const companyId = document.getElementById('swal-new-company').value;
 
       if (!name || !email || !password) {
         Swal.showValidationMessage('Todos los campos son obligatorios');
         return false;
       }
-
+      
       const domain = email.split('@')[1];
       if (!domain) {
         Swal.showValidationMessage('Ingresa un correo electrónico válido');
@@ -171,13 +185,13 @@ export async function showCreateUserModal(allowedDomains = []) {
         Swal.showValidationMessage(`Dominio no autorizado. Permitidos: ${allowedDomains.map(d => '@' + d).join(', ')}`);
         return false;
       }
-
+      
       if (password.length < 6) {
         Swal.showValidationMessage('La contraseña debe tener al menos 6 caracteres');
         return false;
       }
 
-      return { name, email, password, role };
+      return { email, password, name, role, company_id: companyId ? parseInt(companyId) : null };
     }
   });
 
@@ -188,13 +202,19 @@ export async function showCreateUserModal(allowedDomains = []) {
  * Muestra un formulario modal para editar un usuario.
  * @param {Object} user - Los datos actuales del usuario
  * @param {string[]} allowedDomains - Lista de dominios permitidos para validación.
+ * @param {Array<{id: number, name: string}>} companies - Lista de empresas para el select.
  * @returns {Promise<Object|null>} Los datos actualizados o null si cancela.
  */
-export async function showEditUserModal(user, allowedDomains = []) {
+export async function showEditUserModal(user, allowedDomains = [], companies = []) {
   const Swal = (await import('sweetalert2')).default;
   const domainsHint = allowedDomains.length > 0
     ? allowedDomains.map(d => `@${d}`).join(', ')
     : 'dominios autorizados';
+
+  // Generar opciones de empresas
+  const companyOptions = companies.map(c => 
+    `<option value="${c.id}" ${user.company_id == c.id ? 'selected' : ''}>${c.name}</option>`
+  ).join('');
   
   const { value: formValues } = await Swal.fire({
     title: 'Editar Usuario',
@@ -229,6 +249,13 @@ export async function showEditUserModal(user, allowedDomains = []) {
         <input id="swal-edit-name" class="swal-input-custom" value="${user.name || ''}" placeholder="Ej. Juan Pérez">
       </div>
       <div class="swal-form-group">
+        <label for="swal-edit-company">Empresa</label>
+        <select id="swal-edit-company" class="swal-input-custom swal-select-custom">
+          <option value="">Sin empresa asignada</option>
+          ${companyOptions}
+        </select>
+      </div>
+      <div class="swal-form-group">
         <label for="swal-edit-role">Rol en la plataforma</label>
         <select id="swal-edit-role" class="swal-input-custom swal-select-custom">
           <option value="user" ${user.role === 'user' ? 'selected' : ''}>Usuario (Normal)</option>
@@ -252,6 +279,7 @@ export async function showEditUserModal(user, allowedDomains = []) {
       const password = document.getElementById('swal-edit-password').value;
       const name = document.getElementById('swal-edit-name').value;
       const role = document.getElementById('swal-edit-role').value;
+      const companyId = document.getElementById('swal-edit-company').value;
 
       if (!name || !email) {
         Swal.showValidationMessage('El nombre y correo son obligatorios');
@@ -274,7 +302,7 @@ export async function showEditUserModal(user, allowedDomains = []) {
         return false;
       }
 
-      return { email, password, name, role };
+      return { email, password, name, role, company_id: companyId ? parseInt(companyId) : null };
     }
   });
 

@@ -804,6 +804,7 @@ import "../../styles/grid-principal/benefit-card.css";
 </DashboardLayout>
 
 <script>
+  import { supabase } from "../../lib/supabase.js";
   import {
     getUserProfile,
     getAdminUsers,
@@ -1014,6 +1015,9 @@ import "../../styles/grid-principal/benefit-card.css";
       filteredUsers.forEach((user: any) => {
         const tr = document.createElement("tr");
 
+        // Buscar empresa en el perfil
+        const companyId = user.company_id || null;
+
         // Estilo especial para admin badge
         const roleBadge =
           user.role === "admin"
@@ -1031,7 +1035,7 @@ import "../../styles/grid-principal/benefit-card.css";
           <td data-label="Fecha Registro"><span class="text-gray">${formatDate(user.created_at)}</span></td>
           <td data-label="Acciones" class="actions-cell">
             <div style="display: flex; gap: 0.5rem; justify-content: flex-end;">
-              <button class="btn-icon btn-edit" data-user='${JSON.stringify({ id: user.id, email: user.email, name: user.name, role: user.role }).replace(/'/g, "&apos;")}' title="Editar usuario">
+              <button class="btn-icon btn-edit" data-user='${JSON.stringify({ id: user.id, email: user.email, name: user.name, role: user.role, company_id: companyId }).replace(/'/g, "&apos;")}' title="Editar usuario">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
                   <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
@@ -1104,39 +1108,38 @@ import "../../styles/grid-principal/benefit-card.css";
           if (!userDataRaw) return;
 
           const user = JSON.parse(userDataRaw);
-          const newValues: any = await showEditUserModal(user, allowedDomains);
+          
+          // Obtener lista de empresas para el select
+          let companies: any[] = [];
+          try {
+            companies = await getCompaniesForSelect();
+          } catch (e) {
+            console.error("Error al cargar empresas para el modal:", e);
+          }
+
+          const newValues: any = await showEditUserModal(user, allowedDomains, companies);
 
           if (newValues) {
             btn.classList.add("loading");
             try {
-              await adminUpdateUser(
-                user.id,
-                newValues.name,
-                newValues.role,
-                newValues.email,
-                newValues.password,
-              );
-              showToast({
+              // Actualizar todos los datos del usuario en una sola llamada RPC
+              await supabase.rpc('admin_update_user_full', {
+                p_user_id: user.id,
+                p_name: newValues.name,
+                p_role: newValues.role,
+                p_email: newValues.email,
+                p_password: newValues.password || null,
+                p_company_id: newValues.company_id
+              });
+
+              showToast({ 
                 text: `Usuario actualizado correctamente.`,
                 icon: "success",
               });
-              loadUsers();
+              loadUsers(); 
             } catch (error: any) {
               console.error("Error actualizando usuario:", error);
-
-              // Si falla por RLS, mostrar mensaje amigable
-              if (
-                error.message.includes("Row Level Security") ||
-                error.message.includes("RLS") ||
-                error.message.includes("not allowed")
-              ) {
-                showToast({
-                  text: `Necesitamos crear un permiso SQL (RPC) para actualizar perfiles.`,
-                  icon: "error",
-                });
-              } else {
-                showToast({ text: `Error: ${error.message}`, icon: "error" });
-              }
+              showToast({ text: `Error: ${error.message}`, icon: "error" });
               btn.classList.remove("loading");
             }
           }
@@ -1150,19 +1153,36 @@ import "../../styles/grid-principal/benefit-card.css";
     ) as HTMLButtonElement;
     if (addUserBtn) {
       addUserBtn.addEventListener("click", async () => {
-        const userData: any = await showCreateUserModal(allowedDomains);
+        // Obtener lista de empresas para el select
+        let companies: any[] = [];
+        try {
+          companies = await getCompaniesForSelect();
+        } catch (e) {
+          console.error("Error al cargar empresas para el modal de creación:", e);
+        }
+
+        const userData: any = await showCreateUserModal(allowedDomains, companies);
         if (userData) {
           try {
             addUserBtn.disabled = true;
             addUserBtn.innerHTML =
               '<span class="spinner" style="width:20px;height:20px;border-width:2px;margin-right:8px;"></span> Registrando...';
 
-            await adminCreateUser(
+            // 1. Crear el usuario (Auth + Perfil básico)
+            const newUser = await adminCreateUser(
               userData.email,
               userData.password,
               userData.name,
               userData.role,
             );
+
+            // 2. Asignar empresa al perfil recién creado
+            if (newUser && newUser.id) {
+              await supabase.rpc('admin_update_user_company', {
+                p_user_id: newUser.id,
+                p_company_id: userData.company_id
+              });
+            }
 
             showToast({
               text: `Usuario ${userData.email} creado con éxito.`,

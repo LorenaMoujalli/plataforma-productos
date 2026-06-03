@@ -21,9 +21,11 @@ async function isAllowedDomain(domain) {
  * 
  * @param {string} email 
  * @param {string} password 
+ * @param {string} name 
+ * @param {number|null} company_id
  * @returns {Promise<any>}
  */
-export async function signUpUser(email, password, name) {
+export async function signUpUser(email, password, name, company_id = null) {
   const cleanEmail = email.trim();
   const domain = cleanEmail.split("@")[1];
   
@@ -42,6 +44,23 @@ export async function signUpUser(email, password, name) {
   });
 
   if (error) throw error;
+
+  // Si el usuario se creó correctamente en auth, creamos o actualizamos su perfil con la empresa
+  if (data.user) {
+    const { error: profileError } = await supabase
+      .from('profiles')
+      .upsert({ 
+        id: data.user.id, 
+        name: name || "", 
+        email: cleanEmail,
+        company_id 
+      });
+    
+    if (profileError) {
+      console.warn("Usuario creado pero no se pudo asignar la empresa en el perfil:", profileError);
+    }
+  }
+
   return data;
 }
 
@@ -148,7 +167,7 @@ export async function directResetPassword(email, newPassword) {
 export async function getAdminUsers() {
   const { data, error } = await supabase.rpc('admin_get_users');
   if (error) throw error;
-  return data;
+  return data ?? [];
 }
 
 /**
