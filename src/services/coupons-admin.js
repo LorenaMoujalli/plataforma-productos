@@ -18,6 +18,15 @@ export async function getCompaniesForSelect() {
   return data ?? [];
 }
 
+export async function getSectors() {
+  const { data, error } = await supabase
+    .from("sectors")
+    .select("id, name")
+    .order("name");
+  if (error) throw error;
+  return data ?? [];
+}
+
 export async function createCoupon(couponData) {
   const { data, error } = await supabase
     .from("coupons")
@@ -73,11 +82,12 @@ export async function uploadCompanyLogo(file) {
 export async function getCompanies() {
   const { data, error } = await supabase
     .from("companies")
-    .select("id, name, logo_url, created_at, coupons(count)")
+    .select("id, name, logo_url, created_at, sector_id, sectors(name), coupons(count)")
     .order("name");
   if (error) throw error;
   return (data ?? []).map(c => ({
     ...c,
+    sector_name: c.sectors?.name ?? null,
     coupon_count: c.coupons?.[0]?.count ?? 0,
   }));
 }

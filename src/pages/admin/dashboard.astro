@@ -376,6 +376,7 @@ import "../../styles/grid-principal/benefit-card.css";
             <tr>
               <th>Logo</th>
               <th>Nombre</th>
+              <th>Sector</th>
               <th>Cupones</th>
               <th>Fecha de Registro</th>
               <th class="text-right">Acciones</th>
@@ -426,6 +427,14 @@ import "../../styles/grid-principal/benefit-card.css";
             class="cm-input"
             placeholder="Ej: Acme Corp"
           />
+        </div>
+
+        <!-- Sector -->
+        <div class="cm-field">
+          <label for="em-sector">Sector / Industria</label>
+          <select id="em-sector" class="cm-input cm-select">
+            <option value="">Sin sector asignado</option>
+          </select>
         </div>
 
         <!-- Toggle URL / Archivo -->
@@ -822,6 +831,7 @@ import "../../styles/grid-principal/benefit-card.css";
   import {
     getAdminCoupons,
     getCompaniesForSelect,
+    getSectors,
     createCoupon,
     updateCoupon,
     deleteCoupon,
@@ -1463,6 +1473,7 @@ import "../../styles/grid-principal/benefit-card.css";
             }
           </td>
           <td data-label="Nombre"><span class="font-medium">${e.name}</span></td>
+          <td data-label="Sector"><span class="text-gray" style="font-size:0.85rem;">${e.sector_name ?? '—'}</span></td>
           <td data-label="Cupones"><span class="text-gray" style="font-size:0.85rem;">${e.coupon_count ? `${e.coupon_count} cupón${e.coupon_count !== 1 ? "es" : ""}` : "Sin cupones"}</span></td>
           <td data-label="Fecha de Registro"><span class="text-gray">${formatDate(e.created_at)}</span></td>
           <td data-label="Acciones" class="actions-cell">
@@ -1529,6 +1540,7 @@ import "../../styles/grid-principal/benefit-card.css";
     const emOverlay = document.getElementById("em-overlay");
     const emModalTitle = document.getElementById("em-modal-title");
     const emNameInput = document.getElementById("em-name") as HTMLInputElement;
+    const emSectorSelect = document.getElementById("em-sector") as HTMLSelectElement;
     const emLogoInput = document.getElementById(
       "em-logo-url",
     ) as HTMLInputElement;
@@ -1662,6 +1674,24 @@ import "../../styles/grid-principal/benefit-card.css";
         <span class="em-hint-text">PNG, JPG, WEBP, SVG</span>`;
     });
 
+    // Cargar sectores en el select del modal de empresa
+    async function loadSectorsIntoSelect() {
+      if (!emSectorSelect) return;
+      try {
+        const sectors = await getSectors();
+        emSectorSelect.innerHTML = '<option value="">Sin sector asignado</option>';
+        sectors.forEach((s: any) => {
+          const opt = document.createElement('option');
+          opt.value = s.id;
+          opt.textContent = s.name;
+          emSectorSelect.appendChild(opt);
+        });
+      } catch (e) {
+        console.error('Error cargando sectores:', e);
+      }
+    }
+    loadSectorsIntoSelect();
+
     function closeEmpresaModal() {
       if (emOverlay) emOverlay.style.display = "none";
       document.body.style.overflow = "";
@@ -1674,6 +1704,7 @@ import "../../styles/grid-principal/benefit-card.css";
       if (emModalTitle)
         emModalTitle.textContent = empresa ? "Editar Empresa" : "Nueva Empresa";
       if (emNameInput) emNameInput.value = empresa?.name ?? "";
+      if (emSectorSelect) emSectorSelect.value = empresa?.sector_id ? String(empresa.sector_id) : "";
       selectedLogoFile = null;
       // Arrancar siempre en modo archivo
       switchLogoTab("file");
@@ -1705,7 +1736,8 @@ import "../../styles/grid-principal/benefit-card.css";
           logo_url = await uploadCompanyLogo(selectedLogoFile);
         }
 
-        const payload = { name: emNameInput.value.trim(), logo_url };
+        const sectorId = emSectorSelect?.value ? parseInt(emSectorSelect.value) : null;
+        const payload = { name: emNameInput.value.trim(), logo_url, sector_id: sectorId };
         if (editingEmpresaId) {
           await updateCompany(editingEmpresaId, payload);
           showToast({
