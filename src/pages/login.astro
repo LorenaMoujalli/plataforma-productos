@@ -8,10 +8,18 @@ import Layout from "../layouts/Layout.astro";
 
 		<div class="card">
 			<div class="logos-container">
-				<img src="/logo-camara-comercio.webp" alt="Cámara Oficial de Comercio" class="logo-camara" />
+				<img
+					src="/logo-camara-comercio.webp"
+					alt="Cámara Oficial de Comercio"
+					class="logo-camara"
+				/>
 				<div class="right-logos">
 					<img src="/S.webp" alt="S Logo" class="logo-s" />
-					<img src="/socio-a-socio.webp" alt="Socio a Socio" class="logo-socio" />
+					<img
+						src="/socio-a-socio.webp"
+						alt="Socio a Socio"
+						class="logo-socio"
+					/>
 				</div>
 			</div>
 
@@ -21,25 +29,85 @@ import Layout from "../layouts/Layout.astro";
 				<form id="login-form">
 					<div class="form-group">
 						<label for="login-email">Email</label>
-						<input type="email" id="login-email" name="email" required placeholder="" />
+						<input
+							type="email"
+							id="login-email"
+							name="email"
+							required
+							placeholder=""
+						/>
 					</div>
 					<div class="form-group">
 						<label for="login-password">Contraseña</label>
 						<div class="password-wrapper">
-							<input type="password" id="login-password" name="password" required placeholder="" />
-							<button type="button" class="toggle-password" aria-label="Mostrar contraseña">
-								<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="eye-icon" style="display:none;"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-								<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="eye-off-icon"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"></path><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"></path><path d="M6.61 6.61A13.52 13.52 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"></path><line x1="2" y1="2" x2="22" y2="22"></line></svg>
+							<input
+								type="password"
+								id="login-password"
+								name="password"
+								required
+								placeholder=""
+							/>
+							<button
+								type="button"
+								class="toggle-password"
+								aria-label="Mostrar contraseña"
+							>
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									width="24"
+									height="24"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									class="eye-icon"
+									style="display:none;"
+									><path
+										d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"
+									></path><circle cx="12" cy="12" r="3"
+									></circle></svg
+								>
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									width="24"
+									height="24"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									class="eye-off-icon"
+									><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"
+									></path><path
+										d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"
+									></path><path
+										d="M6.61 6.61A13.52 13.52 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"
+									></path><line x1="2" y1="2" x2="22" y2="22"
+									></line></svg
+								>
 							</button>
 						</div>
 					</div>
 					<div class="forgot-password">
-						¿Olvidaste tu contraseña? <a href="/recuperar_clave"><strong>Recupérala</strong></a>
+						¿Olvidaste tu contraseña? <a href="/recuperar_clave"
+							><strong>Recupérala</strong></a
+						>
 					</div>
-					<button type="submit" class="submit-btn" id="login-submit-btn">Ingresar</button>
+					<button
+						type="submit"
+						class="submit-btn"
+						id="login-submit-btn">Ingresar</button
+					>
 				</form>
 				<div class="switch-link">
-					¿Todavía no tienes una cuenta? <button type="button" class="link-btn" id="go-register"><strong>Regístrate</strong></button>
+					¿Todavía no tienes una cuenta? <button
+						type="button"
+						class="link-btn"
+						id="go-register"><strong>Regístrate</strong></button
+					>
 				</div>
 			</div>
 
@@ -49,32 +117,101 @@ import Layout from "../layouts/Layout.astro";
 				<form id="register-form">
 					<div class="form-group">
 						<label for="register-name">Nombre y Apellido</label>
-						<input type="text" id="register-name" name="name" required placeholder="" />
+						<input
+							type="text"
+							id="register-name"
+							name="name"
+							required
+							placeholder=""
+						/>
 					</div>
 					<div class="form-group">
 						<label for="register-email">Email</label>
-						<input type="email" id="register-email" name="email" required placeholder="" />
+						<input
+							type="email"
+							id="register-email"
+							name="email"
+							required
+							placeholder=""
+						/>
 					</div>
 					<div class="form-group">
 						<label for="register-company">Empresa</label>
-						<select id="register-company" name="company_id" required>
+						<select
+							id="register-company"
+							name="company_id"
+							required
+						>
 							<option value="">Cargando empresas...</option>
 						</select>
 					</div>
 					<div class="form-group">
 						<label for="register-password">Contraseña</label>
 						<div class="password-wrapper">
-							<input type="password" id="register-password" name="password" required minlength="6" placeholder="" />
-							<button type="button" class="toggle-password" aria-label="Mostrar contraseña">
-								<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="eye-icon" style="display:none;"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-								<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="eye-off-icon"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"></path><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"></path><path d="M6.61 6.61A13.52 13.52 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"></path><line x1="2" y1="2" x2="22" y2="22"></line></svg>
+							<input
+								type="password"
+								id="register-password"
+								name="password"
+								required
+								minlength="6"
+								placeholder=""
+							/>
+							<button
+								type="button"
+								class="toggle-password"
+								aria-label="Mostrar contraseña"
+							>
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									width="24"
+									height="24"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									class="eye-icon"
+									style="display:none;"
+									><path
+										d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"
+									></path><circle cx="12" cy="12" r="3"
+									></circle></svg
+								>
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									width="24"
+									height="24"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									class="eye-off-icon"
+									><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"
+									></path><path
+										d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"
+									></path><path
+										d="M6.61 6.61A13.52 13.52 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"
+									></path><line x1="2" y1="2" x2="22" y2="22"
+									></line></svg
+								>
 							</button>
 						</div>
 					</div>
 					<div class="switch-link">
-						¿Ya tienes una cuenta? <button type="button" class="link-btn" id="go-login"><strong>Inicia sesión</strong></button>
+						¿Ya tienes una cuenta? <button
+							type="button"
+							class="link-btn"
+							id="go-login"><strong>Inicia sesión</strong></button
+						>
 					</div>
-					<button type="submit" class="submit-btn" id="register-submit-btn">Registrarse</button>
+					<button
+						type="submit"
+						class="submit-btn"
+						id="register-submit-btn">Registrarse</button
+					>
 				</form>
 			</div>
 		</div>
@@ -123,7 +260,9 @@ import Layout from "../layouts/Layout.astro";
 	/* ── Transición entre paneles ── */
 	.auth-panel {
 		width: 100%;
-		transition: opacity 0.28s ease, transform 0.28s ease;
+		transition:
+			opacity 0.28s ease,
+			transform 0.28s ease;
 		opacity: 1;
 		transform: translateY(0);
 	}
@@ -161,9 +300,18 @@ import Layout from "../layouts/Layout.astro";
 		gap: 0.2rem;
 	}
 
-	.logo-s      { height: 55px; object-fit: contain; }
-	.logo-camara { height: 55px; object-fit: contain; }
-	.logo-socio  { height: 50px; object-fit: contain; }
+	.logo-s {
+		height: 55px;
+		object-fit: contain;
+	}
+	.logo-camara {
+		height: 55px;
+		object-fit: contain;
+	}
+	.logo-socio {
+		height: 50px;
+		object-fit: contain;
+	}
 
 	h2 {
 		font-family: "Inter", sans-serif;
@@ -189,7 +337,8 @@ import Layout from "../layouts/Layout.astro";
 		text-align: left;
 	}
 
-	input, select {
+	input,
+	select {
 		width: 100%;
 		padding: 0.85rem 1.1rem;
 		border-radius: 10px;
@@ -209,14 +358,20 @@ import Layout from "../layouts/Layout.astro";
 		background-size: 1.2rem;
 	}
 
-	input:focus, select:focus {
+	input:focus,
+	select:focus {
 		border-color: #9a1c1c;
 		background-color: #ffffff;
 		box-shadow: 0 0 0 4px rgba(211, 47, 47, 0.1);
 	}
 
-	.password-wrapper { position: relative; width: 100%; }
-	.password-wrapper input { padding-right: 3.5rem; }
+	.password-wrapper {
+		position: relative;
+		width: 100%;
+	}
+	.password-wrapper input {
+		padding-right: 3.5rem;
+	}
 
 	.toggle-password {
 		position: absolute;
@@ -232,7 +387,9 @@ import Layout from "../layouts/Layout.astro";
 		color: #94a3b8;
 		transition: color 0.2s;
 	}
-	.toggle-password:hover { color: #d32f2f; }
+	.toggle-password:hover {
+		color: #d32f2f;
+	}
 
 	.forgot-password {
 		font-family: "Inter", sans-serif;
@@ -242,7 +399,10 @@ import Layout from "../layouts/Layout.astro";
 		color: #475569;
 		text-align: center;
 	}
-	.forgot-password a { color: #0f172a; text-decoration: none; }
+	.forgot-password a {
+		color: #0f172a;
+		text-decoration: none;
+	}
 
 	.submit-btn {
 		font-family: "Inter", sans-serif;
@@ -259,7 +419,9 @@ import Layout from "../layouts/Layout.astro";
 		transition: all 0.3s ease;
 		cursor: pointer;
 	}
-	.submit-btn:hover { background-color: #b02121; }
+	.submit-btn:hover {
+		background-color: #b02121;
+	}
 
 	.switch-link {
 		font-family: "Inter", sans-serif;
@@ -282,17 +444,30 @@ import Layout from "../layouts/Layout.astro";
 		color: #000;
 		text-decoration: none;
 	}
-	.link-btn:hover { text-decoration: underline; }
+	.link-btn:hover {
+		text-decoration: underline;
+	}
 
 	@media (max-width: 1024px) {
-		main { justify-content: center; padding: 2rem; }
+		main {
+			justify-content: center;
+			padding: 2rem;
+		}
 	}
 
 	@media (max-width: 480px) {
-		.card { padding: 2rem 1.5rem; }
-		.logos-container { gap: 1rem; }
-		.logo-camara { height: 45px; }
-		.logo-socio  { height: 40px; }
+		.card {
+			padding: 2rem 1.5rem;
+		}
+		.logos-container {
+			gap: 1rem;
+		}
+		.logo-camara {
+			height: 45px;
+		}
+		.logo-socio {
+			height: 40px;
+		}
 	}
 </style>
 
@@ -304,22 +479,25 @@ import Layout from "../layouts/Layout.astro";
 
 	// Interceptar botón de retroceder en el navegador para que no puedan volver a páginas protegidas
 	history.pushState(null, "", window.location.href);
-	window.addEventListener('popstate', () => {
+	window.addEventListener("popstate", () => {
 		history.pushState(null, "", window.location.href);
 	});
 
-	const panelLogin    = document.getElementById('panel-login')!;
-	const panelRegister = document.getElementById('panel-register')!;
-	const registerCompanySelect = document.getElementById('register-company') as HTMLSelectElement;
+	const panelLogin = document.getElementById("panel-login")!;
+	const panelRegister = document.getElementById("panel-register")!;
+	const registerCompanySelect = document.getElementById(
+		"register-company",
+	) as HTMLSelectElement;
 
 	// --- Cargar Empresas ---
 	async function loadCompanies() {
 		try {
 			const companies = await getCompaniesForSelect();
 			if (registerCompanySelect) {
-				registerCompanySelect.innerHTML = '<option value="">Selecciona tu empresa</option>';
-				companies.forEach(company => {
-					const option = document.createElement('option');
+				registerCompanySelect.innerHTML =
+					'<option value="">Selecciona tu empresa</option>';
+				companies.forEach((company) => {
+					const option = document.createElement("option");
 					option.value = company.id.toString();
 					option.textContent = company.name;
 					registerCompanySelect.appendChild(option);
@@ -328,7 +506,8 @@ import Layout from "../layouts/Layout.astro";
 		} catch (error) {
 			console.error("Error al cargar empresas:", error);
 			if (registerCompanySelect) {
-				registerCompanySelect.innerHTML = '<option value="">Error al cargar empresas</option>';
+				registerCompanySelect.innerHTML =
+					'<option value="">Error al cargar empresas</option>';
 			}
 		}
 	}
@@ -336,123 +515,181 @@ import Layout from "../layouts/Layout.astro";
 	loadCompanies();
 
 	// ── Transición entre paneles ───────────────────────────────
-	function switchTo(target: 'login' | 'register') {
-		const current = target === 'login' ? panelRegister : panelLogin;
-		const next    = target === 'login' ? panelLogin    : panelRegister;
+	function switchTo(target: "login" | "register") {
+		const current = target === "login" ? panelRegister : panelLogin;
+		const next = target === "login" ? panelLogin : panelRegister;
 
 		// Sacar el panel actual
-		current.classList.add('exiting');
-		current.addEventListener('transitionend', () => {
-			current.classList.add('hidden');
-			current.classList.remove('exiting');
+		current.classList.add("exiting");
+		current.addEventListener(
+			"transitionend",
+			() => {
+				current.classList.add("hidden");
+				current.classList.remove("exiting");
 
-			// Mostrar el nuevo con animación de entrada
-			next.classList.remove('hidden');
-			next.classList.add('entering');
-			// Forzar reflow para que la transición CSS funcione
-			next.getBoundingClientRect();
-			next.classList.remove('entering');
-		}, { once: true });
+				// Mostrar el nuevo con animación de entrada
+				next.classList.remove("hidden");
+				next.classList.add("entering");
+				// Forzar reflow para que la transición CSS funcione
+				next.getBoundingClientRect();
+				next.classList.remove("entering");
+			},
+			{ once: true },
+		);
 
-		history.replaceState(null, '', target === 'login' ? '/login' : '/register');
+		history.replaceState(
+			null,
+			"",
+			target === "login" ? "/login" : "/register",
+		);
 	}
 
-	document.getElementById('go-register')?.addEventListener('click', () => switchTo('register'));
-	document.getElementById('go-login')?.addEventListener('click',    () => switchTo('login'));
+	document
+		.getElementById("go-register")
+		?.addEventListener("click", () => switchTo("register"));
+	document
+		.getElementById("go-login")
+		?.addEventListener("click", () => switchTo("login"));
 
 	// ── Mostrar panel según URL ────────────────────────────────
 	const isRegister =
-		window.location.pathname === '/register' ||
-		new URLSearchParams(window.location.search).get('mode') === 'register';
+		window.location.pathname === "/register" ||
+		new URLSearchParams(window.location.search).get("mode") === "register";
 
 	if (isRegister) {
-		panelLogin.classList.add('hidden');
-		panelRegister.classList.remove('hidden');
+		panelLogin.classList.add("hidden");
+		panelRegister.classList.remove("hidden");
 	}
 
 	// ── Toggle show/hide contraseña (ambos paneles) ───────────
-	document.querySelectorAll('.toggle-password').forEach(btn => {
-		const wrapper  = btn.closest('.password-wrapper')!;
-		const input    = wrapper.querySelector('input')!;
-		const eyeOn    = btn.querySelector('.eye-icon')    as HTMLElement;
-		const eyeOff   = btn.querySelector('.eye-off-icon') as HTMLElement;
+	document.querySelectorAll(".toggle-password").forEach((btn) => {
+		const wrapper = btn.closest(".password-wrapper")!;
+		const input = wrapper.querySelector("input")!;
+		const eyeOn = btn.querySelector(".eye-icon") as HTMLElement;
+		const eyeOff = btn.querySelector(".eye-off-icon") as HTMLElement;
 		(btn as HTMLButtonElement).onclick = () => {
-			const show = input.type === 'password';
-			input.type = show ? 'text' : 'password';
-			eyeOn.style.display  = show ? 'block' : 'none';
-			eyeOff.style.display = show ? 'none'  : 'block';
-			btn.setAttribute('aria-label', show ? 'Ocultar contraseña' : 'Mostrar contraseña');
+			const show = input.type === "password";
+			input.type = show ? "text" : "password";
+			eyeOn.style.display = show ? "block" : "none";
+			eyeOff.style.display = show ? "none" : "block";
+			btn.setAttribute(
+				"aria-label",
+				show ? "Ocultar contraseña" : "Mostrar contraseña",
+			);
 		};
 	});
 
 	// ── Dominios permitidos (compartido) ──────────────────────
 	let allowedDomains: string[] = [];
-	getAllowedDomainNames().then(d => { allowedDomains = d; }).catch(() => {});
+	getAllowedDomainNames()
+		.then((d) => {
+			allowedDomains = d;
+		})
+		.catch(() => {});
 
 	function isDomainAllowed(email: string) {
-		const domain = email.split('@')[1];
-		return domain && (allowedDomains.length === 0 || allowedDomains.includes(domain.toLowerCase()));
+		const domain = email.split("@")[1];
+		return (
+			domain &&
+			(allowedDomains.length === 0 ||
+				allowedDomains.includes(domain.toLowerCase()))
+		);
 	}
 
 	// ── Login ─────────────────────────────────────────────────
-	const loginForm  = document.getElementById('login-form')    as HTMLFormElement;
-	const loginSubmit = document.getElementById('login-submit-btn') as HTMLButtonElement;
+	const loginForm = document.getElementById("login-form") as HTMLFormElement;
+	const loginSubmit = document.getElementById(
+		"login-submit-btn",
+	) as HTMLButtonElement;
 
-	loginForm?.addEventListener('submit', async (e) => {
+	loginForm?.addEventListener("submit", async (e) => {
 		e.preventDefault();
-		const email    = (document.getElementById('login-email')    as HTMLInputElement).value.trim();
-		const password = (document.getElementById('login-password') as HTMLInputElement).value;
+		const email = (
+			document.getElementById("login-email") as HTMLInputElement
+		).value.trim();
+		const password = (
+			document.getElementById("login-password") as HTMLInputElement
+		).value;
 
 		if (!isDomainAllowed(email)) {
-			showToast({ text: 'Solo se permiten correos de dominios autorizados.', icon: 'error' });
+			showToast({
+				text: "Solo se permiten correos de dominios autorizados.",
+				icon: "error",
+			});
 			return;
 		}
 
 		loginSubmit.disabled = true;
-		loginSubmit.innerText = 'Ingresando...';
+		loginSubmit.innerText = "Ingresando...";
 		try {
 			await signInUser(email, password);
-			window.location.href = '/home';
+			window.location.href = "/home";
 		} catch (err: any) {
-			showToast({ text: err.message || 'Error al iniciar sesión.', icon: 'error' });
+			showToast({
+				text: err.message || "Error al iniciar sesión.",
+				icon: "error",
+			});
 		} finally {
 			loginSubmit.disabled = false;
-			loginSubmit.innerText = 'Ingresar';
+			loginSubmit.innerText = "Ingresar";
 		}
 	});
 
 	// ── Register ──────────────────────────────────────────────
-	const registerForm   = document.getElementById('register-form')      as HTMLFormElement;
-	const registerSubmit = document.getElementById('register-submit-btn') as HTMLButtonElement;
+	const registerForm = document.getElementById(
+		"register-form",
+	) as HTMLFormElement;
+	const registerSubmit = document.getElementById(
+		"register-submit-btn",
+	) as HTMLButtonElement;
 
-	registerForm?.addEventListener('submit', async (e) => {
+	registerForm?.addEventListener("submit", async (e) => {
 		e.preventDefault();
-		const name     = (document.getElementById('register-name')     as HTMLInputElement).value.trim();
-		const email    = (document.getElementById('register-email')    as HTMLInputElement).value.trim();
-		const companyId = (document.getElementById('register-company') as HTMLSelectElement).value;
-		const password = (document.getElementById('register-password') as HTMLInputElement).value;
+		const name = (
+			document.getElementById("register-name") as HTMLInputElement
+		).value.trim();
+		const email = (
+			document.getElementById("register-email") as HTMLInputElement
+		).value.trim();
+		const companyId = (
+			document.getElementById("register-company") as HTMLSelectElement
+		).value;
+		const password = (
+			document.getElementById("register-password") as HTMLInputElement
+		).value;
 
 		if (!isDomainAllowed(email)) {
-			showToast({ text: 'Solo se permiten registros con correos de dominios autorizados.', icon: 'error' });
+			showToast({
+				text: "Solo se permiten registros con correos de dominios autorizados.",
+				icon: "error",
+			});
 			return;
 		}
 
 		registerSubmit.disabled = true;
-		registerSubmit.innerText = 'Registrando...';
+		registerSubmit.innerText = "Registrando...";
 		try {
-			await signUpUser(email, password, name, companyId ? parseInt(companyId) : null);
+			await signUpUser(
+				email,
+				password,
+				name,
+				companyId ? parseInt(companyId) : null,
+			);
 			await showAlert({
-				title: '¡Registro Exitoso!',
-				text: '',
-				icon: 'success',
-				confirmButtonText: 'Ir al Inicio de Sesión',
+				title: "¡Registro Exitoso!",
+				text: "",
+				icon: "success",
+				confirmButtonText: "Ir al Inicio de Sesión",
 			});
-			switchTo('login');
+			switchTo("login");
 		} catch (err: any) {
-			showToast({ text: err.message || 'Error durante el registro.', icon: 'error' });
+			showToast({
+				text: err.message || "Error durante el registro.",
+				icon: "error",
+			});
 		} finally {
 			registerSubmit.disabled = false;
-			registerSubmit.innerText = 'Registrarse';
+			registerSubmit.innerText = "Registrarse";
 		}
 	});
 </script>
