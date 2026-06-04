@@ -51,18 +51,17 @@ export async function updateDomain(id, domain) {
 }
 
 /**
- * Elimina un dominio permitido por su ID.
+ * Elimina un dominio permitido por su ID, eliminando en cascada los usuarios asociados.
  * @param {number} id
  * @returns {Promise<boolean>}
  */
 export async function deleteDomain(id) {
-  const { error } = await supabase
-    .from('allowed_domains')
-    .delete()
-    .eq('id', id);
+  const { data, error } = await supabase.rpc('delete_users_and_domain_by_id', {
+    p_domain_id: id
+  });
 
   if (error) throw error;
-  return true;
+  return data;
 }
 
 /**

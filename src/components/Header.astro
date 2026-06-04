@@ -152,10 +152,10 @@ const currentPath = pathname.replace(/\/$/, '') || '/';
             localStorage.removeItem('userRole');
             try {
                 await signOutUser();
-                window.location.href = "/login";
+                window.location.replace("/login");
             } catch (err) {
                 console.error("Error al cerrar sesión:", err);
-                window.location.href = "/login";
+                window.location.replace("/login");
             }
         };
 

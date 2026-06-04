@@ -128,6 +128,7 @@ import "../../styles/grid-principal/benefit-card.css";
             type="text"
             id="search-user"
             placeholder="Buscar por nombre o correo..."
+            autocomplete="off"
           />
         </div>
         <button id="add-user-btn" class="btn-success">
@@ -852,17 +853,42 @@ import "../../styles/grid-principal/benefit-card.css";
     showEditDomainModal,
   } from "../../utils/notifications.js";
 
+  // ── Verificación de Sesión y Rol de Administrador ──────────
+  window.addEventListener("pageshow", (event) => {
+    if (event.persisted) {
+      window.location.reload();
+    }
+  });
+
+  const { data: { session } } = await supabase.auth.getSession();
+  if (!session) {
+    window.location.replace("/login");
+  } else {
+    try {
+      const profile = await getUserProfile();
+      if (!profile || profile.role !== 'admin') {
+        window.location.replace("/home");
+      }
+    } catch (e) {
+      console.error("Error validando permisos de administrador:", e);
+      window.location.replace("/home");
+    }
+  }
+
   function setupDashboard() {
     // Solo ejecutar en la ruta del dashboard
     if (!window.location.pathname.includes("/admin/dashboard")) return;
 
     // Dominios permitidos (para pasarlos a los modales de usuario)
     let allowedDomains: string[] = [];
-    getAllowedDomainNames()
-      .then((d) => {
-        allowedDomains = d;
-      })
-      .catch(() => {});
+    async function refreshAllowedDomains() {
+      try {
+        allowedDomains = await getAllowedDomainNames();
+      } catch (e) {
+        console.error("Error al refrescar dominios permitidos:", e);
+      }
+    }
+    refreshAllowedDomains();
 
     // Elementos del DOM
     const loadingState = document.getElementById("loading-state");
@@ -1163,8 +1189,8 @@ import "../../styles/grid-principal/benefit-card.css";
           if (newValues) {
             btn.classList.add("loading");
             try {
-              // 1. Actualizar datos principales del usuario
-              await supabase.rpc("admin_update_user_full", {
+              // 1. Actualizar datos principales del usuario (incluyendo empresa)
+              const { error: errFull } = await supabase.rpc("admin_update_user_full", {
                 p_user_id: user.id,
                 p_name: newValues.name,
                 p_role: newValues.role,
@@ -1172,12 +1198,14 @@ import "../../styles/grid-principal/benefit-card.css";
                 p_password: newValues.password || null,
                 p_company_id: newValues.company_id,
               });
+              if (errFull) throw errFull;
 
-              // 2. Actualizar fecha de expiración por separado (RPC con SECURITY DEFINER)
-              await supabase.rpc("admin_update_user_expiration", {
+              // 2. Actualizar fecha de expiración por separado
+              const { error: errExpiration } = await supabase.rpc("admin_update_user_expiration", {
                 p_user_id: user.id,
                 p_expiration_date: newValues.expiration_date || null,
               });
+              if (errExpiration) throw errExpiration;
 
               showToast({
                 text: `Usuario actualizado correctamente.`,
@@ -1232,15 +1260,18 @@ import "../../styles/grid-principal/benefit-card.css";
             // 2. Asignar empresa y fecha de expiración al perfil recién creado
             if (newUser && newUser.id) {
               // Asignar empresa al perfil
-              await supabase.rpc("admin_update_user_company", {
+              const { error: errCompany } = await supabase.rpc("admin_update_user_company", {
                 p_user_id: newUser.id,
                 p_company_id: userData.company_id,
               });
+              if (errCompany) throw errCompany;
+
               // Asignar fecha de expiración via RPC (evita bloqueo por RLS)
-              await supabase.rpc("admin_update_user_expiration", {
+              const { error: errExpiration } = await supabase.rpc("admin_update_user_expiration", {
                 p_user_id: newUser.id,
                 p_expiration_date: userData.expiration_date || null,
               });
+              if (errExpiration) throw errExpiration;
             }
 
             showToast({
@@ -1379,6 +1410,7 @@ import "../../styles/grid-principal/benefit-card.css";
               });
               domainsLoaded = false;
               loadDomains();
+              await refreshAllowedDomains();
             } catch (error: any) {
               showToast({ text: `Error: ${error.message}`, icon: "error" });
               btn.classList.remove("loading");
@@ -1396,7 +1428,7 @@ import "../../styles/grid-principal/benefit-card.css";
 
           const confirmed = await showConfirm({
             title: "¿Eliminar dominio?",
-            text: `¿Deseas eliminar el dominio "${domain}"? Esta acción no se puede deshacer.`,
+            text: `¿Deseas eliminar el dominio "${domain}"? Al hacerlo, se eliminarán permanentemente todos los usuarios y correos que pertenecen a este dominio. Esta acción no se puede deshacer.`,
             confirmButtonText: "Sí, eliminar",
             cancelButtonText: "Cancelar",
           });
@@ -1407,11 +1439,13 @@ import "../../styles/grid-principal/benefit-card.css";
             try {
               await deleteDomain(id);
               showToast({
-                text: `Dominio "${domain}" eliminado.`,
+                text: `Dominio "${domain}" y sus usuarios asociados han sido eliminados.`,
                 icon: "success",
               });
               domainsLoaded = false;
               loadDomains();
+              await refreshAllowedDomains();
+              loadUsers(); // Refrescar la tabla de usuarios
             } catch (error: any) {
               showToast({ text: `Error: ${error.message}`, icon: "error" });
               btn.classList.remove("loading");
@@ -1441,6 +1475,7 @@ import "../../styles/grid-principal/benefit-card.css";
             });
             domainsLoaded = false;
             loadDomains();
+            await refreshAllowedDomains();
           } catch (error: any) {
             showToast({ text: `Error: ${error.message}`, icon: "error" });
           } finally {

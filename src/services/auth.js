@@ -203,7 +203,7 @@ export async function adminCreateUser(email, password, name, role = 'user') {
     throw new Error("Solo se permiten correos electrónicos de dominios autorizados.");
   }
 
-  // 1. Crear un cliente temporal que NO guarde sesión
+  // 1. Crear un cliente temporal que NO guarde sesión y use almacenamiento aislado
   const { createClient } = await import('@supabase/supabase-js');
   const tempSupabase = createClient(
     import.meta.env.PUBLIC_SUPABASE_URL,
@@ -212,7 +212,12 @@ export async function adminCreateUser(email, password, name, role = 'user') {
       auth: {
         persistSession: false,
         autoRefreshToken: false,
-        detectSessionInUrl: false
+        detectSessionInUrl: false,
+        storage: {
+          getItem: () => null,
+          setItem: () => {},
+          removeItem: () => {}
+        }
       }
     }
   );
@@ -285,21 +290,23 @@ export async function updateAuthEmail(newEmail) {
 }
 
 /**
- * Actualiza los datos de un usuario desde el panel de admin (incluyendo email y password).
+ * Actualiza los datos de un usuario desde el panel de admin (incluyendo email, password y empresa).
  * 
  * @param {string} userId
  * @param {string} name
  * @param {string} role
  * @param {string} email
  * @param {string} password
+ * @param {number|null} companyId
  */
-export async function adminUpdateUser(userId, name, role, email, password) {
+export async function adminUpdateUser(userId, name, role, email, password, companyId = null) {
   const { data, error } = await supabase.rpc('admin_update_user_full', {
     p_user_id: userId,
     p_name: name,
     p_role: role,
     p_email: email,
-    p_password: password || null
+    p_password: password || null,
+    p_company_id: companyId
   });
 
   if (error) throw error;

@@ -302,6 +302,12 @@ import Layout from "../layouts/Layout.astro";
 	import { getCompaniesForSelect } from "../services/coupons-admin.js";
 	import { showToast, showAlert } from "../utils/notifications.js";
 
+	// Interceptar botón de retroceder en el navegador para que no puedan volver a páginas protegidas
+	history.pushState(null, "", window.location.href);
+	window.addEventListener('popstate', () => {
+		history.pushState(null, "", window.location.href);
+	});
+
 	const panelLogin    = document.getElementById('panel-login')!;
 	const panelRegister = document.getElementById('panel-register')!;
 	const registerCompanySelect = document.getElementById('register-company') as HTMLSelectElement;

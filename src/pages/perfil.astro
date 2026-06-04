@@ -1125,12 +1125,18 @@ import DashboardLayout from "../layouts/DashboardLayout.astro";
 	) as HTMLButtonElement;
 
 	// --- Cargar Sesión y Validar ---
+	window.addEventListener("pageshow", (event) => {
+		if (event.persisted) {
+			window.location.reload();
+		}
+	});
+
 	const {
 		data: { session },
 	} = await supabase.auth.getSession();
 
 	if (!session) {
-		window.location.href = "/login";
+		window.location.replace("/login");
 	}
 
 	const userId = session?.user?.id;
@@ -1623,8 +1629,9 @@ import DashboardLayout from "../layouts/DashboardLayout.astro";
 		if (!ok) return;
 
 		try {
+			localStorage.removeItem('userRole');
 			await signOutUser();
-			window.location.href = "/login";
+			window.location.replace("/login");
 		} catch (err: any) {
 			showToast({ text: "Error al cerrar sesión.", icon: "error" });
 		}
