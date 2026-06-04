@@ -1,0 +1,399 @@
+---
+// /validar/index.astro — Página pública de verificación de socios.
+// Ruta estática: lee el UUID desde el query param ?id=UUID
+// No requiere SSR ni getStaticPaths(). Compatible con modo static de Astro.
+// Ejemplo de URL: /validar?id=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Verificación de Socio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      html,
+      body {
+        height: 100%;
+        font-family: "Inter", sans-serif;
+      }
+
+      body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        padding: 24px;
+        transition: background 0.5s ease;
+      }
+
+      /* ── Fondos por estado ── */
+      body.loading {
+        background: linear-gradient(145deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%);
+      }
+      body.found {
+        background: linear-gradient(145deg, #0a2e0a 0%, #1a5c1a 40%, #22c55e 100%);
+      }
+      body.not-found {
+        background: linear-gradient(145deg, #2e0a0a 0%, #5c1a1a 40%, #dc2626 100%);
+      }
+      body.error-state {
+        background: linear-gradient(145deg, #1a1a0a 0%, #3d3a00 40%, #a16207 100%);
+      }
+
+      /* ── Destellos de fondo ── */
+      .bg-glow {
+        position: fixed;
+        border-radius: 50%;
+        filter: blur(80px);
+        opacity: 0.25;
+        pointer-events: none;
+        z-index: 0;
+      }
+      .bg-glow-1 { width: 300px; height: 300px; top: -80px; right: -80px; }
+      .bg-glow-2 { width: 200px; height: 200px; bottom: -40px; left: -40px; }
+
+      body.loading   .bg-glow-1 { background: #6366f1; }
+      body.loading   .bg-glow-2 { background: #818cf8; }
+      body.found     .bg-glow-1 { background: #4ade80; }
+      body.found     .bg-glow-2 { background: #86efac; }
+      body.not-found .bg-glow-1 { background: #f87171; }
+      body.not-found .bg-glow-2 { background: #fca5a5; }
+      body.error-state .bg-glow-1 { background: #fbbf24; }
+      body.error-state .bg-glow-2 { background: #fde68a; }
+
+      /* ── Tarjeta central ── */
+      .card {
+        position: relative;
+        z-index: 1;
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        border-radius: 28px;
+        padding: 48px 32px;
+        width: 100%;
+        max-width: 380px;
+        text-align: center;
+        box-shadow:
+          0 32px 64px rgba(0, 0, 0, 0.4),
+          inset 0 1px 0 rgba(255, 255, 255, 0.15);
+        animation: cardIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+      }
+
+      @keyframes cardIn {
+        from { opacity: 0; transform: translateY(30px) scale(0.95); }
+        to   { opacity: 1; transform: translateY(0) scale(1); }
+      }
+
+      /* ── Spinner de carga ── */
+      .spinner {
+        width: 56px;
+        height: 56px;
+        border: 4px solid rgba(255, 255, 255, 0.15);
+        border-top-color: rgba(255, 255, 255, 0.8);
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+        margin: 0 auto 24px;
+      }
+      @keyframes spin { to { transform: rotate(360deg); } }
+
+      /* ── Icono de resultado ── */
+      .status-icon {
+        font-size: 80px;
+        line-height: 1;
+        margin-bottom: 20px;
+        display: block;
+        animation: iconPop 0.6s 0.1s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+      }
+      @keyframes iconPop {
+        from { opacity: 0; transform: scale(0.4); }
+        to   { opacity: 1; transform: scale(1); }
+      }
+
+      /* ── Badge ── */
+      .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 16px;
+        border-radius: 100px;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        margin-bottom: 24px;
+      }
+      body.loading   .status-badge { background: rgba(99,102,241,0.2); color: #c7d2fe; border: 1px solid rgba(99,102,241,0.4); }
+      body.found     .status-badge { background: rgba(74,222,128,0.2); color: #bbf7d0; border: 1px solid rgba(74,222,128,0.4); }
+      body.not-found .status-badge { background: rgba(248,113,113,0.2); color: #fecaca; border: 1px solid rgba(248,113,113,0.4); }
+      body.error-state .status-badge { background: rgba(251,191,36,0.2); color: #fef08a; border: 1px solid rgba(251,191,36,0.4); }
+
+      .badge-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        animation: pulse 2s infinite;
+      }
+      body.loading   .badge-dot { background: #818cf8; }
+      body.found     .badge-dot { background: #4ade80; }
+      body.not-found .badge-dot { background: #f87171; }
+      body.error-state .badge-dot { background: #fbbf24; }
+
+      @keyframes pulse {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50%       { opacity: 0.6; transform: scale(0.8); }
+      }
+
+      /* ── Textos ── */
+      .status-title {
+        font-size: 28px;
+        font-weight: 900;
+        color: #ffffff;
+        line-height: 1.2;
+        margin-bottom: 12px;
+        letter-spacing: -0.02em;
+      }
+      .loading-label {
+        font-size: 18px;
+        font-weight: 700;
+        color: rgba(255, 255, 255, 0.85);
+        margin-bottom: 8px;
+      }
+      .socio-name {
+        font-size: 22px;
+        font-weight: 800;
+        color: #ffffff;
+        margin-bottom: 8px;
+        display: none;
+      }
+      .status-sub {
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.6);
+        line-height: 1.6;
+        margin-top: 8px;
+        white-space: pre-line;
+      }
+
+      /* ── Divisor ── */
+      .divider {
+        width: 48px;
+        height: 3px;
+        border-radius: 2px;
+        margin: 24px auto;
+        opacity: 0.4;
+        display: none;
+      }
+      body.found .divider     { background: #4ade80; display: block; }
+      body.not-found .divider { background: #f87171; display: block; }
+      body.error-state .divider { background: #fbbf24; display: block; }
+
+      /* ── Sello verificación ── */
+      .verify-seal {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.4);
+        margin-top: 28px;
+      }
+      .verify-seal svg { opacity: 0.5; }
+
+      .timestamp {
+        font-size: 11px;
+        color: rgba(255, 255, 255, 0.28);
+        margin-top: 6px;
+        font-variant-numeric: tabular-nums;
+        display: none;
+      }
+
+      /* ── Ocultar estado resultado hasta que esté listo ── */
+      #state-result { display: none; }
+    </style>
+  </head>
+
+  <body class="loading">
+    <div class="bg-glow bg-glow-1"></div>
+    <div class="bg-glow bg-glow-2"></div>
+
+    <div class="card">
+      <!-- Estado: Cargando -->
+      <div id="state-loading">
+        <div class="spinner"></div>
+        <div class="status-badge">
+          <span class="badge-dot"></span>
+          Verificando
+        </div>
+        <p class="loading-label">Consultando sistema...</p>
+        <p class="status-sub">Validando credencial de socio</p>
+      </div>
+
+      <!-- Estado: Resultado -->
+      <div id="state-result">
+        <span class="status-icon" id="result-icon"></span>
+        <div class="status-badge">
+          <span class="badge-dot"></span>
+          <span id="result-badge-text"></span>
+        </div>
+        <h1 class="status-title" id="result-title"></h1>
+        <div class="divider"></div>
+        <p class="socio-name" id="result-name"></p>
+        <p class="status-sub" id="result-sub"></p>
+
+        <div class="verify-seal">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+          </svg>
+          Sistema de verificación de socios
+        </div>
+        <p class="timestamp" id="result-ts"></p>
+      </div>
+    </div>
+
+    <script>
+      import { createClient } from "@supabase/supabase-js";
+
+      // ── Leer UUID desde el query param ?id=UUID ──
+      const params = new URLSearchParams(window.location.search);
+      const uuid = params.get("id") || "";
+
+      const UUID_REGEX =
+        /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+      const body         = document.body;
+      const stateLoading = document.getElementById("state-loading")!;
+      const stateResult  = document.getElementById("state-result")!;
+
+      function showResult(cfg: {
+        state: "found" | "not-found" | "error-state";
+        icon: string;
+        badge: string;
+        title: string;
+        name?: string;
+        sub: string;
+      }) {
+        // Cambiar clase del body (actualiza fondo y colores de badge/dot/divisor)
+        body.classList.remove("loading");
+        body.classList.add(cfg.state);
+
+        document.getElementById("result-icon")!.textContent       = cfg.icon;
+        document.getElementById("result-badge-text")!.textContent = cfg.badge;
+        document.getElementById("result-title")!.textContent      = cfg.title;
+        document.getElementById("result-sub")!.textContent        = cfg.sub;
+
+        const nameEl = document.getElementById("result-name") as HTMLElement;
+        if (cfg.name) {
+          nameEl.textContent   = cfg.name;
+          nameEl.style.display = "block";
+        }
+
+        const ts = document.getElementById("result-ts") as HTMLElement;
+        const now = new Date();
+        ts.textContent = `Verificado el ${now.toLocaleDateString("es-ES", {
+          day: "2-digit",
+          month: "long",
+          year: "numeric",
+        })} a las ${now.toLocaleTimeString("es-ES", {
+          hour: "2-digit",
+          minute: "2-digit",
+        })}`;
+        ts.style.display = "block";
+
+        stateLoading.style.display = "none";
+        stateResult.style.display  = "block";
+      }
+
+      async function verificar() {
+        // Validar formato UUID
+        if (!uuid || !UUID_REGEX.test(uuid)) {
+          showResult({
+            state: "not-found",
+            icon: "❌",
+            badge: "QR Inválido",
+            title: "CÓDIGO INVÁLIDO",
+            sub: "El código escaneado no tiene un formato válido.\nVerifica que el QR no esté dañado.",
+          });
+          return;
+        }
+
+        try {
+          const supabase = createClient(
+            import.meta.env.PUBLIC_SUPABASE_URL,
+            import.meta.env.PUBLIC_SUPABASE_ANON_KEY
+          );
+
+          const { data, error } = await supabase
+            .from("profiles")
+            .select("name")
+            .eq("id", uuid)
+            .maybeSingle();
+
+          if (error) throw error;
+
+          if (data) {
+            showResult({
+              state: "found",
+              icon: "✅",
+              badge: "Verificado",
+              title: "SOCIO REGISTRADO",
+              name: data.name || undefined,
+              sub: "Este QR corresponde a un socio activo\nregistrado en el sistema.",
+            });
+          } else {
+            showResult({
+              state: "not-found",
+              icon: "❌",
+              badge: "No encontrado",
+              title: "SOCIO NO ENCONTRADO",
+              sub: "QR inválido o no registrado.\nEste código no corresponde a ningún socio activo.",
+            });
+          }
+        } catch (err: any) {
+          console.error("Error verificando socio:", err);
+          const isRLS =
+            err?.code === "PGRST301" ||
+            err?.message?.toLowerCase().includes("permission") ||
+            err?.message?.toLowerCase().includes("policy");
+
+          showResult({
+            state: "error-state",
+            icon: "⚠️",
+            badge: "Error",
+            title: isRLS ? "ACCESO RESTRINGIDO" : "ERROR DE CONSULTA",
+            sub: isRLS
+              ? "La política de seguridad no permite esta consulta.\nContacta al administrador."
+              : "No se pudo verificar el QR en este momento.\nIntenta de nuevo más tarde.",
+          });
+        }
+      }
+
+      verificar();
+    </script>
+  </body>
+</html>

@@ -4,23 +4,23 @@ import DashboardLayout from "../layouts/DashboardLayout.astro";
 
 <DashboardLayout title="Perfil">
 	<div class="profile-container">
-		 <a href="/home" class="back-link">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="20"
-        height="20"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      >
-        <line x1="19" y1="12" x2="5" y2="12"></line>
-        <polyline points="12 19 5 12 12 5"></polyline>
-      </svg>
-      Volver
-    </a>
+		<a href="/home" class="back-link">
+			<svg
+				xmlns="http://www.w3.org/2000/svg"
+				width="20"
+				height="20"
+				viewBox="0 0 24 24"
+				fill="none"
+				stroke="currentColor"
+				stroke-width="2"
+				stroke-linecap="round"
+				stroke-linejoin="round"
+			>
+				<line x1="19" y1="12" x2="5" y2="12"></line>
+				<polyline points="12 19 5 12 12 5"></polyline>
+			</svg>
+			Volver
+		</a>
 		<!-- CONTENEDOR PRINCIPAL DE LA SECCIÓN PERFIL -->
 		<div
 			class="profile-section-container"
@@ -293,8 +293,13 @@ import DashboardLayout from "../layouts/DashboardLayout.astro";
 
 						<!-- Campo: Nueva Contraseña -->
 						<div class="modal-field">
-							<label for="input-new-password">Nueva contraseña</label>
-							<div class="password-wrapper" style="position: relative;">
+							<label for="input-new-password"
+								>Nueva contraseña</label
+							>
+							<div
+								class="password-wrapper"
+								style="position: relative;"
+							>
 								<input
 									id="input-new-password"
 									type="password"
@@ -302,17 +307,60 @@ import DashboardLayout from "../layouts/DashboardLayout.astro";
 									required
 									style="padding-right: 45px;"
 								/>
-								<button type="button" class="toggle-password-btn" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: #757575;">
-									<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="eye-open"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-									<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="eye-closed" style="display: none;"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
+								<button
+									type="button"
+									class="toggle-password-btn"
+									style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: #757575;"
+								>
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										width="20"
+										height="20"
+										viewBox="0 0 24 24"
+										fill="none"
+										stroke="currentColor"
+										stroke-width="2"
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										class="eye-open"
+										><path
+											d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"
+										></path><circle cx="12" cy="12" r="3"
+										></circle></svg
+									>
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										width="20"
+										height="20"
+										viewBox="0 0 24 24"
+										fill="none"
+										stroke="currentColor"
+										stroke-width="2"
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										class="eye-closed"
+										style="display: none;"
+										><path
+											d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"
+										></path><line
+											x1="1"
+											y1="1"
+											x2="23"
+											y2="23"></line></svg
+									>
 								</button>
 							</div>
 						</div>
 
 						<!-- Campo: Confirmar Contraseña -->
 						<div class="modal-field">
-							<label for="input-confirm-password">Confirmar contraseña</label>
-							<div class="password-wrapper" style="position: relative;">
+							<label for="input-confirm-password"
+								>Confirmar contraseña</label
+							>
+							<div
+								class="password-wrapper"
+								style="position: relative;"
+							>
 								<input
 									id="input-confirm-password"
 									type="password"
@@ -320,9 +368,47 @@ import DashboardLayout from "../layouts/DashboardLayout.astro";
 									required
 									style="padding-right: 45px;"
 								/>
-								<button type="button" class="toggle-password-btn" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: #757575;">
-									<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="eye-open"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-									<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="eye-closed" style="display: none;"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
+								<button
+									type="button"
+									class="toggle-password-btn"
+									style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: #757575;"
+								>
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										width="20"
+										height="20"
+										viewBox="0 0 24 24"
+										fill="none"
+										stroke="currentColor"
+										stroke-width="2"
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										class="eye-open"
+										><path
+											d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"
+										></path><circle cx="12" cy="12" r="3"
+										></circle></svg
+									>
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										width="20"
+										height="20"
+										viewBox="0 0 24 24"
+										fill="none"
+										stroke="currentColor"
+										stroke-width="2"
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										class="eye-closed"
+										style="display: none;"
+										><path
+											d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"
+										></path><line
+											x1="1"
+											y1="1"
+											x2="23"
+											y2="23"></line></svg
+									>
 								</button>
 							</div>
 						</div>
@@ -346,8 +432,8 @@ import DashboardLayout from "../layouts/DashboardLayout.astro";
 				class="modal-overlay"
 				style="display: none;"
 			>
-				<div 
-					class="card-dialog" 
+				<div
+					class="card-dialog"
 					style="background-color: #ffffff; width: 95%; max-width: 360px; border-radius: 28px; padding: 40px 30px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3); border: 2px solid #000000; box-sizing: border-box; text-align: center; position: relative; animation: modalFadeIn 0.3s ease-out;"
 				>
 					<button
@@ -374,31 +460,49 @@ import DashboardLayout from "../layouts/DashboardLayout.astro";
 					</button>
 
 					<div style="margin-top: 10px;">
-						<p style="font-size: 16px; font-weight: 700; color: #000000; margin: 0 0 25px 0; font-family: inherit; text-transform: none;">Tarjeta de identificación</p>
-						
-						<h2 
-							id="card-display-name" 
+						<p
+							style="font-size: 16px; font-weight: 700; color: #000000; margin: 0 0 25px 0; font-family: inherit; text-transform: none;"
+						>
+							Tarjeta de identificación
+						</p>
+
+						<h2
+							id="card-display-name"
 							style="font-size: 32px; font-weight: 800; color: #da291c; margin: 0 0 5px 0; font-family: inherit;"
 						>
 							Cargando...
 						</h2>
-						
-						<p 
-							id="card-display-company" 
+
+						<p
+							id="card-display-company"
 							style="font-size: 14px; font-style: italic; color: #757575; margin: 0 0 40px 0; font-family: inherit;"
 						>
 							Cargando...
 						</p>
-						
-						<!-- Espacio reservado para el QR -->
-						<div style="height: 120px; margin-bottom: 30px; display: flex; align-items: center; justify-content: center;">
-							<span style="font-size: 14px; color: #b5b5b5; font-style: italic;">[Espacio para código QR]</span>
+
+						<!-- Código QR del socio -->
+						<div
+							style="margin-bottom: 30px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;"
+						>
+							<canvas
+								id="canvas-qr"
+								style="border-radius: 8px; display: none;"
+							></canvas>
+							<span
+								id="qr-loading-text"
+								style="font-size: 13px; color: #b5b5b5; font-style: italic;"
+								>Generando QR...</span
+							>
 						</div>
 
 						<div style="margin-bottom: 25px;">
-							<p style="font-size: 14px; color: #757575; margin: 0 0 5px 0; font-family: inherit;">Email:</p>
-							<p 
-								id="card-display-email" 
+							<p
+								style="font-size: 14px; color: #757575; margin: 0 0 5px 0; font-family: inherit;"
+							>
+								Email:
+							</p>
+							<p
+								id="card-display-email"
 								style="font-size: 16px; font-weight: 700; color: #000000; margin: 0; font-family: inherit; word-break: break-all;"
 							>
 								Cargando...
@@ -406,9 +510,13 @@ import DashboardLayout from "../layouts/DashboardLayout.astro";
 						</div>
 
 						<div>
-							<p style="font-size: 14px; color: #757575; margin: 0 0 5px 0; font-family: inherit;">Fecha de unión:</p>
-							<p 
-								id="card-display-joined" 
+							<p
+								style="font-size: 14px; color: #757575; margin: 0 0 5px 0; font-family: inherit;"
+							>
+								Fecha de unión:
+							</p>
+							<p
+								id="card-display-joined"
 								style="font-size: 16px; font-weight: 700; color: #000000; margin: 0; font-family: inherit;"
 							>
 								Cargando...
@@ -424,12 +532,15 @@ import DashboardLayout from "../layouts/DashboardLayout.astro";
 					background-color: #d32f2f !important;
 					color: #ffffff !important;
 				}
-				.profile-section-container button:not(.toggle-password-btn):not(.modal-close-btn):hover {
+				.profile-section-container
+					button:not(.toggle-password-btn):not(
+						.modal-close-btn
+					):hover {
 					background-color: #b71c1c !important;
 				}
-                .toggle-password-btn:hover {
-                    background-color: transparent !important;
-                }
+				.toggle-password-btn:hover {
+					background-color: transparent !important;
+				}
 
 				@media (max-width: 992px) {
 					.profile-grid {
@@ -597,29 +708,28 @@ import DashboardLayout from "../layouts/DashboardLayout.astro";
 					cursor: not-allowed;
 				}
 				/* ── Resto de estilos existentes ── */
-  .profile-container {
-    position: relative;
-    padding-top: 50px;
-  }
-  .back-link {
-    position: absolute;
-    top: 5px;
-    left: 0;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    color: #64748b;
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 16px;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  }
+				.profile-container {
+					position: relative;
+					padding-top: 50px;
+				}
+				.back-link {
+					position: absolute;
+					top: 5px;
+					left: 0;
+					display: inline-flex;
+					align-items: center;
+					gap: 0.5rem;
+					color: #64748b;
+					text-decoration: none;
+					font-weight: 600;
+					font-size: 16px;
+					transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+				}
 
-  .back-link:hover {
-    color: #0f172a;
-    transform: translateX(-4px);
-  }
-
+				.back-link:hover {
+					color: #0f172a;
+					transform: translateX(-4px);
+				}
 			</style>
 		</div>
 	</div>
@@ -629,8 +739,16 @@ import DashboardLayout from "../layouts/DashboardLayout.astro";
 	import { supabase } from "../lib/supabase.js";
 	import { getCompaniesForSelect } from "../services/coupons-admin.js";
 	import { getAllowedDomainNames } from "../services/domains.js";
-	import { showToast, showAlert, showConfirm } from "../utils/notifications.js";
-	import { signOutUser, updateAuthEmail, directResetPassword } from "../services/auth.js";
+	import {
+		showToast,
+		showAlert,
+		showConfirm,
+	} from "../utils/notifications.js";
+	import {
+		signOutUser,
+		updateAuthEmail,
+		directResetPassword,
+	} from "../services/auth.js";
 
 	// --- Referencias UI ---
 	const displayNameEl = document.getElementById("profile-display-name")!;
@@ -760,22 +878,32 @@ import DashboardLayout from "../layouts/DashboardLayout.astro";
 			displayCompanyEl.textContent = companyVal;
 
 			// Actualizar los datos de la tarjeta de identificación
-			const cardDisplayNameEl = document.getElementById("card-display-name");
-			const cardDisplayCompanyEl = document.getElementById("card-display-company");
-			const cardDisplayEmailEl = document.getElementById("card-display-email");
-			const cardDisplayJoinedEl = document.getElementById("card-display-joined");
+			const cardDisplayNameEl =
+				document.getElementById("card-display-name");
+			const cardDisplayCompanyEl = document.getElementById(
+				"card-display-company",
+			);
+			const cardDisplayEmailEl =
+				document.getElementById("card-display-email");
+			const cardDisplayJoinedEl = document.getElementById(
+				"card-display-joined",
+			);
 
 			if (cardDisplayNameEl) cardDisplayNameEl.textContent = nameVal;
-			if (cardDisplayCompanyEl) cardDisplayCompanyEl.textContent = companyVal;
+			if (cardDisplayCompanyEl)
+				cardDisplayCompanyEl.textContent = companyVal;
 			if (cardDisplayEmailEl) cardDisplayEmailEl.textContent = emailVal;
 
-			const joinedDateObj = new Date(userProfile?.created_at || session?.user?.created_at);
+			const joinedDateObj = new Date(
+				userProfile?.created_at || session?.user?.created_at,
+			);
 			const joinedValLong = joinedDateObj.toLocaleDateString("es-ES", {
 				day: "numeric",
 				month: "long",
 				year: "numeric",
 			});
-			if (cardDisplayJoinedEl) cardDisplayJoinedEl.textContent = joinedValLong;
+			if (cardDisplayJoinedEl)
+				cardDisplayJoinedEl.textContent = joinedValLong;
 
 			// Llenar inputs de modal
 			inputName.value = nameVal;
@@ -799,9 +927,54 @@ import DashboardLayout from "../layouts/DashboardLayout.astro";
 		}
 	}
 
+	// --- Generación del QR ---
+	async function generateQR(uuid: string) {
+		try {
+			// Prioriza la variable de entorno PUBLIC_SITE_URL si está definida.
+			const envUrl = import.meta.env.PUBLIC_SITE_URL;
+			let baseUrl = "";
+
+			if (envUrl && envUrl.trim() !== "") {
+				baseUrl = envUrl.trim().replace(/\/$/, "");
+			} else {
+				// En local, usamos el origen actual (window.location.origin).
+				// NOTA: Para que funcione en el móvil, debes acceder a la web en tu PC
+				// usando tu IP local (ej: http://192.168.1.15:4321) en lugar de localhost.
+				baseUrl = window.location.origin;
+			}
+
+			const qrUrl = `${baseUrl}/validar?id=${uuid}`;
+
+			// @ts-ignore - Ignorar falta de tipos para qrcode
+			const QRCode = (await import("qrcode")).default;
+			const canvas = document.getElementById("canvas-qr") as HTMLCanvasElement;
+			const loadingText = document.getElementById("qr-loading-text");
+
+			if (!canvas) return;
+
+			await QRCode.toCanvas(canvas, qrUrl, {
+				width: 160,
+				margin: 1,
+				color: {
+					dark: "#000000",
+					light: "#ffffff",
+				},
+			});
+
+			canvas.style.display = "block";
+			if (loadingText) loadingText.style.display = "none";
+		} catch (err) {
+			console.error("Error generando QR:", err);
+			const loadingText = document.getElementById("qr-loading-text");
+			if (loadingText) loadingText.textContent = "Error al generar QR";
+		}
+	}
+
 	// Cargar al inicializar
 	if (userId) {
 		await loadAllData();
+		// Generar el QR con el UUID del usuario autenticado
+		await generateQR(userId);
 	}
 
 	// --- Manejo de la Modal Edición ---
@@ -839,9 +1012,15 @@ import DashboardLayout from "../layouts/DashboardLayout.astro";
 	});
 
 	// --- Manejo del Modal de Tarjeta de Identificación ---
-	const btnViewCard = document.getElementById("btn-view-card") as HTMLAnchorElement;
-	const cardModalOverlay = document.getElementById("card-modal-overlay") as HTMLDivElement;
-	const btnCloseCardModal = document.getElementById("btn-close-card-modal") as HTMLButtonElement;
+	const btnViewCard = document.getElementById(
+		"btn-view-card",
+	) as HTMLAnchorElement;
+	const cardModalOverlay = document.getElementById(
+		"card-modal-overlay",
+	) as HTMLDivElement;
+	const btnCloseCardModal = document.getElementById(
+		"btn-close-card-modal",
+	) as HTMLButtonElement;
 
 	if (btnViewCard && cardModalOverlay) {
 		btnViewCard.addEventListener("click", (e) => {
@@ -867,22 +1046,22 @@ import DashboardLayout from "../layouts/DashboardLayout.astro";
 	}
 
 	// --- Toggle Password Visibility ---
-	document.querySelectorAll('.toggle-password-btn').forEach(btn => {
-		btn.addEventListener('click', () => {
-			const wrapper = btn.closest('.password-wrapper');
-			const input = wrapper?.querySelector('input');
-			const eyeOpen = btn.querySelector('.eye-open') as HTMLElement;
-			const eyeClosed = btn.querySelector('.eye-closed') as HTMLElement;
+	document.querySelectorAll(".toggle-password-btn").forEach((btn) => {
+		btn.addEventListener("click", () => {
+			const wrapper = btn.closest(".password-wrapper");
+			const input = wrapper?.querySelector("input");
+			const eyeOpen = btn.querySelector(".eye-open") as HTMLElement;
+			const eyeClosed = btn.querySelector(".eye-closed") as HTMLElement;
 
 			if (input) {
-				if (input.type === 'password') {
-					input.type = 'text';
-					eyeOpen.style.display = 'none';
-					eyeClosed.style.display = 'block';
+				if (input.type === "password") {
+					input.type = "text";
+					eyeOpen.style.display = "none";
+					eyeClosed.style.display = "block";
 				} else {
-					input.type = 'password';
-					eyeOpen.style.display = 'block';
-					eyeClosed.style.display = 'none';
+					input.type = "password";
+					eyeOpen.style.display = "block";
+					eyeClosed.style.display = "none";
 				}
 			}
 		});
@@ -920,22 +1099,29 @@ import DashboardLayout from "../layouts/DashboardLayout.astro";
 
 		try {
 			// 1. Actualizar perfil en public.profiles (nombre, email de contacto, empresa)
-			const { error: rpcError } = await supabase.rpc('update_own_profile', {
-				p_name: newName,
-				p_email: newEmail,
-				p_company_id: newCompanyId
-			});
+			const { error: rpcError } = await supabase.rpc(
+				"update_own_profile",
+				{
+					p_name: newName,
+					p_email: newEmail,
+					p_company_id: newCompanyId,
+				},
+			);
 			if (rpcError) throw rpcError;
 
 			// 2. Si el email cambió, actualizar también en auth.users directamente (sin rate limit ni confirmación)
-			const currentEmail = userProfile?.email || session?.user?.email || '';
+			const currentEmail =
+				userProfile?.email || session?.user?.email || "";
 			if (newEmail && newEmail !== currentEmail) {
-				const { error: emailError } = await supabase.rpc('update_own_email', {
-					p_email: newEmail
-				});
+				const { error: emailError } = await supabase.rpc(
+					"update_own_email",
+					{
+						p_email: newEmail,
+					},
+				);
 				if (emailError) throw emailError;
 			}
- 
+
 			await showAlert({
 				title: "¡Perfil Actualizado!",
 				text: "La información de tu perfil ha sido modificada correctamente.",
@@ -970,7 +1156,10 @@ import DashboardLayout from "../layouts/DashboardLayout.astro";
 		}
 
 		if (newPassword.length < 6) {
-			showToast({ text: "La contraseña debe tener al menos 6 caracteres.", icon: "error" });
+			showToast({
+				text: "La contraseña debe tener al menos 6 caracteres.",
+				icon: "error",
+			});
 			return;
 		}
 
@@ -980,7 +1169,10 @@ import DashboardLayout from "../layouts/DashboardLayout.astro";
 		try {
 			const success = await directResetPassword(email, newPassword);
 			if (!success) {
-				showToast({ text: "Ocurrió un error al intentar actualizar la contraseña.", icon: "error" });
+				showToast({
+					text: "Ocurrió un error al intentar actualizar la contraseña.",
+					icon: "error",
+				});
 				return;
 			}
 
@@ -993,7 +1185,10 @@ import DashboardLayout from "../layouts/DashboardLayout.astro";
 
 			closeResetModal();
 		} catch (err: any) {
-			showToast({ text: err.message || "Error al cambiar la contraseña.", icon: "error" });
+			showToast({
+				text: err.message || "Error al cambiar la contraseña.",
+				icon: "error",
+			});
 		} finally {
 			btnConfirmReset.disabled = false;
 			btnConfirmReset.textContent = "Cambiar contraseña";
