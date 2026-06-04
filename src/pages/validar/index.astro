@@ -44,16 +44,36 @@
 
       /* ── Fondos por estado ── */
       body.loading {
-        background: linear-gradient(145deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%);
+        background: linear-gradient(
+          145deg,
+          #1a1a2e 0%,
+          #16213e 60%,
+          #0f3460 100%
+        );
       }
       body.found {
-        background: linear-gradient(145deg, #0a2e0a 0%, #1a5c1a 40%, #22c55e 100%);
+        background: linear-gradient(
+          145deg,
+          #0a2e0a 0%,
+          #1a5c1a 40%,
+          #22c55e 100%
+        );
       }
       body.not-found {
-        background: linear-gradient(145deg, #2e0a0a 0%, #5c1a1a 40%, #dc2626 100%);
+        background: linear-gradient(
+          145deg,
+          #2e0a0a 0%,
+          #5c1a1a 40%,
+          #dc2626 100%
+        );
       }
       body.error-state {
-        background: linear-gradient(145deg, #1a1a0a 0%, #3d3a00 40%, #a16207 100%);
+        background: linear-gradient(
+          145deg,
+          #1a1a0a 0%,
+          #3d3a00 40%,
+          #a16207 100%
+        );
       }
 
       /* ── Destellos de fondo ── */
@@ -65,17 +85,43 @@
         pointer-events: none;
         z-index: 0;
       }
-      .bg-glow-1 { width: 300px; height: 300px; top: -80px; right: -80px; }
-      .bg-glow-2 { width: 200px; height: 200px; bottom: -40px; left: -40px; }
+      .bg-glow-1 {
+        width: 300px;
+        height: 300px;
+        top: -80px;
+        right: -80px;
+      }
+      .bg-glow-2 {
+        width: 200px;
+        height: 200px;
+        bottom: -40px;
+        left: -40px;
+      }
 
-      body.loading   .bg-glow-1 { background: #6366f1; }
-      body.loading   .bg-glow-2 { background: #818cf8; }
-      body.found     .bg-glow-1 { background: #4ade80; }
-      body.found     .bg-glow-2 { background: #86efac; }
-      body.not-found .bg-glow-1 { background: #f87171; }
-      body.not-found .bg-glow-2 { background: #fca5a5; }
-      body.error-state .bg-glow-1 { background: #fbbf24; }
-      body.error-state .bg-glow-2 { background: #fde68a; }
+      body.loading .bg-glow-1 {
+        background: #6366f1;
+      }
+      body.loading .bg-glow-2 {
+        background: #818cf8;
+      }
+      body.found .bg-glow-1 {
+        background: #4ade80;
+      }
+      body.found .bg-glow-2 {
+        background: #86efac;
+      }
+      body.not-found .bg-glow-1 {
+        background: #f87171;
+      }
+      body.not-found .bg-glow-2 {
+        background: #fca5a5;
+      }
+      body.error-state .bg-glow-1 {
+        background: #fbbf24;
+      }
+      body.error-state .bg-glow-2 {
+        background: #fde68a;
+      }
 
       /* ── Tarjeta central ── */
       .card {
@@ -97,8 +143,14 @@
       }
 
       @keyframes cardIn {
-        from { opacity: 0; transform: translateY(30px) scale(0.95); }
-        to   { opacity: 1; transform: translateY(0) scale(1); }
+        from {
+          opacity: 0;
+          transform: translateY(30px) scale(0.95);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
       }
 
       /* ── Spinner de carga ── */
@@ -111,7 +163,11 @@
         animation: spin 0.8s linear infinite;
         margin: 0 auto 24px;
       }
-      @keyframes spin { to { transform: rotate(360deg); } }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
 
       /* ── Icono de resultado ── */
       .status-icon {
@@ -122,8 +178,14 @@
         animation: iconPop 0.6s 0.1s cubic-bezier(0.34, 1.56, 0.64, 1) both;
       }
       @keyframes iconPop {
-        from { opacity: 0; transform: scale(0.4); }
-        to   { opacity: 1; transform: scale(1); }
+        from {
+          opacity: 0;
+          transform: scale(0.4);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
       }
 
       /* ── Badge ── */
@@ -139,10 +201,26 @@
         text-transform: uppercase;
         margin-bottom: 24px;
       }
-      body.loading   .status-badge { background: rgba(99,102,241,0.2); color: #c7d2fe; border: 1px solid rgba(99,102,241,0.4); }
-      body.found     .status-badge { background: rgba(74,222,128,0.2); color: #bbf7d0; border: 1px solid rgba(74,222,128,0.4); }
-      body.not-found .status-badge { background: rgba(248,113,113,0.2); color: #fecaca; border: 1px solid rgba(248,113,113,0.4); }
-      body.error-state .status-badge { background: rgba(251,191,36,0.2); color: #fef08a; border: 1px solid rgba(251,191,36,0.4); }
+      body.loading .status-badge {
+        background: rgba(99, 102, 241, 0.2);
+        color: #c7d2fe;
+        border: 1px solid rgba(99, 102, 241, 0.4);
+      }
+      body.found .status-badge {
+        background: rgba(74, 222, 128, 0.2);
+        color: #bbf7d0;
+        border: 1px solid rgba(74, 222, 128, 0.4);
+      }
+      body.not-found .status-badge {
+        background: rgba(248, 113, 113, 0.2);
+        color: #fecaca;
+        border: 1px solid rgba(248, 113, 113, 0.4);
+      }
+      body.error-state .status-badge {
+        background: rgba(251, 191, 36, 0.2);
+        color: #fef08a;
+        border: 1px solid rgba(251, 191, 36, 0.4);
+      }
 
       .badge-dot {
         width: 8px;
@@ -150,14 +228,29 @@
         border-radius: 50%;
         animation: pulse 2s infinite;
       }
-      body.loading   .badge-dot { background: #818cf8; }
-      body.found     .badge-dot { background: #4ade80; }
-      body.not-found .badge-dot { background: #f87171; }
-      body.error-state .badge-dot { background: #fbbf24; }
+      body.loading .badge-dot {
+        background: #818cf8;
+      }
+      body.found .badge-dot {
+        background: #4ade80;
+      }
+      body.not-found .badge-dot {
+        background: #f87171;
+      }
+      body.error-state .badge-dot {
+        background: #fbbf24;
+      }
 
       @keyframes pulse {
-        0%, 100% { opacity: 1; transform: scale(1); }
-        50%       { opacity: 0.6; transform: scale(0.8); }
+        0%,
+        100% {
+          opacity: 1;
+          transform: scale(1);
+        }
+        50% {
+          opacity: 0.6;
+          transform: scale(0.8);
+        }
       }
 
       /* ── Textos ── */
@@ -199,9 +292,18 @@
         opacity: 0.4;
         display: none;
       }
-      body.found .divider     { background: #4ade80; display: block; }
-      body.not-found .divider { background: #f87171; display: block; }
-      body.error-state .divider { background: #fbbf24; display: block; }
+      body.found .divider {
+        background: #4ade80;
+        display: block;
+      }
+      body.not-found .divider {
+        background: #f87171;
+        display: block;
+      }
+      body.error-state .divider {
+        background: #fbbf24;
+        display: block;
+      }
 
       /* ── Sello verificación ── */
       .verify-seal {
@@ -213,7 +315,9 @@
         color: rgba(255, 255, 255, 0.4);
         margin-top: 28px;
       }
-      .verify-seal svg { opacity: 0.5; }
+      .verify-seal svg {
+        opacity: 0.5;
+      }
 
       .timestamp {
         font-size: 11px;
@@ -224,7 +328,9 @@
       }
 
       /* ── Ocultar estado resultado hasta que esté listo ── */
-      #state-result { display: none; }
+      #state-result {
+        display: none;
+      }
     </style>
   </head>
 
@@ -286,9 +392,9 @@
       const UUID_REGEX =
         /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
-      const body         = document.body;
+      const body = document.body;
       const stateLoading = document.getElementById("state-loading")!;
-      const stateResult  = document.getElementById("state-result")!;
+      const stateResult = document.getElementById("state-result")!;
 
       function showResult(cfg: {
         state: "found" | "not-found" | "error-state";
@@ -302,14 +408,14 @@
         body.classList.remove("loading");
         body.classList.add(cfg.state);
 
-        document.getElementById("result-icon")!.textContent       = cfg.icon;
+        document.getElementById("result-icon")!.textContent = cfg.icon;
         document.getElementById("result-badge-text")!.textContent = cfg.badge;
-        document.getElementById("result-title")!.textContent      = cfg.title;
-        document.getElementById("result-sub")!.textContent        = cfg.sub;
+        document.getElementById("result-title")!.textContent = cfg.title;
+        document.getElementById("result-sub")!.textContent = cfg.sub;
 
         const nameEl = document.getElementById("result-name") as HTMLElement;
         if (cfg.name) {
-          nameEl.textContent   = cfg.name;
+          nameEl.textContent = cfg.name;
           nameEl.style.display = "block";
         }
 
@@ -326,7 +432,7 @@
         ts.style.display = "block";
 
         stateLoading.style.display = "none";
-        stateResult.style.display  = "block";
+        stateResult.style.display = "block";
       }
 
       async function verificar() {
@@ -345,7 +451,7 @@
         try {
           const supabase = createClient(
             import.meta.env.PUBLIC_SUPABASE_URL,
-            import.meta.env.PUBLIC_SUPABASE_ANON_KEY
+            import.meta.env.PUBLIC_SUPABASE_ANON_KEY,
           );
 
           const { data, error } = await supabase

@@ -341,7 +341,15 @@ import Pagination from "./Pagination.astro";
           });
         }
       });
-      const uniqueSectors = Array.from(sectorMap.values()).sort((a, b) => a.name.localeCompare(b.name));
+      const uniqueSectors = Array.from(sectorMap.values()).sort((a, b) => {
+        const nameA = String(a.name).toLowerCase().trim();
+        const nameB = String(b.name).toLowerCase().trim();
+        const isAOther = nameA === "otros" || nameA === "otro";
+        const isBOther = nameB === "otros" || nameB === "otro";
+        if (isAOther && !isBOther) return 1;
+        if (!isAOther && isBOther) return -1;
+        return a.name.localeCompare(b.name);
+      });
 
       menuSector.innerHTML = `
         <div class="dropdown-item active" data-id="">Todos los sectores</div>
@@ -444,8 +452,52 @@ import Pagination from "./Pagination.astro";
     }
   }
 
+  // ── Resetear Filtros ─────────────────────────────────────────
+  function resetFilters(): void {
+    selectedCompanyId = "";
+    selectedSectorId = "";
+    selectedDiscount = "";
+    selectedPromoFilter = "all";
+
+    // Reset active labels to defaults
+    const labelEmpresa = document.querySelector("#dropdown-empresa .selected-label");
+    if (labelEmpresa) labelEmpresa.textContent = "Empresas";
+
+    const labelSector = document.querySelector("#dropdown-sector .selected-label");
+    if (labelSector) labelSector.textContent = "Sector";
+
+    const labelDescuento = document.querySelector("#dropdown-descuento .selected-label");
+    if (labelDescuento) labelDescuento.textContent = "Descuento";
+
+    const labelPromociones = document.querySelector("#dropdown-promociones .selected-label");
+    if (labelPromociones) labelPromociones.textContent = "Promociones";
+
+    // Reset active class in dropdown items
+    const menus = ["menu-empresa", "menu-sector", "menu-descuento", "menu-promociones"];
+    menus.forEach(menuId => {
+      const menu = document.getElementById(menuId);
+      if (menu) {
+        menu.querySelectorAll(".dropdown-item").forEach(el => el.classList.remove("active"));
+        const defaultItem = menu.querySelector('.dropdown-item[data-id=""], .dropdown-item[data-value=""], .dropdown-item[data-value="all"]');
+        if (defaultItem) {
+          defaultItem.classList.add("active");
+        }
+      }
+    });
+
+    applyFilters();
+  }
+
+  function initResetButton(): void {
+    const btn = document.getElementById("btn-reset-filters");
+    if (btn) {
+      btn.addEventListener("click", resetFilters);
+    }
+  }
+
   // Inicializar todo
   initDropdowns();
   initPromoFilter();
+  initResetButton();
   loadCoupons();
 </script>
