@@ -151,6 +151,14 @@ export async function showCreateUserModal(allowedDomains = [], companies = []) {
           <option value="admin">Administrador</option>
         </select>
       </div>
+      <div class="swal-form-group">
+        <label for="swal-new-expiration" style="display:flex;align-items:center;gap:0.4rem;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+          Fecha de Expiración <span style="font-weight:400;color:#94a3b8;">(Opcional)</span>
+        </label>
+        <input id="swal-new-expiration" type="date" class="swal-input-custom" style="cursor:pointer;">
+        <p class="swal-hint" style="font-size:0.8rem;color:#94a3b8;margin-top:0.3rem;">Si no se establece, quedará como "No especificado"</p>
+      </div>
     `,
     focusConfirm: false,
     showCancelButton: true,
@@ -169,6 +177,7 @@ export async function showCreateUserModal(allowedDomains = [], companies = []) {
       const name = document.getElementById('swal-new-name').value;
       const role = document.getElementById('swal-new-role').value;
       const companyId = document.getElementById('swal-new-company').value;
+      const expirationDate = document.getElementById('swal-new-expiration').value || null;
 
       if (!name || !email || !password) {
         Swal.showValidationMessage('Todos los campos son obligatorios');
@@ -191,7 +200,7 @@ export async function showCreateUserModal(allowedDomains = [], companies = []) {
         return false;
       }
 
-      return { email, password, name, role, company_id: companyId ? parseInt(companyId) : null };
+      return { email, password, name, role, company_id: companyId ? parseInt(companyId) : null, expiration_date: expirationDate };
     }
   });
 
@@ -215,6 +224,9 @@ export async function showEditUserModal(user, allowedDomains = [], companies = [
   const companyOptions = companies.map(c => 
     `<option value="${c.id}" ${user.company_id == c.id ? 'selected' : ''}>${c.name}</option>`
   ).join('');
+
+  // Formatear fecha para el input tipo date (YYYY-MM-DD)
+  const formattedExpiration = user.expiration_date ? user.expiration_date.split('T')[0] : '';
   
   const { value: formValues } = await Swal.fire({
     title: 'Editar Usuario',
@@ -262,6 +274,14 @@ export async function showEditUserModal(user, allowedDomains = [], companies = [
           <option value="admin" ${user.role === 'admin' ? 'selected' : ''}>Administrador</option>
         </select>
       </div>
+      <div class="swal-form-group">
+        <label for="swal-edit-expiration" style="display:flex;align-items:center;gap:0.4rem;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+          Fecha de Expiración <span style="font-weight:400;color:#94a3b8;">(Opcional)</span>
+        </label>
+        <input id="swal-edit-expiration" type="date" class="swal-input-custom" style="cursor:pointer;" value="${formattedExpiration}">
+        <p class="swal-hint" style="font-size:0.8rem;color:#94a3b8;margin-top:0.3rem;">Deja vacío para que quede como "No especificado"</p>
+      </div>
     `,
     focusConfirm: false,
     showCancelButton: true,
@@ -280,6 +300,7 @@ export async function showEditUserModal(user, allowedDomains = [], companies = [
       const name = document.getElementById('swal-edit-name').value;
       const role = document.getElementById('swal-edit-role').value;
       const companyId = document.getElementById('swal-edit-company').value;
+      const expirationDate = document.getElementById('swal-edit-expiration').value || null;
 
       if (!name || !email) {
         Swal.showValidationMessage('El nombre y correo son obligatorios');
@@ -302,7 +323,7 @@ export async function showEditUserModal(user, allowedDomains = [], companies = [
         return false;
       }
 
-      return { email, password, name, role, company_id: companyId ? parseInt(companyId) : null };
+      return { email, password, name, role, company_id: companyId ? parseInt(companyId) : null, expiration_date: expirationDate };
     }
   });
 

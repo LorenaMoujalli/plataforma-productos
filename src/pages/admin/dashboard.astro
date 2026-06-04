@@ -295,6 +295,7 @@ import "../../styles/grid-principal/benefit-card.css";
               <th>Correo Electrónico</th>
               <th>Rol</th>
               <th>Fecha de Registro</th>
+              <th>Expiración</th>
               <th class="text-right">Acciones</th>
             </tr>
           </thead>
@@ -1018,7 +1019,7 @@ import "../../styles/grid-principal/benefit-card.css";
 
       if (filteredUsers.length === 0) {
         usersTbody.innerHTML =
-          '<tr><td colspan="5" style="text-align:center; padding:3rem; color:#64748b;">No se encontraron usuarios que coincidan con tu búsqueda.</td></tr>';
+          '<tr><td colspan="6" style="text-align:center; padding:3rem; color:#64748b;">No se encontraron usuarios que coincidan con tu búsqueda.</td></tr>';
         return;
       }
 
@@ -1027,6 +1028,31 @@ import "../../styles/grid-principal/benefit-card.css";
 
         // Buscar empresa en el perfil
         const companyId = user.company_id || null;
+
+        // Badge de expiración
+        let expirationBadge = '';
+        if (!user.expiration_date) {
+          expirationBadge = `<span style="display:inline-flex;align-items:center;gap:0.3rem;padding:0.25rem 0.65rem;border-radius:9999px;font-size:0.75rem;font-weight:500;background:#f1f5f9;color:#64748b;border:1px solid #e2e8f0;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            No especificado
+          </span>`;
+        } else {
+          const expDate = new Date(user.expiration_date + 'T00:00:00');
+          const today = new Date(); today.setHours(0,0,0,0);
+          const isExpired = expDate < today;
+          const formattedExp = expDate.toLocaleDateString('es-ES', { day:'2-digit', month:'short', year:'numeric' });
+          if (isExpired) {
+            expirationBadge = `<span style="display:inline-flex;align-items:center;gap:0.3rem;padding:0.25rem 0.65rem;border-radius:9999px;font-size:0.75rem;font-weight:500;background:#fef2f2;color:#dc2626;border:1px solid #fecaca;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+              Vencido: ${formattedExp}
+            </span>`;
+          } else {
+            expirationBadge = `<span style="display:inline-flex;align-items:center;gap:0.3rem;padding:0.25rem 0.65rem;border-radius:9999px;font-size:0.75rem;font-weight:500;background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              ${formattedExp}
+            </span>`;
+          }
+        }
 
         // Estilo especial para admin badge
         const roleBadge =
@@ -1043,9 +1069,10 @@ import "../../styles/grid-principal/benefit-card.css";
           <td data-label="Correo"><span class="text-gray">${user.email}</span></td>
           <td data-label="Rol">${roleBadge}</td>
           <td data-label="Fecha Registro"><span class="text-gray">${formatDate(user.created_at)}</span></td>
+          <td data-label="Expiración">${expirationBadge}</td>
           <td data-label="Acciones" class="actions-cell">
             <div style="display: flex; gap: 0.5rem; justify-content: flex-end;">
-              <button class="btn-icon btn-edit" data-user='${JSON.stringify({ id: user.id, email: user.email, name: user.name, role: user.role, company_id: companyId }).replace(/'/g, "&apos;")}' title="Editar usuario">
+              <button class="btn-icon btn-edit" data-user='${JSON.stringify({ id: user.id, email: user.email, name: user.name, role: user.role, company_id: companyId, expiration_date: user.expiration_date || null }).replace(/'/g, "&apos;")}' title="Editar usuario">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
                   <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
@@ -1136,7 +1163,7 @@ import "../../styles/grid-principal/benefit-card.css";
           if (newValues) {
             btn.classList.add("loading");
             try {
-              // Actualizar todos los datos del usuario en una sola llamada RPC
+              // 1. Actualizar datos principales del usuario
               await supabase.rpc("admin_update_user_full", {
                 p_user_id: user.id,
                 p_name: newValues.name,
@@ -1144,6 +1171,12 @@ import "../../styles/grid-principal/benefit-card.css";
                 p_email: newValues.email,
                 p_password: newValues.password || null,
                 p_company_id: newValues.company_id,
+              });
+
+              // 2. Actualizar fecha de expiración por separado (RPC con SECURITY DEFINER)
+              await supabase.rpc("admin_update_user_expiration", {
+                p_user_id: user.id,
+                p_expiration_date: newValues.expiration_date || null,
               });
 
               showToast({
@@ -1196,11 +1229,17 @@ import "../../styles/grid-principal/benefit-card.css";
               userData.role,
             );
 
-            // 2. Asignar empresa al perfil recién creado
+            // 2. Asignar empresa y fecha de expiración al perfil recién creado
             if (newUser && newUser.id) {
+              // Asignar empresa al perfil
               await supabase.rpc("admin_update_user_company", {
                 p_user_id: newUser.id,
                 p_company_id: userData.company_id,
+              });
+              // Asignar fecha de expiración via RPC (evita bloqueo por RLS)
+              await supabase.rpc("admin_update_user_expiration", {
+                p_user_id: newUser.id,
+                p_expiration_date: userData.expiration_date || null,
               });
             }
 
