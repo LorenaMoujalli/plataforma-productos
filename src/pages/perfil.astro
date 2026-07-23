@@ -1048,7 +1048,7 @@ import DashboardLayout from "../layouts/DashboardLayout.astro";
 </DashboardLayout>
 
 <script>
-	import { supabase } from "../lib/supabase.js";
+	import { supabase } from "../lib/client.js";
 	import { getCompaniesForSelect } from "../services/coupons-admin.js";
 	import { getAllowedDomainNames } from "../services/domains.js";
 	import {

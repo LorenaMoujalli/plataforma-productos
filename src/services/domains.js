@@ -1,17 +1,12 @@
-import { supabase } from "../lib/supabase.js";
-
 /**
  * Obtiene todos los dominios permitidos.
  * @returns {Promise<any[]>}
  */
 export async function getDomains() {
-  const { data, error } = await supabase
-    .from('allowed_domains')
-    .select('*')
-    .order('created_at', { ascending: false });
-
-  if (error) throw error;
-  return data;
+  const res = await fetch('/api/domains');
+  const body = await res.json();
+  if (!res.ok) throw new Error(body.error || 'Error al obtener dominios');
+  return body.data;
 }
 
 /**
@@ -20,15 +15,14 @@ export async function getDomains() {
  * @returns {Promise<any>}
  */
 export async function addDomain(domain) {
-  const clean = domain.trim().toLowerCase();
-  const { data, error } = await supabase
-    .from('allowed_domains')
-    .insert({ domain: clean })
-    .select()
-    .single();
-
-  if (error) throw error;
-  return data;
+  const res = await fetch('/api/domains', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ domain })
+  });
+  const body = await res.json();
+  if (!res.ok) throw new Error(body.error || 'Error al agregar dominio');
+  return body.data;
 }
 
 /**
@@ -38,16 +32,14 @@ export async function addDomain(domain) {
  * @returns {Promise<any>}
  */
 export async function updateDomain(id, domain) {
-  const clean = domain.trim().toLowerCase();
-  const { data, error } = await supabase
-    .from('allowed_domains')
-    .update({ domain: clean })
-    .eq('id', id)
-    .select()
-    .single();
-
-  if (error) throw error;
-  return data;
+  const res = await fetch('/api/domains', {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ id, domain })
+  });
+  const body = await res.json();
+  if (!res.ok) throw new Error(body.error || 'Error al actualizar dominio');
+  return body.data;
 }
 
 /**
@@ -56,12 +48,12 @@ export async function updateDomain(id, domain) {
  * @returns {Promise<boolean>}
  */
 export async function deleteDomain(id) {
-  const { data, error } = await supabase.rpc('delete_users_and_domain_by_id', {
-    p_domain_id: id
+  const res = await fetch(`/api/domains?id=${id}`, {
+    method: 'DELETE'
   });
-
-  if (error) throw error;
-  return data;
+  const body = await res.json();
+  if (!res.ok) throw new Error(body.error || 'Error al eliminar dominio');
+  return body.data;
 }
 
 /**
@@ -69,10 +61,6 @@ export async function deleteDomain(id) {
  * @returns {Promise<string[]>}
  */
 export async function getAllowedDomainNames() {
-  const { data, error } = await supabase
-    .from('allowed_domains')
-    .select('domain');
-
-  if (error) throw error;
-  return (data || []).map(d => d.domain.toLowerCase());
+  const list = await getDomains();
+  return (list || []).map(d => d.domain.toLowerCase());
 }

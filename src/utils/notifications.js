@@ -191,7 +191,7 @@ export async function showCreateUserModal(allowedDomains = [], companies = []) {
       }
 
       if (allowedDomains.length > 0 && !allowedDomains.includes(domain)) {
-        Swal.showValidationMessage(`Dominio no autorizado. Permitidos: ${allowedDomains.map(d => '@' + d).join(', ')}`);
+        Swal.showValidationMessage('Dominio no autorizado.');
         return false;
       }
       
@@ -314,7 +314,7 @@ export async function showEditUserModal(user, allowedDomains = [], companies = [
       }
 
       if (allowedDomains.length > 0 && !allowedDomains.includes(domain)) {
-        Swal.showValidationMessage(`Dominio no autorizado. Permitidos: ${allowedDomains.map(d => '@' + d).join(', ')}`);
+        Swal.showValidationMessage('Dominio no autorizado.');
         return false;
       }
       
@@ -427,6 +427,95 @@ export async function showEditDomainModal(domainData) {
         return false;
       }
       return { domain };
+    }
+  });
+
+  return formValues || null;
+}
+
+/**
+ * Muestra un modal para agregar un nuevo sector.
+ * @returns {Promise<{name:string}|null>}
+ */
+export async function showCreateSectorModal() {
+  const Swal = (await import('sweetalert2')).default;
+
+  const { value: formValues } = await Swal.fire({
+    title: 'Agregar Sector / Industria',
+    html: `
+      <style>
+        .swal2-html-container { margin: 1rem 0 0 0; overflow: visible; }
+        .swal-form-group { margin-bottom: 1rem; text-align: left; }
+        .swal-form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; font-size: 0.85rem; color: #475569; }
+        .swal-input-custom { width: 100%; box-sizing: border-box; padding: 0.75rem 1rem; border-radius: 8px; border: 1px solid #e2e8f0; background-color: #f8fafc; font-size: 0.95rem; font-family: inherit; transition: all 0.2s; outline: none; }
+        .swal-input-custom:focus { border-color: #94a3b8; box-shadow: 0 0 0 3px rgba(226, 232, 240, 0.5); background-color: #fff; }
+      </style>
+      <div class="swal-form-group">
+        <label for="swal-sector-name">Nombre del Sector</label>
+        <input id="swal-sector-name" class="swal-input-custom" placeholder="Ej: Tecnología, Salud..." autocomplete="off">
+      </div>
+    `,
+    focusConfirm: false,
+    showCancelButton: true,
+    confirmButtonText: 'Agregar',
+    cancelButtonText: 'Cancelar',
+    confirmButtonColor: '#10b981',
+    cancelButtonColor: '#64748b',
+    background: '#ffffff',
+    color: '#0f172a',
+    customClass: { popup: 'premium-popup' },
+    preConfirm: () => {
+      const name = document.getElementById('swal-sector-name').value.trim();
+      if (!name) {
+        Swal.showValidationMessage('El nombre es obligatorio');
+        return false;
+      }
+      return { name };
+    }
+  });
+
+  return formValues || null;
+}
+
+/**
+ * Muestra un modal para editar un sector existente.
+ * @param {{ id: number, name: string }} sectorData
+ * @returns {Promise<{name:string}|null>}
+ */
+export async function showEditSectorModal(sectorData) {
+  const Swal = (await import('sweetalert2')).default;
+
+  const { value: formValues } = await Swal.fire({
+    title: 'Editar Sector / Industria',
+    html: `
+      <style>
+        .swal2-html-container { margin: 1rem 0 0 0; overflow: visible; }
+        .swal-form-group { margin-bottom: 1rem; text-align: left; }
+        .swal-form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; font-size: 0.85rem; color: #475569; }
+        .swal-input-custom { width: 100%; box-sizing: border-box; padding: 0.75rem 1rem; border-radius: 8px; border: 1px solid #e2e8f0; background-color: #f8fafc; font-size: 0.95rem; font-family: inherit; transition: all 0.2s; outline: none; }
+        .swal-input-custom:focus { border-color: #94a3b8; box-shadow: 0 0 0 3px rgba(226, 232, 240, 0.5); background-color: #fff; }
+      </style>
+      <div class="swal-form-group">
+        <label for="swal-edit-sector-name">Nombre del Sector</label>
+        <input id="swal-edit-sector-name" class="swal-input-custom" value="${sectorData.name}" autocomplete="off">
+      </div>
+    `,
+    focusConfirm: false,
+    showCancelButton: true,
+    confirmButtonText: 'Guardar Cambios',
+    cancelButtonText: 'Cancelar',
+    confirmButtonColor: '#0f172a',
+    cancelButtonColor: '#64748b',
+    background: '#ffffff',
+    color: '#0f172a',
+    customClass: { popup: 'premium-popup' },
+    preConfirm: () => {
+      const name = document.getElementById('swal-edit-sector-name').value.trim();
+      if (!name) {
+        Swal.showValidationMessage('El nombre es obligatorio');
+        return false;
+      }
+      return { name };
     }
   });
 

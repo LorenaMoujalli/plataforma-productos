@@ -103,6 +103,24 @@ import "../../styles/grid-principal/benefit-card.css";
               </svg>
               Cupón
             </button>
+            <button class="tab-btn" data-tab="sectores">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                <polyline points="2 17 12 22 22 17"></polyline>
+                <polyline points="2 12 12 17 22 12"></polyline>
+              </svg>
+              Sectores
+            </button>
           </div>
         </div>
         <p id="tab-subtitle">Gestiona los usuarios de la plataforma.</p>
@@ -275,6 +293,48 @@ import "../../styles/grid-principal/benefit-card.css";
           Nueva Empresa
         </button>
       </div>
+
+      <!-- Acciones tab Sectores -->
+      <div class="header-actions" id="sectores-actions" style="display:none;">
+        <div class="search-box">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input
+            type="text"
+            id="search-sector"
+            placeholder="Buscar sector..."
+          />
+        </div>
+        <button id="add-sector-btn" class="btn-success">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+          Nuevo Sector
+        </button>
+      </div>
     </div>
 
     <!-- Mensajes de estado -->
@@ -392,6 +452,32 @@ import "../../styles/grid-principal/benefit-card.css";
           style="display:none;"
         >
           <p>No hay empresas registradas aún.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel: Sectores -->
+    <div id="panel-sectores" class="tab-panel" style="display:none;">
+      <div class="table-container">
+        <div id="loading-state-sectores" class="loading-state">
+          <div class="spinner"></div>
+          <p>Cargando sectores...</p>
+        </div>
+        <table id="sectores-table" class="users-table" style="display:none;">
+          <thead>
+            <tr>
+              <th>Nombre del Sector</th>
+              <th class="text-right">Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="sectores-tbody"></tbody>
+        </table>
+        <div
+          id="empty-state-sectores"
+          class="empty-state"
+          style="display:none;"
+        >
+          <p>No hay sectores registrados aún.</p>
         </div>
       </div>
     </div>
@@ -660,13 +746,22 @@ import "../../styles/grid-principal/benefit-card.css";
             </div>
             <div class="cm-row">
               <div class="cm-field">
-                <label for="cm-vigencia">Vigencia</label>
-                <input
-                  id="cm-vigencia"
-                  type="text"
-                  class="cm-input"
-                  placeholder="Ej: 01/01/26 - 31/12/26"
-                />
+                <label>Vigencia</label>
+                <div style="display: flex; gap: 0.5rem; align-items: center;">
+                  <input
+                    id="cm-vigencia-desde"
+                    type="date"
+                    class="cm-input"
+                    style="flex: 1;"
+                  />
+                  <span style="color: #64748b; font-size: 0.85rem; font-weight: 500;">al</span>
+                  <input
+                    id="cm-vigencia-hasta"
+                    type="date"
+                    class="cm-input"
+                    style="flex: 1;"
+                  />
+                </div>
               </div>
               <div class="cm-field">
                 <label for="cm-tipo-descuento">Tipo de descuento</label>
@@ -815,7 +910,7 @@ import "../../styles/grid-principal/benefit-card.css";
 </DashboardLayout>
 
 <script>
-  import { supabase } from "../../lib/supabase.js";
+  import { supabase } from "../../lib/client.js";
   import {
     getUserProfile,
     getAdminUsers,
@@ -833,7 +928,6 @@ import "../../styles/grid-principal/benefit-card.css";
   import {
     getAdminCoupons,
     getCompaniesForSelect,
-    getSectors,
     createCoupon,
     updateCoupon,
     deleteCoupon,
@@ -845,12 +939,20 @@ import "../../styles/grid-principal/benefit-card.css";
     uploadCompanyLogo,
   } from "../../services/coupons-admin.js";
   import {
+    getSectors,
+    addSector,
+    updateSector,
+    deleteSector,
+  } from "../../services/sectors.js";
+  import {
     showConfirm,
     showToast,
     showCreateUserModal,
     showEditUserModal,
     showCreateDomainModal,
     showEditDomainModal,
+    showCreateSectorModal,
+    showEditSectorModal,
   } from "../../utils/notifications.js";
 
   // ── Verificación de Sesión y Rol de Administrador ──────────
@@ -909,11 +1011,13 @@ import "../../styles/grid-principal/benefit-card.css";
       dominios: document.getElementById("panel-dominios"),
       empresas: document.getElementById("panel-empresas"),
       cupon: document.getElementById("panel-cupon"),
+      sectores: document.getElementById("panel-sectores"),
     };
     const usuariosActions = document.getElementById("usuarios-actions");
     const dominiosActions = document.getElementById("dominios-actions");
     const cuponesActions = document.getElementById("cupones-actions");
     const empresasActions = document.getElementById("empresas-actions");
+    const sectoresActions = document.getElementById("sectores-actions");
     const tabSubtitle = document.getElementById("tab-subtitle");
 
     const subtitles: Record<string, string> = {
@@ -921,11 +1025,13 @@ import "../../styles/grid-principal/benefit-card.css";
       dominios: "Administra los dominios autorizados para registro.",
       empresas: "Administra las empresas y sus logos.",
       cupon: "Crea y gestiona cupones de descuento.",
+      sectores: "Administra los sectores y las industrias.",
     };
 
     let domainsLoaded = false;
     let cuponesLoaded = false;
     let empresasLoaded = false;
+    let sectoresLoaded = false;
 
     function switchTab(tab: string) {
       tabBtns.forEach((btn) => btn.classList.remove("tab-active"));
@@ -946,6 +1052,8 @@ import "../../styles/grid-principal/benefit-card.css";
         cuponesActions.style.display = tab === "cupon" ? "flex" : "none";
       if (empresasActions)
         empresasActions.style.display = tab === "empresas" ? "flex" : "none";
+      if (sectoresActions)
+        sectoresActions.style.display = tab === "sectores" ? "flex" : "none";
 
       if (tabSubtitle) tabSubtitle.textContent = subtitles[tab] ?? "";
 
@@ -960,6 +1068,10 @@ import "../../styles/grid-principal/benefit-card.css";
       if (tab === "empresas" && !empresasLoaded) {
         empresasLoaded = true;
         loadEmpresas();
+      }
+      if (tab === "sectores" && !sectoresLoaded) {
+        sectoresLoaded = true;
+        loadSectors();
       }
     }
 
@@ -1487,6 +1599,191 @@ import "../../styles/grid-principal/benefit-card.css";
               </svg>
               Nuevo Dominio
             `;
+          }
+        }
+      });
+    }
+    // ──────────────────────────────────────────────────────────
+
+    // ── Gestión de Sectores / Industrias ───────────────────────
+    const loadingStateSectores = document.getElementById("loading-state-sectores");
+    const sectoresTable = document.getElementById("sectores-table");
+    const sectoresTbody = document.getElementById("sectores-tbody");
+    const emptyStateSectores = document.getElementById("empty-state-sectores");
+    const searchSectorInput = document.getElementById("search-sector") as HTMLInputElement;
+
+    let allSectors: any[] = [];
+
+    if (searchSectorInput) {
+      searchSectorInput.addEventListener("input", () => {
+        if (allSectors.length > 0) {
+          renderSectors(allSectors);
+        }
+      });
+    }
+
+    async function loadSectors() {
+      if (!loadingStateSectores || !sectoresTable || !emptyStateSectores) return;
+      try {
+        loadingStateSectores.style.display = "flex";
+        sectoresTable.style.display = "none";
+        emptyStateSectores.style.display = "none";
+
+        const list = await getSectors();
+        allSectors = list || [];
+
+        if (allSectors.length === 0) {
+          emptyStateSectores.style.display = "block";
+        } else {
+          renderSectors(allSectors);
+          sectoresTable.style.display = "table";
+        }
+      } catch (error) {
+        console.error("Error al cargar sectores:", error);
+        emptyStateSectores.style.display = "block";
+        emptyStateSectores.innerHTML = `<p>Error al cargar sectores.</p>`;
+      } finally {
+        loadingStateSectores.style.display = "none";
+      }
+    }
+
+    function renderSectors(sectorsList: any[]) {
+      if (!sectoresTbody) return;
+      sectoresTbody.innerHTML = "";
+
+      const queryVal = (searchSectorInput?.value || "").toLowerCase().trim();
+      const filtered = sectorsList.filter((s: any) =>
+        (s.name || "").toLowerCase().includes(queryVal)
+      );
+
+      if (filtered.length === 0) {
+        sectoresTbody.innerHTML =
+          '<tr><td colspan="2" style="text-align:center; padding:3rem; color:#64748b;">No se encontraron sectores.</td></tr>';
+        return;
+      }
+
+      filtered.forEach((s: any) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td data-label="Nombre del Sector">
+            <div style="display:flex; align-items:center; gap:0.8rem;">
+              <div style="width:36px;height:36px;border-radius:10px;background:#f1f5f9;border:1px solid #e2e8f0;display:flex;align-items:center;justify-content:center;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                  <polyline points="2 17 12 22 22 17"></polyline>
+                  <polyline points="2 12 12 17 22 12"></polyline>
+                </svg>
+              </div>
+              <span class="font-medium">${s.name}</span>
+            </div>
+          </td>
+          <td data-label="Acciones" class="actions-cell">
+            <div style="display:flex;gap:0.5rem;justify-content:flex-end;">
+              <button class="btn-icon btn-edit-sector" data-id="${s.id}" data-name="${s.name}" title="Editar sector">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                </svg>
+              </button>
+              <button class="btn-icon btn-delete-sector" data-id="${s.id}" data-name="${s.name}" title="Eliminar sector">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="3 6 5 6 21 6"></polyline>
+                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                  <line x1="10" y1="11" x2="10" y2="17"></line>
+                  <line x1="14" y1="11" x2="14" y2="17"></line>
+                </svg>
+              </button>
+            </div>
+          </td>
+        `;
+        sectoresTbody.appendChild(tr);
+      });
+
+      // Listeners editar sector
+      document.querySelectorAll(".btn-edit-sector").forEach((el) => {
+        const btn = el as HTMLButtonElement;
+        btn.addEventListener("click", async () => {
+          const id = parseInt(btn.getAttribute("data-id") as string);
+          const name = btn.getAttribute("data-name") as string;
+          const result = await showEditSectorModal({ id, name });
+          if (result) {
+            btn.classList.add("loading");
+            try {
+              await updateSector(id, result.name);
+              showToast({
+                text: `Sector actualizado correctamente.`,
+                icon: "success",
+              });
+              sectoresLoaded = false;
+              loadSectors();
+              loadSectorsIntoSelect();
+              // Además recargar la tabla de empresas para reflejar el cambio de nombre
+              empresasLoaded = false;
+            } catch (error: any) {
+              showToast({ text: `Error: ${error.message}`, icon: "error" });
+              btn.classList.remove("loading");
+            }
+          }
+        });
+      });
+
+      // Listeners eliminar sector
+      document.querySelectorAll(".btn-delete-sector").forEach((el) => {
+        const btn = el as HTMLButtonElement;
+        btn.addEventListener("click", async () => {
+          const id = parseInt(btn.getAttribute("data-id") as string);
+          const name = btn.getAttribute("data-name");
+
+          const confirmed = await showConfirm({
+            title: "¿Eliminar sector?",
+            text: `¿Deseas eliminar el sector "${name}"? Al hacerlo, las empresas asociadas a este sector quedarán sin sector asignado.`,
+            confirmButtonText: "Sí, eliminar",
+            cancelButtonText: "Cancelar",
+          });
+
+          if (confirmed) {
+            btn.classList.add("loading");
+            btn.disabled = true;
+            try {
+              await deleteSector(id);
+              showToast({
+                text: `Sector "${name}" eliminado correctamente.`,
+                icon: "success",
+              });
+              sectoresLoaded = false;
+              loadSectors();
+              loadSectorsIntoSelect();
+              empresasLoaded = false; // Forzar recarga para actualizar el nombre de sector a vacío
+            } catch (error: any) {
+              showToast({ text: `Error: ${error.message}`, icon: "error" });
+              btn.classList.remove("loading");
+              btn.disabled = false;
+            }
+          }
+        });
+      });
+    }
+
+    // Botón Nuevo Sector
+    const addSectorBtn = document.getElementById("add-sector-btn") as HTMLButtonElement;
+    if (addSectorBtn) {
+      addSectorBtn.addEventListener("click", async () => {
+        const result = await showCreateSectorModal();
+        if (result) {
+          addSectorBtn.disabled = true;
+          try {
+            await addSector(result.name);
+            showToast({
+              text: `Sector "${result.name}" agregado con éxito.`,
+              icon: "success",
+            });
+            sectoresLoaded = false;
+            loadSectors();
+            loadSectorsIntoSelect();
+          } catch (error: any) {
+            showToast({ text: `Error: ${error.message}`, icon: "error" });
+          } finally {
+            addSectorBtn.disabled = false;
           }
         }
       });
@@ -2042,8 +2339,11 @@ import "../../styles/grid-principal/benefit-card.css";
     const cmDescription = document.getElementById(
       "cm-description",
     ) as HTMLTextAreaElement;
-    const cmVigencia = document.getElementById(
-      "cm-vigencia",
+    const cmVigenciaDesde = document.getElementById(
+      "cm-vigencia-desde",
+    ) as HTMLInputElement;
+    const cmVigenciaHasta = document.getElementById(
+      "cm-vigencia-hasta",
     ) as HTMLInputElement;
     const cmTipoDesc = document.getElementById(
       "cm-tipo-descuento",
@@ -2125,7 +2425,29 @@ import "../../styles/grid-principal/benefit-card.css";
           : "Inactivo (oculto en home)";
       if (cmTitleInput) cmTitleInput.value = coupon?.title ?? "";
       if (cmDescription) cmDescription.value = coupon?.description ?? "";
-      if (cmVigencia) cmVigencia.value = coupon?.vigencia ?? "";
+      if (coupon?.vigencia) {
+        const parts = coupon.vigencia.split(" - ");
+        if (parts.length === 2) {
+          const parseDate = (dStr: string) => {
+            const m = dStr.trim().match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+            if (m) {
+              const day = m[1].padStart(2, '0');
+              const month = m[2].padStart(2, '0');
+              const year = m[3];
+              return `${year}-${month}-${day}`;
+            }
+            return "";
+          };
+          if (cmVigenciaDesde) cmVigenciaDesde.value = parseDate(parts[0]);
+          if (cmVigenciaHasta) cmVigenciaHasta.value = parseDate(parts[1]);
+        } else {
+          if (cmVigenciaDesde) cmVigenciaDesde.value = "";
+          if (cmVigenciaHasta) cmVigenciaHasta.value = "";
+        }
+      } else {
+        if (cmVigenciaDesde) cmVigenciaDesde.value = "";
+        if (cmVigenciaHasta) cmVigenciaHasta.value = "";
+      }
       if (cmTipoDesc)
         cmTipoDesc.value = coupon?.tipo_descuento ?? "Descuento porcentual";
       if (cmDiscountAmt)
@@ -2160,13 +2482,24 @@ import "../../styles/grid-principal/benefit-card.css";
         return;
       }
 
+      let vigenciaStr = "";
+      const desdeVal = cmVigenciaDesde?.value;
+      const hastaVal = cmVigenciaHasta?.value;
+      if (desdeVal && hastaVal) {
+        const formatDateToSlash = (dStr: string) => {
+          const parts = dStr.split("-");
+          return `${parts[2]}/${parts[1]}/${parts[0]}`;
+        };
+        vigenciaStr = `${formatDateToSlash(desdeVal)} - ${formatDateToSlash(hastaVal)}`;
+      }
+
       const payload = {
         company_id: parseInt(cmCompanyId.value),
         sort_order: parseInt(cmSortOrder?.value || "0"),
         active: cmActiveChk?.checked ?? true,
         title: cmTitleInput.value.trim(),
         description: cmDescription?.value ?? "",
-        vigencia: cmVigencia?.value ?? "",
+        vigencia: vigenciaStr,
         tipo_descuento: cmTipoDesc?.value ?? "",
         discount_amount: cmDiscountAmt?.value || "XXXX",
         discount_label: cmDiscountLbl?.value || "DE DESCUENTO",
@@ -2237,7 +2570,16 @@ import "../../styles/grid-principal/benefit-card.css";
       const companyName = co?.name ?? "";
       const title = cmTitleInput?.value || "(Sin título)";
       const description = cmDescription?.value || "";
-      const vigencia = cmVigencia?.value || "—";
+      let vigencia = "—";
+      const desdeVal = cmVigenciaDesde?.value;
+      const hastaVal = cmVigenciaHasta?.value;
+      if (desdeVal && hastaVal) {
+        const formatDateToSlash = (dStr: string) => {
+          const parts = dStr.split("-");
+          return `${parts[2]}/${parts[1]}/${parts[0]}`;
+        };
+        vigencia = `${formatDateToSlash(desdeVal)} - ${formatDateToSlash(hastaVal)}`;
+      }
       const tipoDesc = cmTipoDesc?.value || "—";
       const discAmt = cmDiscountAmt?.value || "XXXX";
       const discLbl = cmDiscountLbl?.value || "DE DESCUENTO";
@@ -2289,7 +2631,8 @@ import "../../styles/grid-principal/benefit-card.css";
     [
       cmTitleInput,
       cmDescription,
-      cmVigencia,
+      cmVigenciaDesde,
+      cmVigenciaHasta,
       cmDiscountAmt,
       cmDiscountLbl,
       cmCodeLabel,
