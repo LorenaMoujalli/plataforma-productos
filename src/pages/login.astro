@@ -496,7 +496,7 @@ import Layout from "../layouts/Layout.astro";
 			if (registerCompanySelect) {
 				registerCompanySelect.innerHTML =
 					'<option value="">Selecciona tu empresa</option>';
-				companies.forEach((company) => {
+				companies.forEach((company: any) => {
 					const option = document.createElement("option");
 					option.value = company.id.toString();
 					option.textContent = company.name;

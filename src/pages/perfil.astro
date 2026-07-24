@@ -1329,14 +1329,20 @@ import DashboardLayout from "../layouts/DashboardLayout.astro";
 		try {
 			// Prioriza la variable de entorno PUBLIC_SITE_URL si está definida.
 			const envUrl = import.meta.env.PUBLIC_SITE_URL;
+			const localIp = import.meta.env.PUBLIC_LOCAL_IP;
 			let baseUrl = "";
 
 			if (envUrl && envUrl.trim() !== "") {
 				baseUrl = envUrl.trim().replace(/\/$/, "");
+			} else if (
+				localIp &&
+				localIp.trim() !== "" &&
+				(window.location.hostname === "localhost" ||
+					window.location.hostname === "127.0.0.1")
+			) {
+				baseUrl = localIp.trim().replace(/\/$/, "");
 			} else {
 				// En local, usamos el origen actual (window.location.origin).
-				// NOTA: Para que funcione en el móvil, debes acceder a la web en tu PC
-				// usando tu IP local (ej: http://192.168.1.15:4321) en lugar de localhost.
 				baseUrl = window.location.origin;
 			}
 
