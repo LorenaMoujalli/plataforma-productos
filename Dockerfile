@@ -1,5 +1,5 @@
 # Etapa 1: build 
-FROM node:20-slim AS builder 
+FROM node:20 AS builder 
 WORKDIR /app 
 
 # Copiar archivos de dependencia
