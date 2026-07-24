@@ -80,11 +80,16 @@ export async function DELETE({ request, cookies }) {
       return new Response(JSON.stringify({ error: 'ID es requerido' }), { status: 400 });
     }
 
+    const sectorId = parseInt(id, 10);
+    if (isNaN(sectorId)) {
+      return new Response(JSON.stringify({ error: 'ID del sector debe ser un número válido' }), { status: 400 });
+    }
+
     // 1. Desvincular de forma segura las empresas de este sector antes de borrarlo
-    await query.run('UPDATE companies SET sector_id = NULL WHERE sector_id = ?', [id]);
+    await query.run('UPDATE companies SET sector_id = NULL WHERE sector_id = ?', [sectorId]);
 
     // 2. Borrar el sector
-    await query.run('DELETE FROM sectors WHERE id = ?', [id]);
+    await query.run('DELETE FROM sectors WHERE id = ?', [sectorId]);
 
     return new Response(JSON.stringify({ data: true }), { status: 200 });
   } catch (error) {

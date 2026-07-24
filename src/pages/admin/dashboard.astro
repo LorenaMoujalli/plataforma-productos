@@ -365,6 +365,8 @@ import "../../styles/grid-principal/benefit-card.css";
           </tbody>
         </table>
 
+        <div id="users-pagination" style="display: none;"></div>
+
         <div id="empty-state" class="empty-state" style="display: none;">
           <p>No se encontraron usuarios o hubo un error al cargar los datos.</p>
         </div>
@@ -389,6 +391,8 @@ import "../../styles/grid-principal/benefit-card.css";
           </thead>
           <tbody id="domains-tbody"> </tbody>
         </table>
+
+        <div id="domains-pagination" style="display: none;"></div>
 
         <div
           id="empty-state-domains"
@@ -420,6 +424,9 @@ import "../../styles/grid-principal/benefit-card.css";
           </thead>
           <tbody id="cupons-tbody"></tbody>
         </table>
+
+        <div id="cupons-pagination" style="display: none;"></div>
+
         <div id="empty-state-cupons" class="empty-state" style="display:none;">
           <p>No hay cupones registrados aún.</p>
         </div>
@@ -446,6 +453,9 @@ import "../../styles/grid-principal/benefit-card.css";
           </thead>
           <tbody id="empresas-tbody"></tbody>
         </table>
+
+        <div id="empresas-pagination" style="display: none;"></div>
+
         <div
           id="empty-state-empresas"
           class="empty-state"
@@ -472,6 +482,9 @@ import "../../styles/grid-principal/benefit-card.css";
           </thead>
           <tbody id="sectores-tbody"></tbody>
         </table>
+
+        <div id="sectores-pagination" style="display: none;"></div>
+
         <div
           id="empty-state-sectores"
           class="empty-state"
@@ -1033,6 +1046,73 @@ import "../../styles/grid-principal/benefit-card.css";
     let empresasLoaded = false;
     let sectoresLoaded = false;
 
+    let usersPage = 1;
+    let domainsPage = 1;
+    let cuponsPage = 1;
+    let empresasPage = 1;
+    let sectoresPage = 1;
+
+    function renderAdminPagination(
+      containerId: string,
+      currentPage: number,
+      totalPages: number,
+      onPageChange: (page: number) => void
+    ) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+
+      if (totalPages <= 1) {
+        container.innerHTML = "";
+        container.style.display = "none";
+        return;
+      }
+
+      container.style.display = "flex";
+      container.className = "admin-pagination-container";
+
+      let html = `
+        <button class="pag-btn prev-btn" ${currentPage === 1 ? "disabled" : ""} title="Página anterior">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+        </button>
+        <div class="pag-pages">
+      `;
+
+      for (let i = 1; i <= totalPages; i++) {
+        if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) {
+          html += `<button class="pag-num-btn ${i === currentPage ? "active" : ""}" data-page="${i}">${i}</button>`;
+        } else if (i === currentPage - 2 || i === currentPage + 2) {
+          html += `<span class="pag-ellipsis">...</span>`;
+        }
+      }
+
+      html += `
+        </div>
+        <button class="pag-btn next-btn" ${currentPage === totalPages ? "disabled" : ""} title="Página siguiente">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        </button>
+        <span class="pag-info">Página ${currentPage} de ${totalPages}</span>
+      `;
+
+      container.innerHTML = html;
+
+      const prevBtn = container.querySelector(".prev-btn");
+      if (prevBtn && currentPage > 1) {
+        prevBtn.addEventListener("click", () => onPageChange(currentPage - 1));
+      }
+
+      const nextBtn = container.querySelector(".next-btn");
+      if (nextBtn && currentPage < totalPages) {
+        nextBtn.addEventListener("click", () => onPageChange(currentPage + 1));
+      }
+
+      container.querySelectorAll(".pag-num-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const page = parseInt(btn.getAttribute("data-page") || "1", 10);
+          onPageChange(page);
+        });
+      });
+    }
+
     function switchTab(tab: string) {
       tabBtns.forEach((btn) => btn.classList.remove("tab-active"));
       const activeBtn = document.querySelector<HTMLButtonElement>(
@@ -1087,6 +1167,7 @@ import "../../styles/grid-principal/benefit-card.css";
     if (searchInput) {
       searchInput.addEventListener("input", () => {
         if (allUsers.length > 0) {
+          usersPage = 1;
           renderUsers(allUsers);
         }
       });
@@ -1131,6 +1212,7 @@ import "../../styles/grid-principal/benefit-card.css";
           emptyState.style.display = "block";
         } else {
           allUsers = users;
+          usersPage = 1;
           renderUsers(allUsers);
           usersTable.style.display = "table";
         }
@@ -1158,10 +1240,16 @@ import "../../styles/grid-principal/benefit-card.css";
       if (filteredUsers.length === 0) {
         usersTbody.innerHTML =
           '<tr><td colspan="6" style="text-align:center; padding:3rem; color:#64748b;">No se encontraron usuarios que coincidan con tu búsqueda.</td></tr>';
+        const pagContainer = document.getElementById("users-pagination");
+        if (pagContainer) pagContainer.style.display = "none";
         return;
       }
 
-      filteredUsers.forEach((user: any) => {
+      const totalPages = Math.ceil(filteredUsers.length / 10);
+      if (usersPage > totalPages) usersPage = Math.max(1, totalPages);
+      const itemsToRender = filteredUsers.slice((usersPage - 1) * 10, usersPage * 10);
+
+      itemsToRender.forEach((user: any) => {
         const tr = document.createElement("tr");
 
         // Buscar empresa en el perfil
@@ -1332,6 +1420,12 @@ import "../../styles/grid-principal/benefit-card.css";
           }
         });
       });
+
+      // Render pagination
+      renderAdminPagination("users-pagination", usersPage, totalPages, (page) => {
+        usersPage = page;
+        renderUsers(users);
+      });
     }
 
     // Configurar botón de Nuevo Usuario
@@ -1423,7 +1517,10 @@ import "../../styles/grid-principal/benefit-card.css";
 
     if (searchDomainInput) {
       searchDomainInput.addEventListener("input", () => {
-        if (allDomains.length > 0) renderDomains(allDomains);
+        if (allDomains.length > 0) {
+          domainsPage = 1;
+          renderDomains(allDomains);
+        }
       });
     }
 
@@ -1440,6 +1537,7 @@ import "../../styles/grid-principal/benefit-card.css";
           emptyStateDomains.style.display = "block";
         } else {
           allDomains = domains;
+          domainsPage = 1;
           renderDomains(allDomains);
           domainsTable.style.display = "table";
         }
@@ -1464,10 +1562,16 @@ import "../../styles/grid-principal/benefit-card.css";
       if (filtered.length === 0) {
         domainsTbody.innerHTML =
           '<tr><td colspan="3" style="text-align:center; padding:3rem; color:#64748b;">No se encontraron dominios.</td></tr>';
+        const pagContainer = document.getElementById("domains-pagination");
+        if (pagContainer) pagContainer.style.display = "none";
         return;
       }
 
-      filtered.forEach((d: any) => {
+      const totalPages = Math.ceil(filtered.length / 10);
+      if (domainsPage > totalPages) domainsPage = Math.max(1, totalPages);
+      const itemsToRender = filtered.slice((domainsPage - 1) * 10, domainsPage * 10);
+
+      itemsToRender.forEach((d: any) => {
         const tr = document.createElement("tr");
         tr.innerHTML = `
           <td data-label="Dominio">
@@ -1566,6 +1670,12 @@ import "../../styles/grid-principal/benefit-card.css";
           }
         });
       });
+
+      // Render pagination
+      renderAdminPagination("domains-pagination", domainsPage, totalPages, (page) => {
+        domainsPage = page;
+        renderDomains(domains);
+      });
     }
 
     // Botón Nuevo Dominio
@@ -1617,6 +1727,7 @@ import "../../styles/grid-principal/benefit-card.css";
     if (searchSectorInput) {
       searchSectorInput.addEventListener("input", () => {
         if (allSectors.length > 0) {
+          sectoresPage = 1;
           renderSectors(allSectors);
         }
       });
@@ -1635,6 +1746,8 @@ import "../../styles/grid-principal/benefit-card.css";
         if (allSectors.length === 0) {
           emptyStateSectores.style.display = "block";
         } else {
+          allSectors = list || [];
+          sectoresPage = 1;
           renderSectors(allSectors);
           sectoresTable.style.display = "table";
         }
@@ -1659,10 +1772,16 @@ import "../../styles/grid-principal/benefit-card.css";
       if (filtered.length === 0) {
         sectoresTbody.innerHTML =
           '<tr><td colspan="2" style="text-align:center; padding:3rem; color:#64748b;">No se encontraron sectores.</td></tr>';
+        const pagContainer = document.getElementById("sectores-pagination");
+        if (pagContainer) pagContainer.style.display = "none";
         return;
       }
 
-      filtered.forEach((s: any) => {
+      const totalPages = Math.ceil(filtered.length / 10);
+      if (sectoresPage > totalPages) sectoresPage = Math.max(1, totalPages);
+      const itemsToRender = filtered.slice((sectoresPage - 1) * 10, sectoresPage * 10);
+
+      itemsToRender.forEach((s: any) => {
         const tr = document.createElement("tr");
         tr.innerHTML = `
           <td data-label="Nombre del Sector">
@@ -1762,6 +1881,12 @@ import "../../styles/grid-principal/benefit-card.css";
           }
         });
       });
+
+      // Render pagination
+      renderAdminPagination("sectores-pagination", sectoresPage, totalPages, (page) => {
+        sectoresPage = page;
+        renderSectors(sectorsList);
+      });
     }
 
     // Botón Nuevo Sector
@@ -1805,7 +1930,10 @@ import "../../styles/grid-principal/benefit-card.css";
 
     if (searchEmpresaInput) {
       searchEmpresaInput.addEventListener("input", () => {
-        if (allEmpresas.length > 0) renderEmpresas(allEmpresas);
+        if (allEmpresas.length > 0) {
+          empresasPage = 1;
+          renderEmpresas(allEmpresas);
+        }
       });
     }
 
@@ -1820,6 +1948,8 @@ import "../../styles/grid-principal/benefit-card.css";
         if (!allEmpresas.length) {
           emptyStateEmpresas.style.display = "block";
         } else {
+          allEmpresas = allEmpresas || [];
+          empresasPage = 1;
           renderEmpresas(allEmpresas);
           empresasTable.style.display = "table";
         }
@@ -1840,10 +1970,17 @@ import "../../styles/grid-principal/benefit-card.css";
       empresasTbody.innerHTML = "";
       if (!filtered.length) {
         empresasTbody.innerHTML =
-          '<tr><td colspan="5" style="text-align:center;padding:3rem;color:#64748b;">No se encontraron empresas.</td></tr>';
+          '<tr><td colspan="6" style="text-align:center;padding:3rem;color:#64748b;">No se encontraron empresas.</td></tr>';
+        const pagContainer = document.getElementById("empresas-pagination");
+        if (pagContainer) pagContainer.style.display = "none";
         return;
       }
-      filtered.forEach((e: any) => {
+
+      const totalPages = Math.ceil(filtered.length / 10);
+      if (empresasPage > totalPages) empresasPage = Math.max(1, totalPages);
+      const itemsToRender = filtered.slice((empresasPage - 1) * 10, empresasPage * 10);
+
+      itemsToRender.forEach((e: any) => {
         const tr = document.createElement("tr");
         tr.innerHTML = `
           <td data-label="Logo">
@@ -1914,6 +2051,12 @@ import "../../styles/grid-principal/benefit-card.css";
             btn.disabled = false;
           }
         });
+      });
+
+      // Render pagination
+      renderAdminPagination("empresas-pagination", empresasPage, totalPages, (page) => {
+        empresasPage = page;
+        renderEmpresas(empresas);
       });
     }
 
@@ -2182,7 +2325,10 @@ import "../../styles/grid-principal/benefit-card.css";
 
     if (searchCuponInput) {
       searchCuponInput.addEventListener("input", () => {
-        if (allCupons.length > 0) renderCupons(allCupons);
+        if (allCupons.length > 0) {
+          cuponsPage = 1;
+          renderCupons(allCupons);
+        }
       });
     }
 
@@ -2196,6 +2342,8 @@ import "../../styles/grid-principal/benefit-card.css";
         if (!allCupons.length) {
           emptyStateCupons.style.display = "block";
         } else {
+          allCupons = allCupons || [];
+          cuponsPage = 1;
           renderCupons(allCupons);
           cuponsTable.style.display = "table";
         }
@@ -2219,9 +2367,16 @@ import "../../styles/grid-principal/benefit-card.css";
       if (!filtered.length) {
         cuponsTbody.innerHTML =
           '<tr><td colspan="6" style="text-align:center;padding:3rem;color:#64748b;">No se encontraron cupones.</td></tr>';
+        const pagContainer = document.getElementById("cupons-pagination");
+        if (pagContainer) pagContainer.style.display = "none";
         return;
       }
-      filtered.forEach((c: any) => {
+
+      const totalPages = Math.ceil(filtered.length / 10);
+      if (cuponsPage > totalPages) cuponsPage = Math.max(1, totalPages);
+      const itemsToRender = filtered.slice((cuponsPage - 1) * 10, cuponsPage * 10);
+
+      itemsToRender.forEach((c: any) => {
         const co = c.companies ?? {};
         const tr = document.createElement("tr");
         tr.innerHTML = `
@@ -2317,6 +2472,12 @@ import "../../styles/grid-principal/benefit-card.css";
           const c = allCupons.find((x: any) => x.id === id);
           if (c) openCouponModal(c);
         });
+      });
+
+      // Render pagination
+      renderAdminPagination("cupons-pagination", cuponsPage, totalPages, (page) => {
+        cuponsPage = page;
+        renderCupons(cupons);
       });
     }
 
@@ -3689,5 +3850,83 @@ import "../../styles/grid-principal/benefit-card.css";
   }
   .swal2-cancel, .swal2-deny {
     border-radius: 0px !important;
+  }
+
+  /* ── Paginación Panel de Administración ── */
+  .admin-pagination-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+    padding: 1rem 0;
+    flex-wrap: wrap;
+    font-family: "Outfit", sans-serif;
+  }
+  .pag-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    background: white;
+    color: #475569;
+    transition: all 0.2s ease;
+    cursor: pointer;
+  }
+  .pag-btn:hover:not(:disabled) {
+    background: #f8fafc;
+    border-color: #cbd5e1;
+    color: #da291c;
+  }
+  .pag-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+  .pag-pages {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+  .pag-num-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 36px;
+    height: 36px;
+    padding: 0 0.5rem;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    background: white;
+    color: #475569;
+    font-weight: 500;
+    font-size: 0.875rem;
+    transition: all 0.2s ease;
+    cursor: pointer;
+  }
+  .pag-num-btn:hover {
+    background: #f8fafc;
+    border-color: #cbd5e1;
+    color: #da291c;
+  }
+  .pag-num-btn.active {
+    background: #da291c;
+    border-color: #da291c;
+    color: white;
+    font-weight: 600;
+    box-shadow: 0 4px 10px rgba(218, 41, 28, 0.2);
+  }
+  .pag-ellipsis {
+    color: #94a3b8;
+    padding: 0 0.25rem;
+    font-size: 0.875rem;
+  }
+  .pag-info {
+    font-size: 0.875rem;
+    color: #64748b;
+    margin-left: 0.75rem;
+    font-weight: 500;
   }
 </style>

@@ -2,7 +2,24 @@ import sqlite3 from 'sqlite3';
 import path from 'path';
 import fs from 'fs';
 
-const DB_FILE = path.resolve('socio.db');
+const DB_DIR = path.resolve('db');
+if (!fs.existsSync(DB_DIR)) {
+  fs.mkdirSync(DB_DIR, { recursive: true });
+}
+
+const OLD_DB_FILE = path.resolve('socio.db');
+const DB_FILE = path.join(DB_DIR, 'socio.db');
+
+// Migrar la base de datos automáticamente si existe en la raíz
+if (fs.existsSync(OLD_DB_FILE) && !fs.existsSync(DB_FILE)) {
+  try {
+    fs.renameSync(OLD_DB_FILE, DB_FILE);
+    console.log('Base de datos migrada exitosamente a la carpeta db/');
+  } catch (err) {
+    console.error('Error al migrar la base de datos a db/:', err);
+  }
+}
+
 const db = new sqlite3.Database(DB_FILE);
 db.run('PRAGMA foreign_keys = ON;');
 
@@ -153,7 +170,6 @@ export async function initDb() {
       ['28ae139a-89c0-4cd7-bfb8-743874aa27c6', 'hola@oberstaff.com', '$2a$10$pRlvvqOTKpFGUowSWeHZ5uN8HPiv3BUZs1Ma66XlWQKswrKni..Je', 'user'],
       ['c77bdab5-5f7a-4083-b197-0439062924fd', 'prueba@oberstaff.com', '$2a$10$DXZFagi9unJhK87NgXwAjeB3Z7MJ7VBY1b70LbTNBUkY1XWg.wxSK', 'user'],
       ['d0c07b96-4d15-419c-b6c5-19a9bb5007cc', 'test@oberstaff.com', '$2a$10$VKigIllqWkjnxg1Y9Gu9uenApoNVzJYTGyWhwF5X7rUTvth8.lL5.', 'user'],
-      ['18b4a5e2-c5a7-4d7e-8824-f1783af641cd', 'panel@oberstaff.com', '$2a$06$gdAhVmZdtOs6Vdyxn7JwZ.HUx2TvHq25SUFzhEPYPEK8QwwQ.jouC', 'user'],
       ['9fdcff80-342c-4806-97f9-1ea14a69f006', 'test88@oberstaff.com', '$2a$06$s772ELRDeoxRceIG8KPSyOyAB8mNzbo3kwgXZvYeFtJ3u4PDSSzCO', 'user'],
       ['16d61d37-b8d3-4356-87f0-44d506607d14', 'panel8@oberstaff.com', '$2a$10$9vK2pN28Vi5fvUPMSJxd..zRowbk/TS5/ouK5k88qfVcsWOgCcy8C', 'user']
     ];

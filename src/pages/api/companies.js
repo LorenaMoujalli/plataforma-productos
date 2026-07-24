@@ -55,9 +55,10 @@ export async function POST({ request, cookies }) {
     }
 
     const payload = await request.json();
+    const sectorId = payload.sector_id ? parseInt(payload.sector_id, 10) : null;
     const res = await query.run(
       'INSERT INTO companies (name, logo_url, sector_id) VALUES (?, ?, ?)',
-      [payload.name, payload.logo_url || null, payload.sector_id || null]
+      [payload.name, payload.logo_url || null, isNaN(sectorId) ? null : sectorId]
     );
 
     const newCompany = await query.get('SELECT * FROM companies WHERE id = ?', [res.lastID]);
@@ -76,13 +77,20 @@ export async function PUT({ request, cookies }) {
 
     const payload = await request.json();
     const { id, name, logo_url, sector_id } = payload;
+    
+    const companyId = parseInt(id, 10);
+    const parsedSectorId = sector_id ? parseInt(sector_id, 10) : null;
+
+    if (isNaN(companyId)) {
+      return new Response(JSON.stringify({ error: 'ID de empresa inválido' }), { status: 400 });
+    }
 
     await query.run(
       'UPDATE companies SET name = ?, logo_url = ?, sector_id = ? WHERE id = ?',
-      [name, logo_url || null, sector_id || null, id]
+      [name, logo_url || null, (parsedSectorId && !isNaN(parsedSectorId)) ? parsedSectorId : null, companyId]
     );
 
-    const updated = await query.get('SELECT * FROM companies WHERE id = ?', [id]);
+    const updated = await query.get('SELECT * FROM companies WHERE id = ?', [companyId]);
     return new Response(JSON.stringify({ data: updated }), { status: 200 });
   } catch (error) {
     console.error('Error en PUT /api/companies:', error);
@@ -103,11 +111,16 @@ export async function DELETE({ request, cookies }) {
       return new Response(JSON.stringify({ error: 'ID es requerido' }), { status: 400 });
     }
 
+    const companyId = parseInt(id, 10);
+    if (isNaN(companyId)) {
+      return new Response(JSON.stringify({ error: 'ID de empresa inválido' }), { status: 400 });
+    }
+
     // 1. Eliminar cupones de esta empresa
-    await query.run('DELETE FROM coupons WHERE company_id = ?', [id]);
+    await query.run('DELETE FROM coupons WHERE company_id = ?', [companyId]);
 
     // 2. Eliminar la empresa
-    await query.run('DELETE FROM companies WHERE id = ?', [id]);
+    await query.run('DELETE FROM companies WHERE id = ?', [companyId]);
 
     return new Response(JSON.stringify({ success: true }), { status: 200 });
   } catch (error) {
