@@ -7,6 +7,11 @@ interface Props {
 }
 
 const { title } = Astro.props;
+
+// Evitar que el navegador almacene en caché las páginas del dashboard.
+// Esto obliga al navegador a recargar la página desde el servidor al pulsar la flecha "Atrás",
+// ejecutando el script de redirección al login de forma inmediata.
+Astro.response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
 ---
 
 <!doctype html>

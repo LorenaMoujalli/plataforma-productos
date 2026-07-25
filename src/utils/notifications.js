@@ -118,7 +118,7 @@ export async function showCreateUserModal(allowedDomains = [], companies = []) {
         .swal-select-custom { appearance: none; background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e"); background-repeat: no-repeat; background-position: right 1rem center; background-size: 1em; cursor: pointer; }
       </style>
       <div class="swal-form-group">
-        <label for="swal-new-email">Correo Electrónico (${domainsHint})</label>
+        <label for="swal-new-email">Correo Electrónico</label>
         <input id="swal-new-email" type="email" class="swal-input-custom" placeholder="usuario@dominio.com" autocomplete="off">
       </div>
       <div class="swal-form-group">
@@ -147,7 +147,7 @@ export async function showCreateUserModal(allowedDomains = [], companies = []) {
       <div class="swal-form-group">
         <label for="swal-new-role">Rol en la plataforma</label>
         <select id="swal-new-role" class="swal-input-custom swal-select-custom">
-          <option value="user">Usuario (Normal)</option>
+          <option value="user">Usuario</option>
           <option value="admin">Administrador</option>
         </select>
       </div>
@@ -241,7 +241,7 @@ export async function showEditUserModal(user, allowedDomains = [], companies = [
         .swal-select-custom { appearance: none; background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e"); background-repeat: no-repeat; background-position: right 1rem center; background-size: 1em; cursor: pointer; }
       </style>
       <div class="swal-form-group">
-        <label for="swal-edit-email">Correo Electrónico (${domainsHint})</label>
+        <label for="swal-edit-email">Correo Electrónico</label>
         <input id="swal-edit-email" type="email" class="swal-input-custom" value="${user.email}" autocomplete="off">
       </div>
       <div class="swal-form-group">
@@ -270,7 +270,7 @@ export async function showEditUserModal(user, allowedDomains = [], companies = [
       <div class="swal-form-group">
         <label for="swal-edit-role">Rol en la plataforma</label>
         <select id="swal-edit-role" class="swal-input-custom swal-select-custom">
-          <option value="user" ${user.role === 'user' ? 'selected' : ''}>Usuario (Normal)</option>
+          <option value="user" ${user.role === 'user' ? 'selected' : ''}>Usuario</option>
           <option value="admin" ${user.role === 'admin' ? 'selected' : ''}>Administrador</option>
         </select>
       </div>
