@@ -37,7 +37,7 @@ export async function POST({ request, cookies }) {
     cookies.set('session_token', sessionId, {
       path: '/',
       httpOnly: true,
-      secure: true,
+      secure: false,
       sameSite: 'lax',
       expires: new Date(expiresAt)
     });
