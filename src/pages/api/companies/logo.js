@@ -26,8 +26,15 @@ export async function POST({ request, cookies }) {
     const ext = file.name.split('.').pop();
     const filename = `company-${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
 
+    // Determinar la ruta de subida: en desarrollo es public/uploads, en producción es dist/client/uploads
+    let uploadDir = path.resolve('public/uploads/logos');
+    const prodDir = path.resolve('dist/client/uploads/logos');
+    
+    if (fs.existsSync(path.resolve('dist/client'))) {
+      uploadDir = prodDir;
+    }
+
     // Asegurar que el directorio de destino exista
-    const uploadDir = path.resolve('public/uploads/logos');
     if (!fs.existsSync(uploadDir)) {
       fs.mkdirSync(uploadDir, { recursive: true });
     }
