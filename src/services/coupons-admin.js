@@ -1,91 +1,89 @@
-import { supabase } from "../lib/supabase.js";
-
 export async function getAdminCoupons() {
-  const { data, error } = await supabase
-    .from("coupons")
-    .select("*, companies(id, name, logo_url)")
-    .order("sort_order", { ascending: true });
-  if (error) throw error;
-  return data ?? [];
+  const res = await fetch('/api/coupons?admin=true');
+  const body = await res.json();
+  if (!res.ok) throw new Error(body.error || 'Error al obtener cupones de administración');
+  return body.data ?? [];
 }
 
 export async function getCompaniesForSelect() {
-  const { data, error } = await supabase
-    .from("companies")
-    .select("id, name, logo_url")
-    .order("name");
-  if (error) throw error;
-  return data ?? [];
+  const res = await fetch('/api/companies?select=true');
+  const body = await res.json();
+  if (!res.ok) throw new Error(body.error || 'Error al obtener empresas');
+  return body.data ?? [];
 }
 
 export async function getSectors() {
-  const { data, error } = await supabase
-    .from("sectors")
-    .select("id, name")
-    .order("name");
-  if (error) throw error;
-  return data ?? [];
+  const res = await fetch('/api/sectors');
+  const body = await res.json();
+  if (!res.ok) throw new Error(body.error || 'Error al obtener sectores');
+  return body.data ?? [];
 }
 
 export async function createCoupon(couponData) {
-  const { data, error } = await supabase
-    .from("coupons")
-    .insert(couponData)
-    .select()
-    .single();
-  if (error) throw error;
-  return data;
+  const res = await fetch('/api/coupons', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(couponData)
+  });
+  const body = await res.json();
+  if (!res.ok) throw new Error(body.error || 'Error al crear cupón');
+  return body.data;
 }
 
 export async function updateCoupon(id, couponData) {
-  const { data, error } = await supabase
-    .from("coupons")
-    .update(couponData)
-    .eq("id", id)
-    .select()
-    .single();
-  if (error) throw error;
-  return data;
+  const res = await fetch(`/api/coupons?id=${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ id, ...couponData })
+  });
+  const body = await res.json();
+  if (!res.ok) throw new Error(body.error || 'Error al actualizar cupón');
+  return body.data;
 }
 
 export async function deleteCoupon(id) {
-  const { error } = await supabase.from("coupons").delete().eq("id", id);
-  if (error) throw error;
+  const res = await fetch(`/api/coupons?id=${id}`, {
+    method: 'DELETE'
+  });
+  const body = await res.json();
+  if (!res.ok) throw new Error(body.error || 'Error al eliminar cupón');
   return true;
 }
 
 export async function toggleCouponActive(id, active) {
-  const { data, error } = await supabase
-    .from("coupons")
-    .update({ active })
-    .eq("id", id)
-    .select()
-    .single();
-  if (error) throw error;
-  return data;
+  const res = await fetch('/api/coupons/toggle', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ id, active })
+  });
+  const body = await res.json();
+  if (!res.ok) throw new Error(body.error || 'Error al alternar estado del cupón');
+  return body.data;
 }
 
 // ── Empresas ─────────────────────────────────────────────────
 
 export async function uploadCompanyLogo(file) {
-  const ext = file.name.split('.').pop();
-  const path = `companies/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
-  const { error } = await supabase.storage.from('logos').upload(path, file, {
-    cacheControl: '3600',
-    upsert: false,
+  const formData = new FormData();
+  formData.append('file', file);
+
+  const res = await fetch('/api/companies/logo', {
+    method: 'POST',
+    body: formData
   });
-  if (error) throw error;
-  const { data } = supabase.storage.from('logos').getPublicUrl(path);
-  return data.publicUrl;
+  const body = await res.json();
+  if (!res.ok) throw new Error(body.error || 'Error al subir logo de la empresa');
+  return body.publicUrl;
 }
 
 export async function getCompanies() {
-  const { data, error } = await supabase
-    .from("companies")
-    .select("id, name, logo_url, created_at, sector_id, sectors(name), coupons(count)")
-    .order("name");
-  if (error) throw error;
-  return (data ?? []).map(c => ({
+  const res = await fetch('/api/companies');
+  const body = await res.json();
+  if (!res.ok) throw new Error(body.error || 'Error al obtener empresas');
+  
+  // El backend ya devuelve el formato correcto con el sector mapeado
+  // c.sectors?.name y c.coupons?.[0]?.count
+  return (body.data ?? []).map(c => ({
     ...c,
     sector_name: c.sectors?.name ?? null,
     coupon_count: c.coupons?.[0]?.count ?? 0,
@@ -93,36 +91,32 @@ export async function getCompanies() {
 }
 
 export async function createCompany(payload) {
-  const { data, error } = await supabase
-    .from("companies")
-    .insert(payload)
-    .select()
-    .single();
-  if (error) throw error;
-  return data;
+  const res = await fetch('/api/companies', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+  const body = await res.json();
+  if (!res.ok) throw new Error(body.error || 'Error al crear empresa');
+  return body.data;
 }
 
 export async function updateCompany(id, payload) {
-  const { data, error } = await supabase
-    .from("companies")
-    .update(payload)
-    .eq("id", id)
-    .select()
-    .single();
-  if (error) throw error;
-  return data;
+  const res = await fetch('/api/companies', {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ id, ...payload })
+  });
+  const body = await res.json();
+  if (!res.ok) throw new Error(body.error || 'Error al actualizar empresa');
+  return body.data;
 }
 
 export async function deleteCompany(id) {
-  // Primero eliminar todos los cupones de esta empresa
-  const { error: couponError } = await supabase
-    .from("coupons")
-    .delete()
-    .eq("company_id", id);
-  if (couponError) throw couponError;
-
-  // Luego eliminar la empresa
-  const { error } = await supabase.from("companies").delete().eq("id", id);
-  if (error) throw error;
+  const res = await fetch(`/api/companies?id=${id}`, {
+    method: 'DELETE'
+  });
+  const body = await res.json();
+  if (!res.ok) throw new Error(body.error || 'Error al eliminar empresa');
   return true;
 }

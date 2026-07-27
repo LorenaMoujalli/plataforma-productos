@@ -383,7 +383,7 @@
     </div>
 
     <script>
-      import { createClient } from "@supabase/supabase-js";
+      import { supabase } from "../../lib/client.js";
 
       // ── Leer UUID desde el query param ?id=UUID ──
       const params = new URLSearchParams(window.location.search);
@@ -449,11 +449,6 @@
         }
 
         try {
-          const supabase = createClient(
-            import.meta.env.PUBLIC_SUPABASE_URL,
-            import.meta.env.PUBLIC_SUPABASE_ANON_KEY,
-          );
-
           const { data, error } = await supabase
             .from("profiles")
             .select("name")

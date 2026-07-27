@@ -118,7 +118,7 @@ export async function showCreateUserModal(allowedDomains = [], companies = []) {
         .swal-select-custom { appearance: none; background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e"); background-repeat: no-repeat; background-position: right 1rem center; background-size: 1em; cursor: pointer; }
       </style>
       <div class="swal-form-group">
-        <label for="swal-new-email">Correo Electrónico (${domainsHint})</label>
+        <label for="swal-new-email">Correo Electrónico</label>
         <input id="swal-new-email" type="email" class="swal-input-custom" placeholder="usuario@dominio.com" autocomplete="off">
       </div>
       <div class="swal-form-group">
@@ -147,7 +147,7 @@ export async function showCreateUserModal(allowedDomains = [], companies = []) {
       <div class="swal-form-group">
         <label for="swal-new-role">Rol en la plataforma</label>
         <select id="swal-new-role" class="swal-input-custom swal-select-custom">
-          <option value="user">Usuario (Normal)</option>
+          <option value="user">Usuario</option>
           <option value="admin">Administrador</option>
         </select>
       </div>
@@ -191,7 +191,7 @@ export async function showCreateUserModal(allowedDomains = [], companies = []) {
       }
 
       if (allowedDomains.length > 0 && !allowedDomains.includes(domain)) {
-        Swal.showValidationMessage(`Dominio no autorizado. Permitidos: ${allowedDomains.map(d => '@' + d).join(', ')}`);
+        Swal.showValidationMessage('Dominio no autorizado.');
         return false;
       }
       
@@ -241,7 +241,7 @@ export async function showEditUserModal(user, allowedDomains = [], companies = [
         .swal-select-custom { appearance: none; background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e"); background-repeat: no-repeat; background-position: right 1rem center; background-size: 1em; cursor: pointer; }
       </style>
       <div class="swal-form-group">
-        <label for="swal-edit-email">Correo Electrónico (${domainsHint})</label>
+        <label for="swal-edit-email">Correo Electrónico</label>
         <input id="swal-edit-email" type="email" class="swal-input-custom" value="${user.email}" autocomplete="off">
       </div>
       <div class="swal-form-group">
@@ -270,7 +270,7 @@ export async function showEditUserModal(user, allowedDomains = [], companies = [
       <div class="swal-form-group">
         <label for="swal-edit-role">Rol en la plataforma</label>
         <select id="swal-edit-role" class="swal-input-custom swal-select-custom">
-          <option value="user" ${user.role === 'user' ? 'selected' : ''}>Usuario (Normal)</option>
+          <option value="user" ${user.role === 'user' ? 'selected' : ''}>Usuario</option>
           <option value="admin" ${user.role === 'admin' ? 'selected' : ''}>Administrador</option>
         </select>
       </div>
@@ -314,7 +314,7 @@ export async function showEditUserModal(user, allowedDomains = [], companies = [
       }
 
       if (allowedDomains.length > 0 && !allowedDomains.includes(domain)) {
-        Swal.showValidationMessage(`Dominio no autorizado. Permitidos: ${allowedDomains.map(d => '@' + d).join(', ')}`);
+        Swal.showValidationMessage('Dominio no autorizado.');
         return false;
       }
       
@@ -427,6 +427,95 @@ export async function showEditDomainModal(domainData) {
         return false;
       }
       return { domain };
+    }
+  });
+
+  return formValues || null;
+}
+
+/**
+ * Muestra un modal para agregar un nuevo sector.
+ * @returns {Promise<{name:string}|null>}
+ */
+export async function showCreateSectorModal() {
+  const Swal = (await import('sweetalert2')).default;
+
+  const { value: formValues } = await Swal.fire({
+    title: 'Agregar Sector / Industria',
+    html: `
+      <style>
+        .swal2-html-container { margin: 1rem 0 0 0; overflow: visible; }
+        .swal-form-group { margin-bottom: 1rem; text-align: left; }
+        .swal-form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; font-size: 0.85rem; color: #475569; }
+        .swal-input-custom { width: 100%; box-sizing: border-box; padding: 0.75rem 1rem; border-radius: 8px; border: 1px solid #e2e8f0; background-color: #f8fafc; font-size: 0.95rem; font-family: inherit; transition: all 0.2s; outline: none; }
+        .swal-input-custom:focus { border-color: #94a3b8; box-shadow: 0 0 0 3px rgba(226, 232, 240, 0.5); background-color: #fff; }
+      </style>
+      <div class="swal-form-group">
+        <label for="swal-sector-name">Nombre del Sector</label>
+        <input id="swal-sector-name" class="swal-input-custom" placeholder="Ej: Tecnología, Salud..." autocomplete="off">
+      </div>
+    `,
+    focusConfirm: false,
+    showCancelButton: true,
+    confirmButtonText: 'Agregar',
+    cancelButtonText: 'Cancelar',
+    confirmButtonColor: '#10b981',
+    cancelButtonColor: '#64748b',
+    background: '#ffffff',
+    color: '#0f172a',
+    customClass: { popup: 'premium-popup' },
+    preConfirm: () => {
+      const name = document.getElementById('swal-sector-name').value.trim();
+      if (!name) {
+        Swal.showValidationMessage('El nombre es obligatorio');
+        return false;
+      }
+      return { name };
+    }
+  });
+
+  return formValues || null;
+}
+
+/**
+ * Muestra un modal para editar un sector existente.
+ * @param {{ id: number, name: string }} sectorData
+ * @returns {Promise<{name:string}|null>}
+ */
+export async function showEditSectorModal(sectorData) {
+  const Swal = (await import('sweetalert2')).default;
+
+  const { value: formValues } = await Swal.fire({
+    title: 'Editar Sector / Industria',
+    html: `
+      <style>
+        .swal2-html-container { margin: 1rem 0 0 0; overflow: visible; }
+        .swal-form-group { margin-bottom: 1rem; text-align: left; }
+        .swal-form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; font-size: 0.85rem; color: #475569; }
+        .swal-input-custom { width: 100%; box-sizing: border-box; padding: 0.75rem 1rem; border-radius: 8px; border: 1px solid #e2e8f0; background-color: #f8fafc; font-size: 0.95rem; font-family: inherit; transition: all 0.2s; outline: none; }
+        .swal-input-custom:focus { border-color: #94a3b8; box-shadow: 0 0 0 3px rgba(226, 232, 240, 0.5); background-color: #fff; }
+      </style>
+      <div class="swal-form-group">
+        <label for="swal-edit-sector-name">Nombre del Sector</label>
+        <input id="swal-edit-sector-name" class="swal-input-custom" value="${sectorData.name}" autocomplete="off">
+      </div>
+    `,
+    focusConfirm: false,
+    showCancelButton: true,
+    confirmButtonText: 'Guardar Cambios',
+    cancelButtonText: 'Cancelar',
+    confirmButtonColor: '#0f172a',
+    cancelButtonColor: '#64748b',
+    background: '#ffffff',
+    color: '#0f172a',
+    customClass: { popup: 'premium-popup' },
+    preConfirm: () => {
+      const name = document.getElementById('swal-edit-sector-name').value.trim();
+      if (!name) {
+        Swal.showValidationMessage('El nombre es obligatorio');
+        return false;
+      }
+      return { name };
     }
   });
 

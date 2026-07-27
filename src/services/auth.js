@@ -1,22 +1,5 @@
-import { supabase } from "../lib/supabase.js";
-
 /**
- * Verifica si un dominio está en la tabla allowed_domains.
- * @param {string} domain
- * @returns {Promise<boolean>}
- */
-async function isAllowedDomain(domain) {
-  const { data, error } = await supabase
-    .from('allowed_domains')
-    .select('id')
-    .ilike('domain', domain.trim())
-    .maybeSingle();
-
-  return !error && data !== null;
-}
-
-/**
- * Registra un nuevo usuario en la base de datos de autenticación de Supabase.
+ * Registra un nuevo usuario en la base de datos local.
  * Valida que el correo electrónico pertenezca al dominio autorizado.
  * 
  * @param {string} email 
@@ -26,76 +9,32 @@ async function isAllowedDomain(domain) {
  * @returns {Promise<any>}
  */
 export async function signUpUser(email, password, name, company_id = null) {
-  const cleanEmail = email.trim();
-  const domain = cleanEmail.split("@")[1];
-  
-  if (!domain || !(await isAllowedDomain(domain))) {
-    throw new Error("Solo se permiten registros con correos electrónicos de dominios autorizados.");
-  }
-
-  const { data, error } = await supabase.auth.signUp({
-    email: cleanEmail,
-    password,
-    options: {
-      data: {
-        name: name || "",
-      }
-    }
+  const res = await fetch('/api/auth/register', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, password, name, company_id })
   });
-
-  if (error) throw error;
-
-  // Si el usuario se creó correctamente en auth, creamos o actualizamos su perfil con la empresa
-  if (data.user) {
-    const { error: profileError } = await supabase
-      .from('profiles')
-      .upsert({ 
-        id: data.user.id, 
-        name: name || "", 
-        email: cleanEmail,
-        company_id 
-      });
-    
-    if (profileError) {
-      console.warn("Usuario creado pero no se pudo asignar la empresa en el perfil:", profileError);
-    }
-  }
-
-  return data;
+  const body = await res.json();
+  if (!res.ok) throw new Error(body.error || 'Error en el registro');
+  return body;
 }
 
 /**
  * Inicia sesión con correo y contraseña.
- * Valida el dominio antes de realizar la petición.
  * 
  * @param {string} email 
  * @param {string} password 
  * @returns {Promise<any>}
  */
 export async function signInUser(email, password) {
-  const cleanEmail = email.trim(); 
-  const domain = cleanEmail.split("@")[1];
-
-  if (!domain || !(await isAllowedDomain(domain))) {
-    throw new Error("Solo se permiten correos electrónicos de dominios autorizados.");
-  }
-
-  const { data, error } = await supabase.auth.signInWithPassword({
-    email: cleanEmail,
-    password,
+  const res = await fetch('/api/auth/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, password })
   });
-
-  if (error) {
-    
-    if (error.message.includes("Invalid login credentials")) {
-      throw new Error("Credenciales incorrectas. Verifica tu correo y contraseña.");
-    } else if (error.message.includes("Email not confirmed")) {
-      throw new Error("Debes confirmar tu correo antes de iniciar sesión.");
-    }
-    throw error;
-  }
-  
-  return data;
+  const body = await res.json();
+  if (!res.ok) throw new Error(body.error || 'Error de inicio de sesión');
+  return body;
 }
 
 /**
@@ -104,59 +43,47 @@ export async function signInUser(email, password) {
  * @returns {Promise<void>}
  */
 export async function signOutUser() {
-  const { error } = await supabase.auth.signOut();
-  if (error) throw error;
+  const res = await fetch('/api/auth/logout', {
+    method: 'POST'
+  });
+  if (!res.ok) throw new Error('Error al cerrar sesión');
 }
 
 export async function getCurrentSession() {
-  const { data: { session }, error } = await supabase.auth.getSession();
-  if (error) throw error;
-  return session;
+  const res = await fetch('/api/auth/session');
+  const body = await res.json();
+  if (!res.ok) throw new Error(body.error || 'Error al obtener sesión');
+  return body.session;
 }
 
 /**
  * Obtiene el perfil del usuario activo de la tabla public.profiles.
- * Útil para obtener el rol (admin o user).
  * 
  * @returns {Promise<any>}
  */
 export async function getUserProfile() {
-  const session = await getCurrentSession();
-  if (!session) return null;
-
-  const { data, error } = await supabase
-    .from('profiles')
-    .select('*')
-    .eq('id', session.user.id)
-    .single();
-
-  if (error) {
-    console.error("Error al obtener el perfil:", error.message);
-    return null;
-  }
-  return data;
+  const res = await fetch('/api/auth/profile');
+  const body = await res.json();
+  if (!res.ok) return null;
+  return body.data;
 }
 
 /**
- * Fuerza el cambio de contraseña directo mediante RPC (Solo usar si es estrictamente necesario)
+ * Fuerza el cambio de contraseña directo
  * 
  * @param {string} email 
  * @param {string} newPassword 
  * @returns {Promise<boolean>}
  */
 export async function directResetPassword(email, newPassword) {
-  const cleanEmail = email.trim();
-  
-  // Llamamos a la función RPC que crearemos en la base de datos
-  const { data, error } = await supabase.rpc('direct_reset_password', {
-    p_email: cleanEmail,
-    p_new_password: newPassword
+  const res = await fetch('/api/auth/reset-password', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, newPassword })
   });
-
-  if (error) throw error;
-  
-  // data retornará true si el correo existía y se actualizó, false si no existe
-  return data;
+  const body = await res.json();
+  if (!res.ok) throw new Error(body.error || 'Error al restablecer contraseña');
+  return body.success;
 }
 
 /**
@@ -165,9 +92,10 @@ export async function directResetPassword(email, newPassword) {
  * @returns {Promise<any[]>}
  */
 export async function getAdminUsers() {
-  const { data, error } = await supabase.rpc('admin_get_users');
-  if (error) throw error;
-  return data ?? [];
+  const res = await fetch('/api/admin/users');
+  const body = await res.json();
+  if (!res.ok) throw new Error(body.error || 'Error al obtener usuarios');
+  return body.data ?? [];
 }
 
 /**
@@ -177,17 +105,16 @@ export async function getAdminUsers() {
  * @returns {Promise<boolean>}
  */
 export async function deleteAdminUser(userId) {
-  const { data, error } = await supabase.rpc('admin_delete_user', {
-    user_id: userId
+  const res = await fetch(`/api/admin/users?id=${userId}`, {
+    method: 'DELETE'
   });
-  if (error) throw error;
-  return data;
+  const body = await res.json();
+  if (!res.ok) throw new Error(body.error || 'Error al eliminar usuario');
+  return body.data;
 }
 
 /**
  * Crea un usuario nuevo directamente desde el panel de admin sin cerrar la sesión actual.
- * Utilizamos un cliente secundario de Supabase sin persistencia para que no interfiera
- * con la sesión del administrador activa.
  * 
  * @param {string} email 
  * @param {string} password 
@@ -196,63 +123,14 @@ export async function deleteAdminUser(userId) {
  * @returns {Promise<any>}
  */
 export async function adminCreateUser(email, password, name, role = 'user') {
-  const cleanEmail = email.trim();
-  const domain = cleanEmail.split("@")[1];
-  
-  if (!domain || !(await isAllowedDomain(domain))) {
-    throw new Error("Solo se permiten correos electrónicos de dominios autorizados.");
-  }
-
-  // 1. Crear un cliente temporal que NO guarde sesión y use almacenamiento aislado
-  const { createClient } = await import('@supabase/supabase-js');
-  const tempSupabase = createClient(
-    import.meta.env.PUBLIC_SUPABASE_URL,
-    import.meta.env.PUBLIC_SUPABASE_ANON_KEY,
-    {
-      auth: {
-        persistSession: false,
-        autoRefreshToken: false,
-        detectSessionInUrl: false,
-        storage: {
-          getItem: () => null,
-          setItem: () => {},
-          removeItem: () => {}
-        }
-      }
-    }
-  );
-
-  // 2. Crear el usuario de forma nativa (Supabase se encarga de auth.users y auth.identities)
-  const { data: authData, error: authError } = await tempSupabase.auth.signUp({
-    email: cleanEmail,
-    password: password,
-    options: {
-      data: { name: name }
-    }
+  const res = await fetch('/api/admin/users', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, password, name, role })
   });
-
-  if (authError) throw authError;
-
-  const newUserId = authData?.user?.id;
-  if (!newUserId) throw new Error("No se pudo obtener el ID del usuario creado.");
-
-  // 3. Si el rol es admin, actualizamos el perfil
-  // Nota: El trigger 'on_auth_user_created' de Supabase habrá creado el perfil en 'public.profiles'
-  if (role === 'admin') {
-    // Usamos el RPC para evitar bloqueos por políticas RLS
-    const { error: updateError } = await supabase.rpc('admin_update_user', {
-      p_user_id: newUserId,
-      p_name: name,
-      p_role: 'admin'
-    });
-      
-    if (updateError) {
-      console.error("Error al asignar rol de admin:", updateError);
-      throw new Error("Usuario creado, pero no se pudo asignar el rol de administrador.");
-    }
-  }
-
-  return authData.user;
+  const body = await res.json();
+  if (!res.ok) throw new Error(body.error || 'Error al crear usuario');
+  return body.data;
 }
 
 /**
@@ -263,15 +141,14 @@ export async function adminCreateUser(email, password, name, role = 'user') {
  * @returns {Promise<any>}
  */
 export async function updateUserProfile(userId, profileData) {
-  const { data, error } = await supabase
-    .from('profiles')
-    .update(profileData)
-    .eq('id', userId)
-    .select()
-    .single();
-
-  if (error) throw error;
-  return data;
+  const res = await fetch('/api/auth/profile', {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(profileData)
+  });
+  const body = await res.json();
+  if (!res.ok) throw new Error(body.error || 'Error al actualizar perfil');
+  return body.data;
 }
 
 /**
@@ -281,12 +158,19 @@ export async function updateUserProfile(userId, profileData) {
  * @returns {Promise<any>}
  */
 export async function updateAuthEmail(newEmail) {
-  const { data, error } = await supabase.auth.updateUser({
-    email: newEmail
+  const profile = await getUserProfile();
+  const res = await fetch('/api/auth/profile', {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      name: profile?.name || '',
+      email: newEmail.trim(),
+      company_id: profile?.company_id || null
+    })
   });
-
-  if (error) throw error;
-  return data;
+  const body = await res.json();
+  if (!res.ok) throw new Error(body.error || 'Error al actualizar correo');
+  return body;
 }
 
 /**
@@ -300,15 +184,19 @@ export async function updateAuthEmail(newEmail) {
  * @param {number|null} companyId
  */
 export async function adminUpdateUser(userId, name, role, email, password, companyId = null) {
-  const { data, error } = await supabase.rpc('admin_update_user_full', {
-    p_user_id: userId,
-    p_name: name,
-    p_role: role,
-    p_email: email,
-    p_password: password || null,
-    p_company_id: companyId
+  const res = await fetch('/api/admin/users', {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      userId,
+      name,
+      role,
+      email,
+      password,
+      companyId
+    })
   });
-
-  if (error) throw error;
-  return data;
+  const body = await res.json();
+  if (!res.ok) throw new Error(body.error || 'Error al actualizar usuario');
+  return body.data;
 }

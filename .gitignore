@@ -17,8 +17,11 @@ pnpm-debug.log*
 .env
 .env.production
 
-# macOS-specific file
-.DS_Store
-
 # jetbrains setting folder
 .idea/
+
+# imágenes subidas por usuarios (gestionadas por volumen en producción)
+uploads/
+
+# base de datos SQLite local (gestionada por volumen en producción)
+db/

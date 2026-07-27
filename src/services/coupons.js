@@ -1,29 +1,11 @@
-import { supabase } from "../lib/supabase.js";
-
 /**
  * Obtiene todos los cupones activos junto con los datos de su empresa,
  * ordenados por sort_order.
  * @returns {Promise<any[]>}
  */
 export async function getCoupons() {
-  const { data, error } = await supabase
-    .from("coupons")
-    .select(`
-      *,
-      companies (
-        id,
-        name,
-        logo_url,
-        sector_id,
-        sectors (
-          id,
-          name
-        )
-      )
-    `)
-    .eq("active", true)
-    .order("sort_order", { ascending: true });
-
-  if (error) throw error;
-  return data ?? [];
+  const res = await fetch('/api/coupons');
+  const body = await res.json();
+  if (!res.ok) throw new Error(body.error || 'Error al obtener cupones');
+  return body.data ?? [];
 }

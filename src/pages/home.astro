@@ -10,7 +10,7 @@ import GridPrincipal from "../components/grid-principal/GridPrincipal.astro";
 </DashboardLayout>
 
 <script>
-	import { supabase } from "../lib/supabase.js";
+	import { supabase } from "../lib/client.js";
 
 	window.addEventListener("pageshow", (event) => {
 		if (event.persisted) {
