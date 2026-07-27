@@ -19,3 +19,9 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# imágenes subidas por usuarios (gestionadas por volumen en producción)
+uploads/
+
+# base de datos SQLite local (gestionada por volumen en producción)
+db/
