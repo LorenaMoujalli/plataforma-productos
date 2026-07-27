@@ -19,5 +19,14 @@ RUN npm run build
 FROM node:20-alpine 
 WORKDIR /app 
 COPY --from=builder /app ./ 
+
+# Crear el directorio de uploads para imágenes subidas por usuarios.
+# IMPORTANTE: monta este directorio como volumen para persistencia entre deploys:
+#   docker run -v uploads_data:/app/uploads ...
+#   o en docker-compose:
+#     volumes:
+#       - uploads_data:/app/uploads
+RUN mkdir -p /app/uploads/logos /app/uploads/avatars
+
 EXPOSE 4321 
-CMD ["npm", "run", "preview", "--", "--host", "0.0.0.0", "--port", "4321"]
+CMD ["node", "./dist/server/entry.mjs"]

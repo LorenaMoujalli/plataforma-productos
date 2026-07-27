@@ -28,6 +28,7 @@ export const supabase = {
             const body = await res.json();
             if (!res.ok) throw new Error(body.error || 'Error al subir archivo');
             
+            // El servidor ya devuelve la URL pública correcta apuntando a /api/images/
             lastUploadedUrl = body.publicUrl;
             return { data: { path }, error: null };
           } catch (err) {
@@ -35,7 +36,9 @@ export const supabase = {
           }
         },
         getPublicUrl(path) {
-          return { data: { publicUrl: lastUploadedUrl || `/uploads/logos/${path.split('/').pop()}` } };
+          // Usar la URL devuelta por el servidor en la última subida,
+          // o construir la ruta correcta si se llama en frío
+          return { data: { publicUrl: lastUploadedUrl || `/api/images/logos/${path.split('/').pop().split('?')[0]}` } };
         }
       };
     }

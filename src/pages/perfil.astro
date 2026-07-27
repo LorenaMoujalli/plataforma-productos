@@ -1662,7 +1662,7 @@ import DashboardLayout from "../layouts/DashboardLayout.astro";
 				return;
 			}
 
-			// Validar tamaño (ej: 2MB)
+			// Validar tamaño (2MB)
 			if (file.size > 2 * 1024 * 1024) {
 				showToast({
 					text: "La imagen no debe superar los 2MB.",
@@ -1677,44 +1677,48 @@ import DashboardLayout from "../layouts/DashboardLayout.astro";
 					icon: "info",
 				});
 
-				const ext = file.name.split(".").pop();
-				const path = `avatars/${userId}-${Date.now()}.${ext}`;
+				const formData = new FormData();
+				formData.append("file", file);
 
-				// Subir a storage (usando el bucket 'logos' existente)
-				const { error: uploadError } = await supabase.storage
-					.from("logos")
-					.upload(path, file, {
-						cacheControl: "3600",
-						upsert: true,
-					});
+				// Llamar al endpoint dedicado de avatar — guarda en DB y devuelve la URL
+				const res = await fetch("/api/auth/avatar", {
+					method: "POST",
+					body: formData,
+				});
 
-				if (uploadError) throw uploadError;
+				const body = await res.json();
+				if (!res.ok) throw new Error(body.error || "Error al subir el avatar");
 
-				// Obtener URL pública
-				const { data: urlData } = supabase.storage
-					.from("logos")
-					.getPublicUrl(path);
+				const publicUrl = body.publicUrl;
 
-				const publicUrl = urlData.publicUrl;
+				// Actualizar UI inmediatamente sin recargar todo el perfil
+				const avatarImg = document.getElementById("profile-avatar-img") as HTMLImageElement;
+				const avatarPlaceholder = document.getElementById("profile-avatar-placeholder");
+				const cardAvatarImg = document.getElementById("card-avatar-img") as HTMLImageElement;
+				const cardAvatarPlaceholder = document.getElementById("card-avatar-placeholder");
 
-				// Guardar en la tabla de perfiles
-				const { error: updateError } = await supabase
-					.from("profiles")
-					.update({ avatar_url: publicUrl })
-					.eq("id", userId);
+				if (avatarImg) {
+					avatarImg.src = publicUrl;
+					avatarImg.style.display = "block";
+				}
+				if (avatarPlaceholder) avatarPlaceholder.style.display = "none";
+				if (cardAvatarImg) {
+					cardAvatarImg.src = publicUrl;
+					cardAvatarImg.style.display = "block";
+				}
+				if (cardAvatarPlaceholder) cardAvatarPlaceholder.style.display = "none";
 
-				if (updateError) throw updateError;
+				// Actualizar el perfil local para que otros usos del userProfile reflejen el nuevo avatar
+				if (userProfile) userProfile.avatar_url = publicUrl;
 
 				showToast({
 					text: "Foto de perfil actualizada correctamente.",
 					icon: "success",
 				});
-
-				await loadAllData();
 			} catch (err: any) {
 				console.error("Error al actualizar la foto de perfil:", err);
 				showToast({
-					text: "Error al subir la foto de perfil.",
+					text: err.message || "Error al subir la foto de perfil.",
 					icon: "error",
 				});
 			}
