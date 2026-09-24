@@ -1066,7 +1066,6 @@ import DashboardLayout from "../layouts/DashboardLayout.astro";
 	} from "../utils/notifications.js";
 	import {
 		signOutUser,
-		updateAuthEmail,
 		directResetPassword,
 	} from "../services/auth.js";
 
@@ -1491,16 +1490,6 @@ import DashboardLayout from "../layouts/DashboardLayout.astro";
 			}
 		});
 	});
-
-	// --- Validación de Dominio ---
-	function isDomainAllowed(email: string) {
-		const domain = email.split("@")[1];
-		return (
-			domain &&
-			(allowedDomains.length === 0 ||
-				allowedDomains.includes(domain.toLowerCase()))
-		);
-	}
 
 	// --- Guardar Cambios Perfil ---
 	editProfileForm.addEventListener("submit", async (e) => {
