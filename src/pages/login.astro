@@ -136,16 +136,6 @@ import Layout from "../layouts/Layout.astro";
 						/>
 					</div>
 					<div class="form-group">
-						<label for="register-company">Empresa</label>
-						<select
-							id="register-company"
-							name="company_id"
-							required
-						>
-							<option value="">Cargando empresas...</option>
-						</select>
-					</div>
-					<div class="form-group">
 						<label for="register-password">Contraseña</label>
 						<div class="password-wrapper">
 							<input
@@ -474,7 +464,6 @@ import Layout from "../layouts/Layout.astro";
 <script>
 	import { signInUser, signUpUser } from "../services/auth.js";
 	import { getAllowedDomainNames } from "../services/domains.js";
-	import { getCompaniesForSelect } from "../services/coupons-admin.js";
 	import { showToast, showAlert } from "../utils/notifications.js";
 
 	// Interceptar botón de retroceder en el navegador para que no puedan volver a páginas protegidas
@@ -485,34 +474,6 @@ import Layout from "../layouts/Layout.astro";
 
 	const panelLogin = document.getElementById("panel-login")!;
 	const panelRegister = document.getElementById("panel-register")!;
-	const registerCompanySelect = document.getElementById(
-		"register-company",
-	) as HTMLSelectElement;
-
-	// --- Cargar Empresas ---
-	async function loadCompanies() {
-		try {
-			const companies = await getCompaniesForSelect();
-			if (registerCompanySelect) {
-				registerCompanySelect.innerHTML =
-					'<option value="">Selecciona tu empresa</option>';
-				companies.forEach((company: any) => {
-					const option = document.createElement("option");
-					option.value = company.id.toString();
-					option.textContent = company.name;
-					registerCompanySelect.appendChild(option);
-				});
-			}
-		} catch (error) {
-			console.error("Error al cargar empresas:", error);
-			if (registerCompanySelect) {
-				registerCompanySelect.innerHTML =
-					'<option value="">Error al cargar empresas</option>';
-			}
-		}
-	}
-
-	loadCompanies();
 
 	// ── Transición entre paneles ───────────────────────────────
 	function switchTo(target: "login" | "register") {
@@ -651,9 +612,6 @@ import Layout from "../layouts/Layout.astro";
 		const email = (
 			document.getElementById("register-email") as HTMLInputElement
 		).value.trim();
-		const companyId = (
-			document.getElementById("register-company") as HTMLSelectElement
-		).value;
 		const password = (
 			document.getElementById("register-password") as HTMLInputElement
 		).value;
@@ -672,8 +630,7 @@ import Layout from "../layouts/Layout.astro";
 			await signUpUser(
 				email,
 				password,
-				name,
-				companyId ? parseInt(companyId) : null,
+				name
 			);
 			await showAlert({
 				title: "¡Registro Exitoso!",

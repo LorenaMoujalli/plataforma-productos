@@ -11,7 +11,7 @@
  */
 export async function showAlert({ title, text, icon, confirmButtonText = 'Entendido' }) {
   const Swal = (await import('sweetalert2')).default;
-  
+
   return Swal.fire({
     title,
     text,
@@ -36,7 +36,7 @@ export async function showAlert({ title, text, icon, confirmButtonText = 'Entend
  */
 export async function showToast({ text, icon }) {
   const Swal = (await import('sweetalert2')).default;
-  
+
   const Toast = Swal.mixin({
     toast: true,
     position: 'top-end',
@@ -69,7 +69,7 @@ export async function showToast({ text, icon }) {
  */
 export async function showConfirm({ title, text, confirmButtonText = 'Sí, eliminar', cancelButtonText = 'Cancelar' }) {
   const Swal = (await import('sweetalert2')).default;
-  
+
   const result = await Swal.fire({
     title,
     text,
@@ -91,21 +91,19 @@ export async function showConfirm({ title, text, confirmButtonText = 'Sí, elimi
 
 /**
  * Muestra un formulario modal para crear un nuevo usuario.
- * @param {string[]} allowedDomains - Lista de dominios permitidos para validación.
+ * @param {string[]|Array<{domain: string, company_id: number}>} allowedDomains - Lista de dominios permitidos para validación.
  * @param {Array<{id: number, name: string}>} companies - Lista de empresas para el select.
+ * @param {Array<{domain: string, company_id: number}>} domainsData - Lista completa de dominios con company_id.
  * @returns {Promise<Object|null>} Los datos del nuevo usuario o null si cancela.
  */
-export async function showCreateUserModal(allowedDomains = [], companies = []) {
+export async function showCreateUserModal(allowedDomains = [], companies = [], domainsData = []) {
   const Swal = (await import('sweetalert2')).default;
-  const domainsHint = allowedDomains.length > 0
-    ? allowedDomains.map(d => `@${d}`).join(', ')
-    : 'dominios autorizados';
+  const domainLookup = domainsData.length > 0
+    ? domainsData
+    : (Array.isArray(allowedDomains) ? allowedDomains.map(d => typeof d === 'object' ? d : { domain: d, company_id: null }) : []);
 
-  // Generar opciones de empresas
-  const companyOptions = companies.map(c => 
-    `<option value="${c.id}">${c.name}</option>`
-  ).join('');
-  
+  const domainNames = domainLookup.map(d => (d.domain || '').toLowerCase()).filter(Boolean);
+
   const { value: formValues } = await Swal.fire({
     title: 'Registrar Nuevo Usuario',
     html: `
@@ -138,11 +136,8 @@ export async function showCreateUserModal(allowedDomains = [], companies = []) {
         <input id="swal-new-name" class="swal-input-custom" placeholder="Ej. Juan Pérez">
       </div>
       <div class="swal-form-group">
-        <label for="swal-new-company">Empresa</label>
-        <select id="swal-new-company" class="swal-input-custom swal-select-custom">
-          <option value="">Sin empresa asignada</option>
-          ${companyOptions}
-        </select>
+        <label for="swal-new-company-display">Empresa <span style="font-size:0.75rem; color:#64748b; font-weight:normal;">(Asignada automáticamente por el dominio)</span></label>
+        <input id="swal-new-company-display" class="swal-input-custom" readonly disabled style="background-color: #f8fafc; cursor: not-allowed; color: #475569;" placeholder="Sin empresa asignada">
       </div>
       <div class="swal-form-group">
         <label for="swal-new-role">Rol en la plataforma</label>
@@ -171,36 +166,68 @@ export async function showCreateUserModal(allowedDomains = [], companies = []) {
     customClass: {
       popup: 'premium-popup',
     },
+    didOpen: () => {
+      const emailInput = document.getElementById('swal-new-email');
+      const companyDisplay = document.getElementById('swal-new-company-display');
+
+      const syncCompany = () => {
+        const email = (emailInput?.value || '').trim().toLowerCase();
+        const domain = email.split('@')[1];
+        if (!domain) {
+          if (companyDisplay) companyDisplay.value = 'Sin empresa asignada';
+          return;
+        }
+        const match = domainLookup.find(d => (d.domain || '').toLowerCase() === domain);
+        if (match && match.company_id) {
+          const comp = companies.find(c => c.id == match.company_id);
+          if (companyDisplay) {
+            companyDisplay.value = comp ? comp.name : (match.company_name || 'Empresa #' + match.company_id);
+          }
+        } else {
+          if (companyDisplay) companyDisplay.value = 'Sin empresa asignada';
+        }
+      };
+
+      emailInput?.addEventListener('input', syncCompany);
+      emailInput?.addEventListener('change', syncCompany);
+      emailInput?.addEventListener('paste', () => setTimeout(syncCompany, 50));
+    },
     preConfirm: () => {
       const email = document.getElementById('swal-new-email').value.trim().toLowerCase();
       const password = document.getElementById('swal-new-password').value;
       const name = document.getElementById('swal-new-name').value;
       const role = document.getElementById('swal-new-role').value;
-      const companyId = document.getElementById('swal-new-company').value;
       const expirationDate = document.getElementById('swal-new-expiration').value || null;
 
       if (!name || !email || !password) {
         Swal.showValidationMessage('Todos los campos son obligatorios');
         return false;
       }
-      
+
       const domain = email.split('@')[1];
       if (!domain) {
         Swal.showValidationMessage('Ingresa un correo electrónico válido');
         return false;
       }
 
-      if (allowedDomains.length > 0 && !allowedDomains.includes(domain)) {
+      if (domainNames.length > 0 && !domainNames.includes(domain)) {
         Swal.showValidationMessage('Dominio no autorizado.');
         return false;
       }
-      
+
       if (password.length < 6) {
         Swal.showValidationMessage('La contraseña debe tener al menos 6 caracteres');
         return false;
       }
 
-      return { email, password, name, role, company_id: companyId ? parseInt(companyId) : null, expiration_date: expirationDate };
+      // Sincronizar automáticamente con el dominio si está mapeado
+      let finalCompanyId = null;
+      const match = domainLookup.find(d => (d.domain || '').toLowerCase() === domain);
+      if (match && match.company_id) {
+        finalCompanyId = match.company_id;
+      }
+
+      return { email, password, name, role, company_id: finalCompanyId, expiration_date: expirationDate };
     }
   });
 
@@ -210,24 +237,26 @@ export async function showCreateUserModal(allowedDomains = [], companies = []) {
 /**
  * Muestra un formulario modal para editar un usuario.
  * @param {Object} user - Los datos actuales del usuario
- * @param {string[]} allowedDomains - Lista de dominios permitidos para validación.
+ * @param {string[]|Array<{domain: string, company_id: number}>} allowedDomains - Lista de dominios permitidos para validación.
  * @param {Array<{id: number, name: string}>} companies - Lista de empresas para el select.
+ * @param {Array<{domain: string, company_id: number}>} domainsData - Lista completa de dominios con company_id.
  * @returns {Promise<Object|null>} Los datos actualizados o null si cancela.
  */
-export async function showEditUserModal(user, allowedDomains = [], companies = []) {
+export async function showEditUserModal(user, allowedDomains = [], companies = [], domainsData = []) {
   const Swal = (await import('sweetalert2')).default;
-  const domainsHint = allowedDomains.length > 0
-    ? allowedDomains.map(d => `@${d}`).join(', ')
-    : 'dominios autorizados';
+  const domainLookup = domainsData.length > 0
+    ? domainsData
+    : (Array.isArray(allowedDomains) ? allowedDomains.map(d => typeof d === 'object' ? d : { domain: d, company_id: null }) : []);
 
-  // Generar opciones de empresas
-  const companyOptions = companies.map(c => 
-    `<option value="${c.id}" ${user.company_id == c.id ? 'selected' : ''}>${c.name}</option>`
-  ).join('');
+  const domainNames = domainLookup.map(d => (d.domain || '').toLowerCase()).filter(Boolean);
+
+  // Obtener nombre de empresa actual
+  const currentCompany = companies.find(c => c.id == user.company_id);
+  const currentCompanyName = currentCompany ? currentCompany.name : 'Sin empresa asignada';
 
   // Formatear fecha para el input tipo date (YYYY-MM-DD)
   const formattedExpiration = user.expiration_date ? user.expiration_date.split('T')[0] : '';
-  
+
   const { value: formValues } = await Swal.fire({
     title: 'Editar Usuario',
     html: `
@@ -261,11 +290,8 @@ export async function showEditUserModal(user, allowedDomains = [], companies = [
         <input id="swal-edit-name" class="swal-input-custom" value="${user.name || ''}" placeholder="Ej. Juan Pérez">
       </div>
       <div class="swal-form-group">
-        <label for="swal-edit-company">Empresa</label>
-        <select id="swal-edit-company" class="swal-input-custom swal-select-custom">
-          <option value="">Sin empresa asignada</option>
-          ${companyOptions}
-        </select>
+        <label for="swal-edit-company-display">Empresa <span style="font-size:0.75rem; color:#64748b; font-weight:normal;">(Asignada automáticamente por el dominio)</span></label>
+        <input id="swal-edit-company-display" class="swal-input-custom" readonly disabled style="background-color: #f8fafc; cursor: not-allowed; color: #475569;" value="${currentCompanyName}" placeholder="Sin empresa asignada">
       </div>
       <div class="swal-form-group">
         <label for="swal-edit-role">Rol en la plataforma</label>
@@ -294,36 +320,68 @@ export async function showEditUserModal(user, allowedDomains = [], companies = [
     customClass: {
       popup: 'premium-popup',
     },
+    didOpen: () => {
+      const emailInput = document.getElementById('swal-edit-email');
+      const companyDisplay = document.getElementById('swal-edit-company-display');
+
+      const syncCompany = () => {
+        const email = (emailInput?.value || '').trim().toLowerCase();
+        const domain = email.split('@')[1];
+        if (!domain) {
+          if (companyDisplay) companyDisplay.value = 'Sin empresa asignada';
+          return;
+        }
+        const match = domainLookup.find(d => (d.domain || '').toLowerCase() === domain);
+        if (match && match.company_id) {
+          const comp = companies.find(c => c.id == match.company_id);
+          if (companyDisplay) {
+            companyDisplay.value = comp ? comp.name : (match.company_name || 'Empresa #' + match.company_id);
+          }
+        } else {
+          if (companyDisplay) companyDisplay.value = 'Sin empresa asignada';
+        }
+      };
+
+      emailInput?.addEventListener('input', syncCompany);
+      emailInput?.addEventListener('change', syncCompany);
+      emailInput?.addEventListener('paste', () => setTimeout(syncCompany, 50));
+    },
     preConfirm: () => {
       const email = document.getElementById('swal-edit-email').value.trim().toLowerCase();
       const password = document.getElementById('swal-edit-password').value;
       const name = document.getElementById('swal-edit-name').value;
       const role = document.getElementById('swal-edit-role').value;
-      const companyId = document.getElementById('swal-edit-company').value;
       const expirationDate = document.getElementById('swal-edit-expiration').value || null;
 
       if (!name || !email) {
         Swal.showValidationMessage('El nombre y correo son obligatorios');
         return false;
       }
-      
+
       const domain = email.split('@')[1];
       if (!domain) {
         Swal.showValidationMessage('Ingresa un correo electrónico válido');
         return false;
       }
 
-      if (allowedDomains.length > 0 && !allowedDomains.includes(domain)) {
+      if (domainNames.length > 0 && !domainNames.includes(domain)) {
         Swal.showValidationMessage('Dominio no autorizado.');
         return false;
       }
-      
+
       if (password && password.length < 6) {
         Swal.showValidationMessage('La nueva contraseña debe tener al menos 6 caracteres');
         return false;
       }
 
-      return { email, password, name, role, company_id: companyId ? parseInt(companyId) : null, expiration_date: expirationDate };
+      // Sincronizar automáticamente con el dominio si está mapeado
+      let finalCompanyId = null;
+      const match = domainLookup.find(d => (d.domain || '').toLowerCase() === domain);
+      if (match && match.company_id) {
+        finalCompanyId = match.company_id;
+      }
+
+      return { email, password, name, role, company_id: finalCompanyId, expiration_date: expirationDate };
     }
   });
 
@@ -332,10 +390,15 @@ export async function showEditUserModal(user, allowedDomains = [], companies = [
 
 /**
  * Muestra un modal para agregar un nuevo dominio permitido.
- * @returns {Promise<{domain:string}|null>}
+ * @param {Array<{id: number, name: string}>} companies
+ * @returns {Promise<{domain:string, company_id:number}|null>}
  */
-export async function showCreateDomainModal() {
+export async function showCreateDomainModal(companies = []) {
   const Swal = (await import('sweetalert2')).default;
+
+  const companyOptions = companies.map(c =>
+    `<option value="${c.id}">${c.name}</option>`
+  ).join('');
 
   const { value: formValues } = await Swal.fire({
     title: 'Agregar Dominio',
@@ -346,12 +409,20 @@ export async function showCreateDomainModal() {
         .swal-form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; font-size: 0.85rem; color: #475569; }
         .swal-input-custom { width: 100%; box-sizing: border-box; padding: 0.75rem 1rem; border-radius: 8px; border: 1px solid #e2e8f0; background-color: #f8fafc; font-size: 0.95rem; font-family: inherit; transition: all 0.2s; outline: none; }
         .swal-input-custom:focus { border-color: #94a3b8; box-shadow: 0 0 0 3px rgba(226, 232, 240, 0.5); background-color: #fff; }
+        .swal-select-custom { appearance: none; background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e"); background-repeat: no-repeat; background-position: right 1rem center; background-size: 1em; cursor: pointer; }
         .swal-hint { font-size: 0.8rem; color: #94a3b8; margin-top: 0.3rem; }
       </style>
       <div class="swal-form-group">
         <label for="swal-domain">Dominio</label>
         <input id="swal-domain" class="swal-input-custom" placeholder="empresa.com" autocomplete="off">
         <p class="swal-hint">Sin @ ni http. Ej: empresa.com</p>
+      </div>
+      <div class="swal-form-group">
+        <label for="swal-domain-company">Empresa Asociada (Obligatoria)</label>
+        <select id="swal-domain-company" class="swal-input-custom swal-select-custom">
+          <option value="">-- Selecciona una empresa --</option>
+          ${companyOptions}
+        </select>
       </div>
     `,
     focusConfirm: false,
@@ -365,6 +436,8 @@ export async function showCreateDomainModal() {
     customClass: { popup: 'premium-popup' },
     preConfirm: () => {
       const domain = document.getElementById('swal-domain').value.trim().toLowerCase();
+      const companyId = document.getElementById('swal-domain-company').value;
+
       if (!domain) {
         Swal.showValidationMessage('El dominio es obligatorio');
         return false;
@@ -374,7 +447,11 @@ export async function showCreateDomainModal() {
         Swal.showValidationMessage('Ingresa un dominio válido. Ej: empresa.com');
         return false;
       }
-      return { domain };
+      if (!companyId) {
+        Swal.showValidationMessage('Debes seleccionar una empresa obligatoriamente');
+        return false;
+      }
+      return { domain, company_id: parseInt(companyId) };
     }
   });
 
@@ -383,11 +460,16 @@ export async function showCreateDomainModal() {
 
 /**
  * Muestra un modal para editar un dominio existente.
- * @param {{ id: number, domain: string }} domainData
- * @returns {Promise<{domain:string}|null>}
+ * @param {{ id: number, domain: string, company_id?: number }} domainData
+ * @param {Array<{id: number, name: string}>} companies
+ * @returns {Promise<{domain:string, company_id:number}|null>}
  */
-export async function showEditDomainModal(domainData) {
+export async function showEditDomainModal(domainData, companies = []) {
   const Swal = (await import('sweetalert2')).default;
+
+  const companyOptions = companies.map(c =>
+    `<option value="${c.id}" ${domainData.company_id == c.id ? 'selected' : ''}>${c.name}</option>`
+  ).join('');
 
   const { value: formValues } = await Swal.fire({
     title: 'Editar Dominio',
@@ -398,12 +480,20 @@ export async function showEditDomainModal(domainData) {
         .swal-form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; font-size: 0.85rem; color: #475569; }
         .swal-input-custom { width: 100%; box-sizing: border-box; padding: 0.75rem 1rem; border-radius: 8px; border: 1px solid #e2e8f0; background-color: #f8fafc; font-size: 0.95rem; font-family: inherit; transition: all 0.2s; outline: none; }
         .swal-input-custom:focus { border-color: #94a3b8; box-shadow: 0 0 0 3px rgba(226, 232, 240, 0.5); background-color: #fff; }
+        .swal-select-custom { appearance: none; background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e"); background-repeat: no-repeat; background-position: right 1rem center; background-size: 1em; cursor: pointer; }
         .swal-hint { font-size: 0.8rem; color: #94a3b8; margin-top: 0.3rem; }
       </style>
       <div class="swal-form-group">
         <label for="swal-edit-domain">Dominio</label>
         <input id="swal-edit-domain" class="swal-input-custom" value="${domainData.domain}" autocomplete="off">
         <p class="swal-hint">Sin @ ni http. Ej: empresa.com</p>
+      </div>
+      <div class="swal-form-group">
+        <label for="swal-edit-domain-company">Empresa Asociada (Obligatoria)</label>
+        <select id="swal-edit-domain-company" class="swal-input-custom swal-select-custom">
+          <option value="">-- Selecciona una empresa --</option>
+          ${companyOptions}
+        </select>
       </div>
     `,
     focusConfirm: false,
@@ -417,6 +507,8 @@ export async function showEditDomainModal(domainData) {
     customClass: { popup: 'premium-popup' },
     preConfirm: () => {
       const domain = document.getElementById('swal-edit-domain').value.trim().toLowerCase();
+      const companyId = document.getElementById('swal-edit-domain-company').value;
+
       if (!domain) {
         Swal.showValidationMessage('El dominio es obligatorio');
         return false;
@@ -426,7 +518,11 @@ export async function showEditDomainModal(domainData) {
         Swal.showValidationMessage('Ingresa un dominio válido. Ej: empresa.com');
         return false;
       }
-      return { domain };
+      if (!companyId) {
+        Swal.showValidationMessage('Debes seleccionar una empresa obligatoriamente');
+        return false;
+      }
+      return { domain, company_id: parseInt(companyId) };
     }
   });
 

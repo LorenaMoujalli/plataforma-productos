@@ -385,6 +385,7 @@ import "../../styles/grid-principal/benefit-card.css";
           <thead>
             <tr>
               <th>Dominio</th>
+              <th>Empresa Asociada</th>
               <th>Fecha de Registro</th>
               <th class="text-right">Acciones</th>
             </tr>
@@ -996,9 +997,11 @@ import "../../styles/grid-principal/benefit-card.css";
 
     // Dominios permitidos (para pasarlos a los modales de usuario)
     let allowedDomains: string[] = [];
+    let allowedDomainsList: any[] = [];
     async function refreshAllowedDomains() {
       try {
-        allowedDomains = await getAllowedDomainNames();
+        allowedDomainsList = await getDomains();
+        allowedDomains = (allowedDomainsList || []).map((d: any) => d.domain.toLowerCase());
       } catch (e) {
         console.error("Error al refrescar dominios permitidos:", e);
       }
@@ -1380,10 +1383,19 @@ import "../../styles/grid-principal/benefit-card.css";
             console.error("Error al cargar empresas para el modal:", e);
           }
 
+          if (allowedDomainsList.length === 0) {
+            try {
+              allowedDomainsList = await getDomains();
+            } catch (e) {
+              console.error("Error al cargar dominios para el modal:", e);
+            }
+          }
+
           const newValues: any = await showEditUserModal(
             user,
             allowedDomains,
             companies,
+            allowedDomainsList,
           );
 
           if (newValues) {
@@ -1445,9 +1457,18 @@ import "../../styles/grid-principal/benefit-card.css";
           );
         }
 
+        if (allowedDomainsList.length === 0) {
+          try {
+            allowedDomainsList = await getDomains();
+          } catch (e) {
+            console.error("Error al cargar dominios para el modal:", e);
+          }
+        }
+
         const userData: any = await showCreateUserModal(
           allowedDomains,
           companies,
+          allowedDomainsList,
         );
         if (userData) {
           try {
@@ -1561,7 +1582,7 @@ import "../../styles/grid-principal/benefit-card.css";
 
       if (filtered.length === 0) {
         domainsTbody.innerHTML =
-          '<tr><td colspan="3" style="text-align:center; padding:3rem; color:#64748b;">No se encontraron dominios.</td></tr>';
+          '<tr><td colspan="4" style="text-align:center; padding:3rem; color:#64748b;">No se encontraron dominios.</td></tr>';
         const pagContainer = document.getElementById("domains-pagination");
         if (pagContainer) pagContainer.style.display = "none";
         return;
@@ -1586,10 +1607,17 @@ import "../../styles/grid-principal/benefit-card.css";
               <span class="font-medium">${d.domain}</span>
             </div>
           </td>
+          <td data-label="Empresa Asociada">
+            ${
+              d.company_name
+                ? `<span style="background:#e0f2fe; color:#0369a1; font-weight:600; padding:4px 10px; border-radius:6px; font-size:0.85rem; display:inline-block;">${d.company_name}</span>`
+                : `<span style="background:#fef2f2; color:#b91c1c; font-weight:500; padding:4px 8px; border-radius:6px; font-size:0.82rem; display:inline-block;">Sin empresa</span>`
+            }
+          </td>
           <td data-label="Fecha Registro"><span class="text-gray">${formatDate(d.created_at)}</span></td>
           <td data-label="Acciones" class="actions-cell">
             <div style="display:flex;gap:0.5rem;justify-content:flex-end;">
-              <button class="btn-icon btn-edit-domain" data-id="${d.id}" data-domain="${d.domain}" title="Editar dominio">
+              <button class="btn-icon btn-edit-domain" data-id="${d.id}" data-domain="${d.domain}" data-company-id="${d.company_id || ''}" title="Editar dominio">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
                   <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
@@ -1615,11 +1643,21 @@ import "../../styles/grid-principal/benefit-card.css";
         btn.addEventListener("click", async () => {
           const id = parseInt(btn.getAttribute("data-id") as string);
           const domain = btn.getAttribute("data-domain") as string;
-          const result: any = await showEditDomainModal({ id, domain });
+          const companyIdAttr = btn.getAttribute("data-company-id");
+          const companyId = companyIdAttr ? parseInt(companyIdAttr) : undefined;
+
+          let companies = [];
+          try {
+            companies = await getCompaniesForSelect();
+          } catch (e) {
+            console.error("Error al cargar empresas:", e);
+          }
+
+          const result: any = await showEditDomainModal({ id, domain, company_id: companyId }, companies);
           if (result) {
             btn.classList.add("loading");
             try {
-              await updateDomain(id, result.domain);
+              await updateDomain(id, result.domain, result.company_id);
               showToast({
                 text: `Dominio actualizado correctamente.`,
                 icon: "success",
@@ -1684,13 +1722,20 @@ import "../../styles/grid-principal/benefit-card.css";
     ) as HTMLButtonElement;
     if (addDomainBtn) {
       addDomainBtn.addEventListener("click", async () => {
-        const result: any = await showCreateDomainModal();
+        let companies = [];
+        try {
+          companies = await getCompaniesForSelect();
+        } catch (e) {
+          console.error("Error al cargar empresas:", e);
+        }
+
+        const result: any = await showCreateDomainModal(companies);
         if (result) {
           addDomainBtn.disabled = true;
           addDomainBtn.innerHTML =
             '<span class="spinner" style="width:20px;height:20px;border-width:2px;margin-right:8px;"></span> Guardando...';
           try {
-            await addDomain(result.domain);
+            await addDomain(result.domain, result.company_id);
             showToast({
               text: `Dominio "${result.domain}" agregado con éxito.`,
               icon: "success",
@@ -3155,16 +3200,12 @@ import "../../styles/grid-principal/benefit-card.css";
   }
 
   .users-table tbody tr {
-    transition: all 0.25s ease;
+    transition: background-color 0.15s ease;
     background-color: white;
   }
 
   .users-table tbody tr:hover {
-    background-color: #fefeff;
-    box-shadow: none;
-    transform: scale(1.001) translateY(-1px);
-    position: relative;
-    z-index: 10;
+    background-color: #f8fafc;
   }
 
   .users-table tbody tr:last-child td {

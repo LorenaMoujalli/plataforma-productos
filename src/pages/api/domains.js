@@ -12,7 +12,12 @@ async function isAdmin(cookies) {
 
 export async function GET() {
   try {
-    const domains = await query.all('SELECT * FROM allowed_domains ORDER BY created_at DESC');
+    const domains = await query.all(`
+      SELECT ad.id, ad.domain, ad.company_id, ad.created_at, c.name AS company_name
+      FROM allowed_domains ad
+      LEFT JOIN companies c ON ad.company_id = c.id
+      ORDER BY ad.created_at DESC
+    `);
     return new Response(JSON.stringify({ data: domains }), { status: 200 });
   } catch (error) {
     console.error('Error en GET /api/domains:', error);
@@ -26,11 +31,28 @@ export async function POST({ request, cookies }) {
       return new Response(JSON.stringify({ error: 'Acceso denegado: Se requieren permisos de administrador.' }), { status: 403 });
     }
 
-    const { domain } = await request.json();
+    const { domain, company_id } = await request.json();
+    if (!domain) {
+      return new Response(JSON.stringify({ error: 'El dominio es obligatorio.' }), { status: 400 });
+    }
+    if (!company_id) {
+      return new Response(JSON.stringify({ error: 'Debe asociar una empresa obligatoriamente.' }), { status: 400 });
+    }
+
+    const company = await query.get('SELECT id FROM companies WHERE id = ?', [company_id]);
+    if (!company) {
+      return new Response(JSON.stringify({ error: 'La empresa seleccionada no existe.' }), { status: 400 });
+    }
+
     const clean = domain.trim().toLowerCase();
 
-    const res = await query.run('INSERT INTO allowed_domains (domain) VALUES (?)', [clean]);
-    const newDomain = await query.get('SELECT * FROM allowed_domains WHERE id = ?', [res.lastID]);
+    const res = await query.run('INSERT INTO allowed_domains (domain, company_id) VALUES (?, ?)', [clean, company_id]);
+    const newDomain = await query.get(`
+      SELECT ad.id, ad.domain, ad.company_id, ad.created_at, c.name AS company_name
+      FROM allowed_domains ad
+      LEFT JOIN companies c ON ad.company_id = c.id
+      WHERE ad.id = ?
+    `, [res.lastID]);
 
     return new Response(JSON.stringify({ data: newDomain }), { status: 201 });
   } catch (error) {
@@ -45,11 +67,28 @@ export async function PUT({ request, cookies }) {
       return new Response(JSON.stringify({ error: 'Acceso denegado: Se requieren permisos de administrador.' }), { status: 403 });
     }
 
-    const { id, domain } = await request.json();
+    const { id, domain, company_id } = await request.json();
+    if (!domain) {
+      return new Response(JSON.stringify({ error: 'El dominio es obligatorio.' }), { status: 400 });
+    }
+    if (!company_id) {
+      return new Response(JSON.stringify({ error: 'Debe asociar una empresa obligatoriamente.' }), { status: 400 });
+    }
+
+    const company = await query.get('SELECT id FROM companies WHERE id = ?', [company_id]);
+    if (!company) {
+      return new Response(JSON.stringify({ error: 'La empresa seleccionada no existe.' }), { status: 400 });
+    }
+
     const clean = domain.trim().toLowerCase();
 
-    await query.run('UPDATE allowed_domains SET domain = ? WHERE id = ?', [clean, id]);
-    const updatedDomain = await query.get('SELECT * FROM allowed_domains WHERE id = ?', [id]);
+    await query.run('UPDATE allowed_domains SET domain = ?, company_id = ? WHERE id = ?', [clean, company_id, id]);
+    const updatedDomain = await query.get(`
+      SELECT ad.id, ad.domain, ad.company_id, ad.created_at, c.name AS company_name
+      FROM allowed_domains ad
+      LEFT JOIN companies c ON ad.company_id = c.id
+      WHERE ad.id = ?
+    `, [id]);
 
     return new Response(JSON.stringify({ data: updatedDomain }), { status: 200 });
   } catch (error) {

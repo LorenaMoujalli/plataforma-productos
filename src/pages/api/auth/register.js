@@ -6,9 +6,9 @@ export async function POST({ request }) {
     const { email, password, name, company_id } = await request.json();
     const cleanEmail = email.trim().toLowerCase();
 
-    // 1. Validar dominio
+    // 1. Validar dominio y obtener empresa asociada
     const domain = cleanEmail.split('@')[1];
-    const allowed = await query.get('SELECT id FROM allowed_domains WHERE LOWER(domain) = ?', [domain]);
+    const allowed = await query.get('SELECT id, company_id FROM allowed_domains WHERE LOWER(domain) = ?', [domain]);
     if (!allowed) {
       return new Response(JSON.stringify({ error: 'Solo se permiten registros con correos electrónicos de dominios autorizados.' }), { status: 400 });
     }
@@ -19,12 +19,12 @@ export async function POST({ request }) {
       return new Response(JSON.stringify({ error: 'El usuario ya existe.' }), { status: 400 });
     }
 
-    // 3. Crear usuario
+    // 3. Crear usuario y perfil con empresa asignada automáticamente por su dominio
     const userId = crypto.randomUUID();
     const hashedPassword = bcrypt.hashSync(password, 10);
     
     await query.run('INSERT INTO users (id, email, password, role) VALUES (?, ?, ?, ?)', [userId, cleanEmail, hashedPassword, 'user']);
-    await query.run('INSERT INTO profiles (id, email, name, role, company_id) VALUES (?, ?, ?, ?, ?)', [userId, cleanEmail, name || '', 'user', company_id || null]);
+    await query.run('INSERT INTO profiles (id, email, name, role, company_id) VALUES (?, ?, ?, ?, ?)', [userId, cleanEmail, name || '', 'user', allowed.company_id || null]);
 
     return new Response(JSON.stringify({
       user: {

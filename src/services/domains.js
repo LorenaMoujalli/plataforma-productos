@@ -10,15 +10,16 @@ export async function getDomains() {
 }
 
 /**
- * Agrega un nuevo dominio permitido.
+ * Agrega un nuevo dominio permitido asociado a una empresa.
  * @param {string} domain
+ * @param {number} company_id
  * @returns {Promise<any>}
  */
-export async function addDomain(domain) {
+export async function addDomain(domain, company_id) {
   const res = await fetch('/api/domains', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ domain })
+    body: JSON.stringify({ domain, company_id })
   });
   const body = await res.json();
   if (!res.ok) throw new Error(body.error || 'Error al agregar dominio');
@@ -26,16 +27,17 @@ export async function addDomain(domain) {
 }
 
 /**
- * Actualiza el valor de un dominio existente.
+ * Actualiza el valor de un dominio existente y su empresa asociada.
  * @param {number} id
  * @param {string} domain
+ * @param {number} company_id
  * @returns {Promise<any>}
  */
-export async function updateDomain(id, domain) {
+export async function updateDomain(id, domain, company_id) {
   const res = await fetch('/api/domains', {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ id, domain })
+    body: JSON.stringify({ id, domain, company_id })
   });
   const body = await res.json();
   if (!res.ok) throw new Error(body.error || 'Error al actualizar dominio');

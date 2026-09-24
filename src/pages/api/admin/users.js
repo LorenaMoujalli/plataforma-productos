@@ -39,9 +39,9 @@ export async function POST({ request, cookies }) {
     const { email, password, name, role } = await request.json();
     const cleanEmail = email.trim().toLowerCase();
 
-    // Validar dominio
+    // Validar dominio y obtener empresa asignada
     const domain = cleanEmail.split('@')[1];
-    const allowed = await query.get('SELECT id FROM allowed_domains WHERE LOWER(domain) = ?', [domain]);
+    const allowed = await query.get('SELECT id, company_id FROM allowed_domains WHERE LOWER(domain) = ?', [domain]);
     if (!allowed) {
       return new Response(JSON.stringify({ error: 'Solo se permiten correos electrónicos de dominios autorizados.' }), { status: 400 });
     }
@@ -56,7 +56,7 @@ export async function POST({ request, cookies }) {
     const hashedPassword = bcrypt.hashSync(password, 10);
 
     await query.run('INSERT INTO users (id, email, password, role) VALUES (?, ?, ?, ?)', [userId, cleanEmail, hashedPassword, role || 'user']);
-    await query.run('INSERT INTO profiles (id, email, name, role) VALUES (?, ?, ?, ?)', [userId, cleanEmail, name || '', role || 'user']);
+    await query.run('INSERT INTO profiles (id, email, name, role, company_id) VALUES (?, ?, ?, ?, ?)', [userId, cleanEmail, name || '', role || 'user', allowed.company_id || null]);
 
     const newUser = await query.get('SELECT * FROM profiles WHERE id = ?', [userId]);
     return new Response(JSON.stringify({ data: newUser }), { status: 201 });
@@ -73,19 +73,32 @@ export async function PUT({ request, cookies }) {
     }
 
     const { userId, name, role, email, password, companyId, expirationDate } = await request.json();
+    const cleanEmail = email ? email.trim().toLowerCase() : '';
+
+    // Obtener empresa asociada al dominio automáticamente si el email está presente
+    let targetCompanyId = companyId ? parseInt(companyId) : null;
+    if (cleanEmail) {
+      const domain = cleanEmail.split('@')[1];
+      if (domain) {
+        const allowed = await query.get('SELECT id, company_id FROM allowed_domains WHERE LOWER(domain) = ?', [domain]);
+        if (allowed && allowed.company_id) {
+          targetCompanyId = allowed.company_id;
+        }
+      }
+    }
 
     // 1. Actualizar tabla users
     if (password && password.trim() !== '') {
       const hashedPassword = bcrypt.hashSync(password, 10);
-      await query.run('UPDATE users SET email = ?, password = ?, role = ? WHERE id = ?', [email, hashedPassword, role, userId]);
+      await query.run('UPDATE users SET email = ?, password = ?, role = ? WHERE id = ?', [cleanEmail || email, hashedPassword, role, userId]);
     } else {
-      await query.run('UPDATE users SET email = ?, role = ? WHERE id = ?', [email, role, userId]);
+      await query.run('UPDATE users SET email = ?, role = ? WHERE id = ?', [cleanEmail || email, role, userId]);
     }
 
     // 2. Actualizar tabla profiles
     await query.run(
       'UPDATE profiles SET name = ?, role = ?, email = ?, company_id = ?, expiration_date = ? WHERE id = ?',
-      [name, role, email, companyId || null, expirationDate || null, userId]
+      [name, role, cleanEmail || email, targetCompanyId, expirationDate || null, userId]
     );
 
     return new Response(JSON.stringify({ data: true }), { status: 200 });

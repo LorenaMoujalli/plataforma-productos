@@ -66,7 +66,18 @@ export async function PUT({ request, cookies }) {
 
     const updatedName = name !== undefined ? name : current.name;
     const updatedEmail = email !== undefined ? email : current.email;
-    const updatedCompanyId = company_id !== undefined ? company_id : current.company_id;
+    let updatedCompanyId = current.company_id;
+
+    if (updatedEmail) {
+      const domain = updatedEmail.split('@')[1];
+      if (domain) {
+        const domRecord = await query.get('SELECT company_id FROM allowed_domains WHERE LOWER(domain) = ?', [domain.toLowerCase()]);
+        if (domRecord && domRecord.company_id) {
+          updatedCompanyId = domRecord.company_id;
+        }
+      }
+    }
+
     const updatedAvatarUrl = avatar_url !== undefined ? avatar_url : current.avatar_url;
     const updatedExpirationDate = expiration_date !== undefined ? expiration_date : current.expiration_date;
 

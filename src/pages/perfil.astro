@@ -282,20 +282,28 @@ import DashboardLayout from "../layouts/DashboardLayout.astro";
 
 						<!-- Campo: Email -->
 						<div class="modal-field">
-							<label for="input-email">Email</label>
+							<label for="input-email">Email <span style="font-size: 0.75rem; color: #94a3b8; font-weight: normal;">(No editable)</span></label>
 							<input
 								id="input-email"
 								type="email"
+								readonly
+								disabled
+								style="background-color: #f8fafc; cursor: not-allowed; color: #475569;"
 								placeholder="Ingresa tu email"
 							/>
 						</div>
 
 						<!-- Campo: Empresa -->
 						<div class="modal-field">
-							<label for="select-company">Empresa</label>
-							<select id="select-company">
-								<option value="">Selecciona una empresa</option>
-							</select>
+							<label for="input-company-name">Empresa <span style="font-size: 0.75rem; color: #94a3b8; font-weight: normal;">(Asignada automáticamente por tu correo)</span></label>
+							<input
+								id="input-company-name"
+								type="text"
+								readonly
+								disabled
+								style="background-color: #f8fafc; cursor: not-allowed; color: #475569;"
+								placeholder="Sin empresa asignada"
+							/>
 						</div>
 
 						<div style="margin-top: 30px;">
@@ -1094,9 +1102,9 @@ import DashboardLayout from "../layouts/DashboardLayout.astro";
 	const inputEmail = document.getElementById(
 		"input-email",
 	) as HTMLInputElement;
-	const selectCompany = document.getElementById(
-		"select-company",
-	) as HTMLSelectElement;
+	const inputCompanyName = document.getElementById(
+		"input-company-name",
+	) as HTMLInputElement;
 	const btnSaveProfile = document.getElementById(
 		"btn-save-profile",
 	) as HTMLButtonElement;
@@ -1152,16 +1160,6 @@ import DashboardLayout from "../layouts/DashboardLayout.astro";
 
 			// 2. Obtener Listado de Empresas
 			companiesList = await getCompaniesForSelect().catch(() => []);
-
-			// Llenar select de la modal
-			selectCompany.innerHTML =
-				'<option value="">Selecciona una empresa</option>';
-			companiesList.forEach((c) => {
-				const option = document.createElement("option");
-				option.value = c.id.toString();
-				option.textContent = c.name;
-				selectCompany.appendChild(option);
-			});
 
 			// 3. Obtener Perfil del Usuario
 			const { data, error } = await supabase
@@ -1305,10 +1303,8 @@ import DashboardLayout from "../layouts/DashboardLayout.astro";
 			// Llenar inputs de modal
 			inputName.value = nameVal;
 			inputEmail.value = emailVal;
-			if (userProfile?.company_id) {
-				selectCompany.value = userProfile.company_id.toString();
-			} else {
-				selectCompany.value = "";
+			if (inputCompanyName) {
+				inputCompanyName.value = companyVal || "Sin empresa asignada";
 			}
 
 			// Llenar email en modal de reset
@@ -1510,14 +1506,10 @@ import DashboardLayout from "../layouts/DashboardLayout.astro";
 	editProfileForm.addEventListener("submit", async (e) => {
 		e.preventDefault();
 		const newName = inputName.value.trim();
-		const newEmail = inputEmail.value.trim();
-		const newCompanyId = selectCompany.value
-			? parseInt(selectCompany.value)
-			: null;
 
-		if (newEmail && !isDomainAllowed(newEmail)) {
+		if (!newName) {
 			showToast({
-				text: "Solo se permiten correos electrónicos de dominios autorizados.",
+				text: "El nombre es obligatorio.",
 				icon: "error",
 			});
 			return;
@@ -1527,33 +1519,18 @@ import DashboardLayout from "../layouts/DashboardLayout.astro";
 		btnSaveProfile.textContent = "Guardando...";
 
 		try {
-			// 1. Actualizar perfil en public.profiles (nombre, email de contacto, empresa)
+			// 1. Actualizar perfil en public.profiles (solo nombre)
 			const { error: rpcError } = await supabase.rpc(
 				"update_own_profile",
 				{
 					p_name: newName,
-					p_email: newEmail,
-					p_company_id: newCompanyId,
 				},
 			);
 			if (rpcError) throw rpcError;
 
-			// 2. Si el email cambió, actualizar también en auth.users directamente (sin rate limit ni confirmación)
-			const currentEmail =
-				userProfile?.email || session?.user?.email || "";
-			if (newEmail && newEmail !== currentEmail) {
-				const { error: emailError } = await supabase.rpc(
-					"update_own_email",
-					{
-						p_email: newEmail,
-					},
-				);
-				if (emailError) throw emailError;
-			}
-
 			await showAlert({
 				title: "¡Perfil Actualizado!",
-				text: "La información de tu perfil ha sido modificada correctamente.",
+				text: "Tu nombre ha sido modificado correctamente.",
 				icon: "success",
 				confirmButtonText: "Aceptar",
 			});

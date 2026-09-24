@@ -66,6 +66,7 @@ export async function initDb() {
     CREATE TABLE IF NOT EXISTS allowed_domains (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       domain TEXT NOT NULL UNIQUE,
+      company_id INTEGER REFERENCES companies(id) ON DELETE SET NULL,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
 
@@ -128,6 +129,17 @@ export async function initDb() {
 
   // Limpiar perfiles huérfanos acumulados por desactivación temporal de foreign keys
   await query.exec('DELETE FROM profiles WHERE id NOT IN (SELECT id FROM users);');
+
+  // Migración automática para allowed_domains
+  try {
+    const tableInfo = await query.all("PRAGMA table_info(allowed_domains)");
+    const hasCompanyId = tableInfo.some(col => col.name === 'company_id');
+    if (!hasCompanyId) {
+      await query.run("ALTER TABLE allowed_domains ADD COLUMN company_id INTEGER REFERENCES companies(id)");
+    }
+  } catch (err) {
+    console.warn("Nota sobre migración allowed_domains:", err.message);
+  }
 
   // Asegurar que exista el sector 'Otro'
   const otroSector = await query.get("SELECT id FROM sectors WHERE LOWER(name) = 'otro'");
