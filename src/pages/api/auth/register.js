@@ -1,10 +1,21 @@
 import { query } from '../../../lib/db.js';
+import { dbErrorResponse } from '../../../lib/api-errors.js';
 import bcrypt from 'bcryptjs';
 
 export async function POST({ request }) {
   try {
     const { email, password, name, company_id } = await request.json();
-    const cleanEmail = email.trim().toLowerCase();
+
+    if (!email || !String(email).trim()) {
+      return new Response(JSON.stringify({ error: 'El correo electrónico es obligatorio.' }), { status: 400 });
+    }
+    const cleanEmail = String(email).trim().toLowerCase();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail)) {
+      return new Response(JSON.stringify({ error: 'Ingresa un correo electrónico válido.' }), { status: 400 });
+    }
+    if (!password || String(password).length < 6) {
+      return new Response(JSON.stringify({ error: 'La contraseña debe tener al menos 6 caracteres.' }), { status: 400 });
+    }
 
     // 1. Validar dominio y obtener empresa asociada
     const domain = cleanEmail.split('@')[1];
@@ -16,7 +27,7 @@ export async function POST({ request }) {
     // 2. Verificar si usuario ya existe
     const existing = await query.get('SELECT id FROM users WHERE LOWER(email) = ?', [cleanEmail]);
     if (existing) {
-      return new Response(JSON.stringify({ error: 'El usuario ya existe.' }), { status: 400 });
+      return new Response(JSON.stringify({ error: `Ya existe una cuenta con el correo "${cleanEmail}". Prueba a iniciar sesión o usa otro correo.` }), { status: 409 });
     }
 
     // 3. Crear usuario y perfil con empresa asignada automáticamente por su dominio
@@ -35,6 +46,6 @@ export async function POST({ request }) {
     }), { status: 201 });
   } catch (error) {
     console.error('Error en registro:', error);
-    return new Response(JSON.stringify({ error: error.message || 'Error interno del servidor' }), { status: 500 });
+    return dbErrorResponse(error, 'No se pudo completar el registro. Intenta de nuevo.');
   }
 }

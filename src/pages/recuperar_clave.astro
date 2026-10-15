@@ -244,7 +244,6 @@ import Layout from "../layouts/Layout.astro";
 
 <script>
     import { directResetPassword, signInUser } from "../services/auth.js";
-    import { getAllowedDomainNames } from "../services/domains.js";
     import { showToast } from "../utils/notifications.js";
 
 	function setupRecovery() {
@@ -261,10 +260,6 @@ import Layout from "../layouts/Layout.astro";
         const submitBtn = document.getElementById(
             "submit-btn",
         ) as HTMLButtonElement;
-
-        // Precargamos dominios permitidos para validación client-side
-        let allowedDomains: string[] = [];
-        getAllowedDomainNames().then(d => { allowedDomains = d; }).catch(() => {});
 
         if (recoverForm) {
             recoverForm.onsubmit = async (e) => {
@@ -290,16 +285,8 @@ import Layout from "../layouts/Layout.astro";
                     return;
                 }
 
-                // Validar dominio
-                const domain = email.split("@")[1];
-                if (!domain || (allowedDomains.length > 0 && !allowedDomains.includes(domain.toLowerCase()))) {
-                    showToast({
-                        text: "Solo se permiten correos de dominios autorizados.",
-                        icon: "error",
-                    });
-                    return;
-                }
-
+                // No validamos dominio aquí: los usuarios creados manualmente desde el
+                // panel admin (dominio no autorizado) también deben poder recuperar su clave.
                 submitBtn.disabled = true;
                 submitBtn.innerText = "Verificando...";
 

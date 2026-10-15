@@ -167,7 +167,8 @@ export const supabase = {
             role: args.p_role,
             email: args.p_email,
             password: args.p_password,
-            companyId: args.p_company_id
+            companyId: args.p_company_id,
+            companyName: args.p_company_name ?? null
           })
         });
         const body = await res.json();

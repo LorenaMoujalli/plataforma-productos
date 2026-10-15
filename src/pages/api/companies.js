@@ -1,4 +1,5 @@
 import { query } from '../../lib/db.js';
+import { dbErrorResponse } from '../../lib/api-errors.js';
 
 async function isAdmin(cookies) {
   const sessionToken = cookies.get('session_token')?.value;
@@ -21,7 +22,9 @@ export async function GET({ request }) {
 
     const companies = await query.all(`
       SELECT c.id, c.name, c.logo_url, c.created_at, c.sector_id, s.name AS sector_name,
-             (SELECT COUNT(*) FROM coupons WHERE company_id = c.id) AS coupon_count
+             (SELECT COUNT(*) FROM coupons WHERE company_id = c.id) AS coupon_count,
+             (SELECT COUNT(*) FROM allowed_domains ad WHERE ad.company_id = c.id) AS domain_count,
+             (SELECT COUNT(*) FROM profiles p WHERE p.company_id = c.id) AS user_count
       FROM companies c
       LEFT JOIN sectors s ON c.sector_id = s.id
       ORDER BY c.name ASC
@@ -38,7 +41,9 @@ export async function GET({ request }) {
       created_at: c.created_at,
       sector_id: c.sector_id,
       sectors: c.sector_name ? { name: c.sector_name } : null,
-      coupons: [{ count: c.coupon_count }]
+      coupons: [{ count: c.coupon_count }],
+      domain_count: c.domain_count || 0,
+      user_count: c.user_count || 0
     }));
 
     return new Response(JSON.stringify({ data }), { status: 200 });
@@ -55,17 +60,28 @@ export async function POST({ request, cookies }) {
     }
 
     const payload = await request.json();
+    const cleanName = (payload.name || '').trim();
+    if (!cleanName) {
+      return new Response(JSON.stringify({ error: 'El nombre de la empresa es obligatorio.' }), { status: 400 });
+    }
+
+    const all = await query.all('SELECT id, name FROM companies');
+    const duplicate = all.find(x => String(x.name || '').toLowerCase() === cleanName.toLowerCase());
+    if (duplicate) {
+      return new Response(JSON.stringify({ error: `Ya existe una empresa llamada "${cleanName}". Elige un nombre diferente.` }), { status: 409 });
+    }
+
     const sectorId = payload.sector_id ? parseInt(payload.sector_id, 10) : null;
     const res = await query.run(
       'INSERT INTO companies (name, logo_url, sector_id) VALUES (?, ?, ?)',
-      [payload.name, payload.logo_url || null, isNaN(sectorId) ? null : sectorId]
+      [cleanName, payload.logo_url || null, isNaN(sectorId) ? null : sectorId]
     );
 
     const newCompany = await query.get('SELECT * FROM companies WHERE id = ?', [res.lastID]);
     return new Response(JSON.stringify({ data: newCompany }), { status: 201 });
   } catch (error) {
     console.error('Error en POST /api/companies:', error);
-    return new Response(JSON.stringify({ error: error.message || 'Error interno' }), { status: 500 });
+    return dbErrorResponse(error, 'No se pudo guardar la empresa. Intenta de nuevo.');
   }
 }
 
@@ -85,16 +101,27 @@ export async function PUT({ request, cookies }) {
       return new Response(JSON.stringify({ error: 'ID de empresa inválido' }), { status: 400 });
     }
 
+    const cleanName = (name || '').trim();
+    if (!cleanName) {
+      return new Response(JSON.stringify({ error: 'El nombre de la empresa es obligatorio.' }), { status: 400 });
+    }
+
+    const all = await query.all('SELECT id, name FROM companies');
+    const duplicate = all.find(x => x.id !== companyId && String(x.name || '').toLowerCase() === cleanName.toLowerCase());
+    if (duplicate) {
+      return new Response(JSON.stringify({ error: `Ya existe otra empresa llamada "${cleanName}". Elige un nombre diferente.` }), { status: 409 });
+    }
+
     await query.run(
       'UPDATE companies SET name = ?, logo_url = ?, sector_id = ? WHERE id = ?',
-      [name, logo_url || null, (parsedSectorId && !isNaN(parsedSectorId)) ? parsedSectorId : null, companyId]
+      [cleanName, logo_url || null, (parsedSectorId && !isNaN(parsedSectorId)) ? parsedSectorId : null, companyId]
     );
 
     const updated = await query.get('SELECT * FROM companies WHERE id = ?', [companyId]);
     return new Response(JSON.stringify({ data: updated }), { status: 200 });
   } catch (error) {
     console.error('Error en PUT /api/companies:', error);
-    return new Response(JSON.stringify({ error: error.message || 'Error interno' }), { status: 500 });
+    return dbErrorResponse(error, 'No se pudo actualizar la empresa. Intenta de nuevo.');
   }
 }
 
@@ -125,6 +152,6 @@ export async function DELETE({ request, cookies }) {
     return new Response(JSON.stringify({ success: true }), { status: 200 });
   } catch (error) {
     console.error('Error en DELETE /api/companies:', error);
-    return new Response(JSON.stringify({ error: error.message || 'Error interno' }), { status: 500 });
+    return dbErrorResponse(error, 'No se pudo eliminar la empresa. Intenta de nuevo.');
   }
 }

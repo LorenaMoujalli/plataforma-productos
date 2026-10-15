@@ -104,6 +104,20 @@ export async function showCreateUserModal(allowedDomains = [], companies = [], d
 
   const domainNames = domainLookup.map(d => (d.domain || '').toLowerCase()).filter(Boolean);
 
+  const escapeAttr = (value) => String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+
+  const companyOptionsHtml = (companies || [])
+    .filter(c => c && c.name)
+    .map(c => `<option value="${escapeAttr(c.name)}"></option>`)
+    .join('');
+
+  // 'auto' = asignación por dominio autorizado | 'manual' = excepción creada por el admin
+  let creationMode = 'auto';
+
   const { value: formValues } = await Swal.fire({
     title: 'Registrar Nuevo Usuario',
     html: `
@@ -114,7 +128,15 @@ export async function showCreateUserModal(allowedDomains = [], companies = [], d
         .swal-input-custom { width: 100%; box-sizing: border-box; padding: 0.75rem 1rem; border-radius: 8px; border: 1px solid #e2e8f0; background-color: #f8fafc; font-size: 0.95rem; font-family: inherit; transition: all 0.2s; outline: none; }
         .swal-input-custom:focus { border-color: #94a3b8; box-shadow: 0 0 0 3px rgba(226, 232, 240, 0.5); background-color: #fff; }
         .swal-select-custom { appearance: none; background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e"); background-repeat: no-repeat; background-position: right 1rem center; background-size: 1em; cursor: pointer; }
+        .swal-mode-btn { transition: all 0.15s; }
       </style>
+      <div class="swal-form-group" style="text-align:center; margin-bottom: 0.75rem;">
+        <div style="display:inline-flex; border:1px solid #e2e8f0; border-radius:8px; overflow:hidden;">
+          <button type="button" id="swal-mode-auto" class="swal-mode-btn" style="padding:0.45rem 1.1rem; border:none; background:#0f172a; color:#fff; font-size:0.85rem; font-weight:600; cursor:pointer;">Automático</button>
+          <button type="button" id="swal-mode-manual" class="swal-mode-btn" style="padding:0.45rem 1.1rem; border:none; border-left:1px solid #e2e8f0; background:transparent; color:#64748b; font-size:0.85rem; font-weight:600; cursor:pointer;">Manual</button>
+        </div>
+        <p id="swal-mode-hint" style="font-size:0.78rem; color:#94a3b8; margin-top:0.45rem; margin-bottom:0;">El dominio debe estar autorizado y la empresa se asigna automáticamente.</p>
+      </div>
       <div class="swal-form-group">
         <label for="swal-new-email">Correo Electrónico</label>
         <input id="swal-new-email" type="email" class="swal-input-custom" placeholder="usuario@dominio.com" autocomplete="off">
@@ -136,8 +158,9 @@ export async function showCreateUserModal(allowedDomains = [], companies = [], d
         <input id="swal-new-name" class="swal-input-custom" placeholder="Ej. Juan Pérez">
       </div>
       <div class="swal-form-group">
-        <label for="swal-new-company-display">Empresa <span style="font-size:0.75rem; color:#64748b; font-weight:normal;">(Asignada automáticamente por el dominio)</span></label>
-        <input id="swal-new-company-display" class="swal-input-custom" readonly disabled style="background-color: #f8fafc; cursor: not-allowed; color: #475569;" placeholder="Sin empresa asignada">
+        <label for="swal-new-company">Empresa <span id="swal-new-company-hint" style="font-size:0.75rem; color:#64748b; font-weight:normal;">(Asignada automáticamente por el dominio)</span></label>
+        <input id="swal-new-company" class="swal-input-custom" list="swal-new-company-list" readonly disabled style="background-color: #f8fafc; cursor: not-allowed; color: #475569;" placeholder="Sin empresa asignada">
+        <datalist id="swal-new-company-list">${companyOptionsHtml}</datalist>
       </div>
       <div class="swal-form-group">
         <label for="swal-new-role">Rol en la plataforma</label>
@@ -168,29 +191,80 @@ export async function showCreateUserModal(allowedDomains = [], companies = [], d
     },
     didOpen: () => {
       const emailInput = document.getElementById('swal-new-email');
-      const companyDisplay = document.getElementById('swal-new-company-display');
+      const companyInput = document.getElementById('swal-new-company');
+      const companyHint = document.getElementById('swal-new-company-hint');
+      const modeHint = document.getElementById('swal-mode-hint');
+      const btnAuto = document.getElementById('swal-mode-auto');
+      const btnManual = document.getElementById('swal-mode-manual');
 
       const syncCompany = () => {
         const email = (emailInput?.value || '').trim().toLowerCase();
         const domain = email.split('@')[1];
         if (!domain) {
-          if (companyDisplay) companyDisplay.value = 'Sin empresa asignada';
+          if (companyInput) companyInput.value = 'Sin empresa asignada';
           return;
         }
         const match = domainLookup.find(d => (d.domain || '').toLowerCase() === domain);
         if (match && match.company_id) {
           const comp = companies.find(c => c.id == match.company_id);
-          if (companyDisplay) {
-            companyDisplay.value = comp ? comp.name : (match.company_name || 'Empresa #' + match.company_id);
+          if (companyInput) {
+            companyInput.value = comp ? comp.name : (match.company_name || 'Empresa #' + match.company_id);
           }
         } else {
-          if (companyDisplay) companyDisplay.value = 'Sin empresa asignada';
+          if (companyInput) companyInput.value = 'Sin empresa asignada';
         }
       };
 
-      emailInput?.addEventListener('input', syncCompany);
-      emailInput?.addEventListener('change', syncCompany);
-      emailInput?.addEventListener('paste', () => setTimeout(syncCompany, 50));
+      const applyMode = () => {
+        const isManual = creationMode === 'manual';
+
+        if (btnAuto) {
+          btnAuto.style.background = isManual ? 'transparent' : '#0f172a';
+          btnAuto.style.color = isManual ? '#64748b' : '#fff';
+        }
+        if (btnManual) {
+          btnManual.style.background = isManual ? '#10b981' : 'transparent';
+          btnManual.style.color = isManual ? '#fff' : '#64748b';
+        }
+
+        if (!companyInput) return;
+
+        if (isManual) {
+          companyInput.removeAttribute('readonly');
+          companyInput.removeAttribute('disabled');
+          companyInput.style.backgroundColor = '#fff';
+          companyInput.style.cursor = 'text';
+          companyInput.style.color = '#0f172a';
+          companyInput.placeholder = 'Ej. Mi Empresa S.L.';
+          companyInput.value = '';
+          if (companyHint) companyHint.textContent = '(Escribe el nombre; si no existe se creará)';
+          if (modeHint) modeHint.textContent = 'Dominio libre (ej. gmail). La empresa es obligatoria.';
+          if (emailInput) emailInput.placeholder = 'usuario@gmail.com';
+        } else {
+          companyInput.setAttribute('readonly', '');
+          companyInput.setAttribute('disabled', '');
+          companyInput.style.backgroundColor = '#f8fafc';
+          companyInput.style.cursor = 'not-allowed';
+          companyInput.style.color = '#475569';
+          companyInput.placeholder = 'Sin empresa asignada';
+          if (companyHint) companyHint.textContent = '(Asignada automáticamente por el dominio)';
+          if (modeHint) modeHint.textContent = 'El dominio debe estar autorizado y la empresa se asigna automáticamente.';
+          if (emailInput) emailInput.placeholder = 'usuario@dominio.com';
+          syncCompany();
+        }
+      };
+
+      btnAuto?.addEventListener('click', () => { creationMode = 'auto'; applyMode(); });
+      btnManual?.addEventListener('click', () => { creationMode = 'manual'; applyMode(); });
+
+      const onEmailChange = () => {
+        if (creationMode === 'auto') syncCompany();
+      };
+      emailInput?.addEventListener('input', onEmailChange);
+      emailInput?.addEventListener('change', onEmailChange);
+      emailInput?.addEventListener('paste', () => setTimeout(onEmailChange, 50));
+
+      applyMode();
     },
     preConfirm: () => {
       const email = document.getElementById('swal-new-email').value.trim().toLowerCase();
@@ -210,13 +284,30 @@ export async function showCreateUserModal(allowedDomains = [], companies = [], d
         return false;
       }
 
-      if (domainNames.length > 0 && !domainNames.includes(domain)) {
-        Swal.showValidationMessage('Dominio no autorizado.');
+      if (password.length < 6) {
+        Swal.showValidationMessage('La contraseña debe tener al menos 6 caracteres');
         return false;
       }
 
-      if (password.length < 6) {
-        Swal.showValidationMessage('La contraseña debe tener al menos 6 caracteres');
+      // Modo manual: dominio libre, empresa obligatoria escrita por el admin
+      if (creationMode === 'manual') {
+        const companyName = document.getElementById('swal-new-company').value.trim();
+        if (!companyName) {
+          Swal.showValidationMessage('Debes indicar el nombre de la empresa');
+          return false;
+        }
+        return {
+          email, password, name, role,
+          expiration_date: expirationDate,
+          mode: 'manual',
+          company_id: null,
+          company_name: companyName
+        };
+      }
+
+      // Modo automático: dominio debe estar autorizado
+      if (domainNames.length > 0 && !domainNames.includes(domain)) {
+        Swal.showValidationMessage('Dominio no autorizado.');
         return false;
       }
 
@@ -227,7 +318,13 @@ export async function showCreateUserModal(allowedDomains = [], companies = [], d
         finalCompanyId = match.company_id;
       }
 
-      return { email, password, name, role, company_id: finalCompanyId, expiration_date: expirationDate };
+      return {
+        email, password, name, role,
+        company_id: finalCompanyId,
+        company_name: null,
+        expiration_date: expirationDate,
+        mode: 'auto'
+      };
     }
   });
 
@@ -249,6 +346,20 @@ export async function showEditUserModal(user, allowedDomains = [], companies = [
     : (Array.isArray(allowedDomains) ? allowedDomains.map(d => typeof d === 'object' ? d : { domain: d, company_id: null }) : []);
 
   const domainNames = domainLookup.map(d => (d.domain || '').toLowerCase()).filter(Boolean);
+
+  // Usuario creado manualmente desde el panel admin (excepción de dominio)
+  const isManual = Number(user.manual_created) === 1;
+
+  const escapeAttr = (value) => String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+
+  const companyOptionsHtml = (companies || [])
+    .filter(c => c && c.name)
+    .map(c => `<option value="${escapeAttr(c.name)}"></option>`)
+    .join('');
 
   // Obtener nombre de empresa actual
   const currentCompany = companies.find(c => c.id == user.company_id);
@@ -290,8 +401,9 @@ export async function showEditUserModal(user, allowedDomains = [], companies = [
         <input id="swal-edit-name" class="swal-input-custom" value="${user.name || ''}" placeholder="Ej. Juan Pérez">
       </div>
       <div class="swal-form-group">
-        <label for="swal-edit-company-display">Empresa <span style="font-size:0.75rem; color:#64748b; font-weight:normal;">(Asignada automáticamente por el dominio)</span></label>
-        <input id="swal-edit-company-display" class="swal-input-custom" readonly disabled style="background-color: #f8fafc; cursor: not-allowed; color: #475569;" value="${currentCompanyName}" placeholder="Sin empresa asignada">
+        <label for="swal-edit-company-display">Empresa <span id="swal-edit-company-hint" style="font-size:0.75rem; color:#64748b; font-weight:normal;">${isManual ? '(Escribe el nombre; si no existe se creará)' : '(Asignada automáticamente por el dominio)'}</span></label>
+        <input id="swal-edit-company-display" class="swal-input-custom" list="swal-edit-company-list" value="${escapeAttr(isManual ? (currentCompany ? currentCompany.name : '') : currentCompanyName)}" placeholder="${isManual ? 'Ej. Mi Empresa S.L.' : 'Sin empresa asignada'}"${isManual ? '' : ' readonly disabled style="background-color: #f8fafc; cursor: not-allowed; color: #475569;"'}>
+        <datalist id="swal-edit-company-list">${companyOptionsHtml}</datalist>
       </div>
       <div class="swal-form-group">
         <label for="swal-edit-role">Rol en la plataforma</label>
@@ -342,9 +454,11 @@ export async function showEditUserModal(user, allowedDomains = [], companies = [
         }
       };
 
-      emailInput?.addEventListener('input', syncCompany);
-      emailInput?.addEventListener('change', syncCompany);
-      emailInput?.addEventListener('paste', () => setTimeout(syncCompany, 50));
+      if (!isManual) {
+        emailInput?.addEventListener('input', syncCompany);
+        emailInput?.addEventListener('change', syncCompany);
+        emailInput?.addEventListener('paste', () => setTimeout(syncCompany, 50));
+      }
     },
     preConfirm: () => {
       const email = document.getElementById('swal-edit-email').value.trim().toLowerCase();
@@ -364,13 +478,29 @@ export async function showEditUserModal(user, allowedDomains = [], companies = [
         return false;
       }
 
-      if (domainNames.length > 0 && !domainNames.includes(domain)) {
-        Swal.showValidationMessage('Dominio no autorizado.');
+      if (password && password.length < 6) {
+        Swal.showValidationMessage('La nueva contraseña debe tener al menos 6 caracteres');
         return false;
       }
 
-      if (password && password.length < 6) {
-        Swal.showValidationMessage('La nueva contraseña debe tener al menos 6 caracteres');
+      // Usuario manual: sin validación de dominio (es una excepción) y empresa obligatoria
+      if (isManual) {
+        const companyName = document.getElementById('swal-edit-company-display').value.trim();
+        if (!companyName) {
+          Swal.showValidationMessage('Debes indicar el nombre de la empresa');
+          return false;
+        }
+        return {
+          email, password, name, role,
+          expiration_date: expirationDate,
+          mode: 'manual',
+          company_id: null,
+          company_name: companyName
+        };
+      }
+
+      if (domainNames.length > 0 && !domainNames.includes(domain)) {
+        Swal.showValidationMessage('Dominio no autorizado.');
         return false;
       }
 
@@ -381,7 +511,13 @@ export async function showEditUserModal(user, allowedDomains = [], companies = [
         finalCompanyId = match.company_id;
       }
 
-      return { email, password, name, role, company_id: finalCompanyId, expiration_date: expirationDate };
+      return {
+        email, password, name, role,
+        company_id: finalCompanyId,
+        company_name: null,
+        expiration_date: expirationDate,
+        mode: 'auto'
+      };
     }
   });
 
@@ -391,9 +527,10 @@ export async function showEditUserModal(user, allowedDomains = [], companies = [
 /**
  * Muestra un modal para agregar un nuevo dominio permitido.
  * @param {Array<{id: number, name: string}>} companies
+ * @param {string[]} [existingDomains] - Dominios ya registrados (en minúsculas) para avisar duplicados.
  * @returns {Promise<{domain:string, company_id:number}|null>}
  */
-export async function showCreateDomainModal(companies = []) {
+export async function showCreateDomainModal(companies = [], existingDomains = []) {
   const Swal = (await import('sweetalert2')).default;
 
   const companyOptions = companies.map(c =>
@@ -447,6 +584,10 @@ export async function showCreateDomainModal(companies = []) {
         Swal.showValidationMessage('Ingresa un dominio válido. Ej: empresa.com');
         return false;
       }
+      if (existingDomains.includes(domain)) {
+        Swal.showValidationMessage(`El dominio "${domain}" ya está autorizado. No hace falta agregarlo otra vez.`);
+        return false;
+      }
       if (!companyId) {
         Swal.showValidationMessage('Debes seleccionar una empresa obligatoriamente');
         return false;
@@ -462,9 +603,10 @@ export async function showCreateDomainModal(companies = []) {
  * Muestra un modal para editar un dominio existente.
  * @param {{ id: number, domain: string, company_id?: number }} domainData
  * @param {Array<{id: number, name: string}>} companies
+ * @param {string[]} [existingDomains] - Otros dominios ya registrados (en minúsculas).
  * @returns {Promise<{domain:string, company_id:number}|null>}
  */
-export async function showEditDomainModal(domainData, companies = []) {
+export async function showEditDomainModal(domainData, companies = [], existingDomains = []) {
   const Swal = (await import('sweetalert2')).default;
 
   const companyOptions = companies.map(c =>
@@ -518,6 +660,10 @@ export async function showEditDomainModal(domainData, companies = []) {
         Swal.showValidationMessage('Ingresa un dominio válido. Ej: empresa.com');
         return false;
       }
+      if (domain !== String(domainData.domain || '').toLowerCase() && existingDomains.includes(domain)) {
+        Swal.showValidationMessage(`El dominio "${domain}" ya está en uso por otro registro. Elige uno diferente.`);
+        return false;
+      }
       if (!companyId) {
         Swal.showValidationMessage('Debes seleccionar una empresa obligatoriamente');
         return false;
@@ -531,9 +677,10 @@ export async function showEditDomainModal(domainData, companies = []) {
 
 /**
  * Muestra un modal para agregar un nuevo sector.
+ * @param {string[]} [existingNames] - Nombres de sectores ya existentes (en minúsculas).
  * @returns {Promise<{name:string}|null>}
  */
-export async function showCreateSectorModal() {
+export async function showCreateSectorModal(existingNames = []) {
   const Swal = (await import('sweetalert2')).default;
 
   const { value: formValues } = await Swal.fire({
@@ -566,6 +713,10 @@ export async function showCreateSectorModal() {
         Swal.showValidationMessage('El nombre es obligatorio');
         return false;
       }
+      if (existingNames.includes(name.toLowerCase())) {
+        Swal.showValidationMessage(`Ya existe un sector llamado "${name}". Elige un nombre diferente.`);
+        return false;
+      }
       return { name };
     }
   });
@@ -576,9 +727,10 @@ export async function showCreateSectorModal() {
 /**
  * Muestra un modal para editar un sector existente.
  * @param {{ id: number, name: string }} sectorData
+ * @param {string[]} [existingNames] - Nombres de otros sectores (en minúsculas).
  * @returns {Promise<{name:string}|null>}
  */
-export async function showEditSectorModal(sectorData) {
+export async function showEditSectorModal(sectorData, existingNames = []) {
   const Swal = (await import('sweetalert2')).default;
 
   const { value: formValues } = await Swal.fire({
@@ -609,6 +761,10 @@ export async function showEditSectorModal(sectorData) {
       const name = document.getElementById('swal-edit-sector-name').value.trim();
       if (!name) {
         Swal.showValidationMessage('El nombre es obligatorio');
+        return false;
+      }
+      if (name.toLowerCase() !== String(sectorData.name || '').toLowerCase() && existingNames.includes(name.toLowerCase())) {
+        Swal.showValidationMessage(`Ya existe otro sector llamado "${name}". Elige un nombre diferente.`);
         return false;
       }
       return { name };

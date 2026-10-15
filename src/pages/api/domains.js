@@ -1,4 +1,5 @@
 import { query } from '../../lib/db.js';
+import { dbErrorResponse } from '../../lib/api-errors.js';
 
 // Auxiliar para validar admin
 async function isAdmin(cookies) {
@@ -13,7 +14,8 @@ async function isAdmin(cookies) {
 export async function GET() {
   try {
     const domains = await query.all(`
-      SELECT ad.id, ad.domain, ad.company_id, ad.created_at, c.name AS company_name
+      SELECT ad.id, ad.domain, ad.company_id, ad.created_at, c.name AS company_name,
+             (SELECT COUNT(*) FROM users u WHERE LOWER(u.email) LIKE '%@' || LOWER(ad.domain)) AS user_count
       FROM allowed_domains ad
       LEFT JOIN companies c ON ad.company_id = c.id
       ORDER BY ad.created_at DESC
@@ -46,6 +48,11 @@ export async function POST({ request, cookies }) {
 
     const clean = domain.trim().toLowerCase();
 
+    const duplicate = await query.get('SELECT id FROM allowed_domains WHERE LOWER(domain) = ?', [clean]);
+    if (duplicate) {
+      return new Response(JSON.stringify({ error: `El dominio "${clean}" ya está autorizado. No hace falta agregarlo otra vez.` }), { status: 409 });
+    }
+
     const res = await query.run('INSERT INTO allowed_domains (domain, company_id) VALUES (?, ?)', [clean, company_id]);
     const newDomain = await query.get(`
       SELECT ad.id, ad.domain, ad.company_id, ad.created_at, c.name AS company_name
@@ -57,7 +64,7 @@ export async function POST({ request, cookies }) {
     return new Response(JSON.stringify({ data: newDomain }), { status: 201 });
   } catch (error) {
     console.error('Error en POST /api/domains:', error);
-    return new Response(JSON.stringify({ error: error.message || 'Error interno' }), { status: 500 });
+    return dbErrorResponse(error, 'No se pudo guardar el dominio. Intenta de nuevo.');
   }
 }
 
@@ -82,6 +89,11 @@ export async function PUT({ request, cookies }) {
 
     const clean = domain.trim().toLowerCase();
 
+    const duplicate = await query.get('SELECT id FROM allowed_domains WHERE LOWER(domain) = ? AND id != ?', [clean, id]);
+    if (duplicate) {
+      return new Response(JSON.stringify({ error: `El dominio "${clean}" ya está en uso por otro registro. Elige uno diferente.` }), { status: 409 });
+    }
+
     await query.run('UPDATE allowed_domains SET domain = ?, company_id = ? WHERE id = ?', [clean, company_id, id]);
     const updatedDomain = await query.get(`
       SELECT ad.id, ad.domain, ad.company_id, ad.created_at, c.name AS company_name
@@ -93,7 +105,7 @@ export async function PUT({ request, cookies }) {
     return new Response(JSON.stringify({ data: updatedDomain }), { status: 200 });
   } catch (error) {
     console.error('Error en PUT /api/domains:', error);
-    return new Response(JSON.stringify({ error: error.message || 'Error interno' }), { status: 500 });
+    return dbErrorResponse(error, 'No se pudo actualizar el dominio. Intenta de nuevo.');
   }
 }
 
@@ -127,9 +139,9 @@ export async function DELETE({ request, cookies }) {
     // 3. Eliminar el dominio de allowed_domains
     await query.run('DELETE FROM allowed_domains WHERE id = ?', [id]);
 
-    return new Response(JSON.stringify({ data: true }), { status: 200 });
+    return new Response(JSON.stringify({ data: true, deleted_users: usersToDelete.length }), { status: 200 });
   } catch (error) {
     console.error('Error en DELETE /api/domains:', error);
-    return new Response(JSON.stringify({ error: error.message || 'Error interno' }), { status: 500 });
+    return dbErrorResponse(error, 'No se pudo eliminar el dominio. Intenta de nuevo.');
   }
 }

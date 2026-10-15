@@ -88,6 +88,7 @@ export async function initDb() {
       email TEXT UNIQUE NOT NULL,
       password TEXT NOT NULL, -- Hashed with bcrypt
       role TEXT CHECK(role IN ('user', 'admin')) DEFAULT 'user',
+      manual_created INTEGER NOT NULL DEFAULT 0,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
 
@@ -141,6 +142,17 @@ export async function initDb() {
     console.warn("Nota sobre migración allowed_domains:", err.message);
   }
 
+  // Migración automática para usuarios creados manualmente desde el panel admin (excepción de dominio)
+  try {
+    const usersTableInfo = await query.all("PRAGMA table_info(users)");
+    const hasManualCreated = usersTableInfo.some(col => col.name === 'manual_created');
+    if (!hasManualCreated) {
+      await query.run("ALTER TABLE users ADD COLUMN manual_created INTEGER NOT NULL DEFAULT 0");
+    }
+  } catch (err) {
+    console.warn("Nota sobre migración users.manual_created:", err.message);
+  }
+
   // Asegurar que exista el sector 'Otro'
   const otroSector = await query.get("SELECT id FROM sectors WHERE LOWER(name) = 'otro'");
   if (!otroSector) {
@@ -153,7 +165,7 @@ export async function initDb() {
     console.log('Sembrando datos iniciales en la base de datos...');
 
     // 1. Dominios
-    await query.run("INSERT INTO allowed_domains (id, domain) VALUES (1, 'oberstaff.com'), (4, 'gmail.com')");
+    await query.run("INSERT INTO allowed_domains (id, domain) VALUES (1, 'oberstaff.com')");
 
     // 2. Sectores
     await query.run("INSERT INTO sectors (id, name) VALUES (1, 'Salud'), (2, 'Turismo'), (3, 'Gastronomía'), (4, 'Servicios'), (5, 'Tecnología')");
