@@ -6,15 +6,17 @@ export async function POST({ request, cookies }) {
     const { email, password } = await request.json();
     const cleanEmail = email.trim().toLowerCase();
 
-    // 1. Validar dominio antes
+    // 1. Validar dominio (los usuarios creados manualmente desde el panel admin son excepción)
     const domain = cleanEmail.split('@')[1];
     const allowed = await query.get('SELECT id FROM allowed_domains WHERE LOWER(domain) = ?', [domain]);
-    if (!allowed) {
-      return new Response(JSON.stringify({ error: 'Solo se permiten correos electrónicos de dominios autorizados.' }), { status: 400 });
-    }
 
     // 2. Buscar usuario
     const user = await query.get('SELECT * FROM users WHERE LOWER(email) = ?', [cleanEmail]);
+
+    if (!allowed && !(user && Number(user.manual_created) === 1)) {
+      return new Response(JSON.stringify({ error: 'Solo se permiten correos electrónicos de dominios autorizados.' }), { status: 400 });
+    }
+
     if (!user) {
       return new Response(JSON.stringify({ error: 'Credenciales incorrectas. Verifica tu correo y contraseña.' }), { status: 400 });
     }

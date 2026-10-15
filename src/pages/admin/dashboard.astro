@@ -1301,7 +1301,7 @@ import "../../styles/grid-principal/benefit-card.css";
           <td data-label="Expiración">${expirationBadge}</td>
           <td data-label="Acciones" class="actions-cell">
             <div style="display: flex; gap: 0.5rem; justify-content: flex-end;">
-              <button class="btn-icon btn-edit" data-user='${JSON.stringify({ id: user.id, email: user.email, name: user.name, role: user.role, company_id: companyId, expiration_date: user.expiration_date || null }).replace(/'/g, "&apos;")}' title="Editar usuario">
+              <button class="btn-icon btn-edit" data-user='${JSON.stringify({ id: user.id, email: user.email, name: user.name, role: user.role, company_id: companyId, expiration_date: user.expiration_date || null, manual_created: user.manual_created || 0 }).replace(/'/g, "&apos;")}' title="Editar usuario">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
                   <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
@@ -1409,6 +1409,7 @@ import "../../styles/grid-principal/benefit-card.css";
                 p_email: newValues.email,
                 p_password: newValues.password || null,
                 p_company_id: newValues.company_id,
+                p_company_name: newValues.company_name || null,
               });
               if (errFull) throw errFull;
 
@@ -1482,16 +1483,24 @@ import "../../styles/grid-principal/benefit-card.css";
               userData.password,
               userData.name,
               userData.role,
+              {
+                mode: userData.mode,
+                company_id: userData.company_id,
+                company_name: userData.company_name,
+              },
             );
 
-            // 2. Asignar empresa y fecha de expiración al perfil recién creado
+            // 2. Asignar fecha de expiración y (si aplica) empresa al perfil recién creado
             if (newUser && newUser.id) {
-              // Asignar empresa al perfil
-              const { error: errCompany } = await supabase.rpc("admin_update_user_company", {
-                p_user_id: newUser.id,
-                p_company_id: userData.company_id,
-              });
-              if (errCompany) throw errCompany;
+              // En modo manual la empresa ya la asignó el POST (find-or-create);
+              // pasar company_id null aquí la borraría.
+              if (userData.mode !== "manual") {
+                const { error: errCompany } = await supabase.rpc("admin_update_user_company", {
+                  p_user_id: newUser.id,
+                  p_company_id: userData.company_id,
+                });
+                if (errCompany) throw errCompany;
+              }
 
               // Asignar fecha de expiración via RPC (evita bloqueo por RLS)
               const { error: errExpiration } = await supabase.rpc("admin_update_user_expiration", {
@@ -1623,7 +1632,7 @@ import "../../styles/grid-principal/benefit-card.css";
                   <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                 </svg>
               </button>
-              <button class="btn-icon btn-delete-domain" data-id="${d.id}" data-domain="${d.domain}" title="Eliminar dominio">
+              <button class="btn-icon btn-delete-domain" data-id="${d.id}" data-domain="${d.domain}" data-user-count="${d.user_count || 0}" title="Eliminar dominio">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <polyline points="3 6 5 6 21 6"></polyline>
                   <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
@@ -1653,7 +1662,11 @@ import "../../styles/grid-principal/benefit-card.css";
             console.error("Error al cargar empresas:", e);
           }
 
-          const result: any = await showEditDomainModal({ id, domain, company_id: companyId }, companies);
+          const otherDomains = allDomains
+            .filter((x: any) => x.id !== id)
+            .map((x: any) => String(x.domain || "").toLowerCase());
+
+          const result: any = await showEditDomainModal({ id, domain, company_id: companyId }, companies, otherDomains);
           if (result) {
             btn.classList.add("loading");
             try {
@@ -1679,10 +1692,15 @@ import "../../styles/grid-principal/benefit-card.css";
         btn.addEventListener("click", async () => {
           const id = parseInt(btn.getAttribute("data-id") as string);
           const domain = btn.getAttribute("data-domain");
+          const userCount = parseInt(btn.getAttribute("data-user-count") || "0", 10);
+          const usersLine =
+            userCount > 0
+              ? `Se eliminarán también las ${userCount} cuenta${userCount === 1 ? "" : "s"} de usuario registrada${userCount === 1 ? "" : "s"} con correos @${domain}.`
+              : `No hay usuarios registrados con correos @${domain}.`;
 
           const confirmed = await showConfirm({
             title: "¿Eliminar dominio?",
-            text: `¿Deseas eliminar el dominio "${domain}"? Al hacerlo, se eliminarán permanentemente todos los usuarios y correos que pertenecen a este dominio. Esta acción no se puede deshacer.`,
+            text: `¿Deseas eliminar el dominio "${domain}"? ${usersLine} Esta acción no se puede deshacer.`,
             confirmButtonText: "Sí, eliminar",
             cancelButtonText: "Cancelar",
           });
@@ -1693,7 +1711,10 @@ import "../../styles/grid-principal/benefit-card.css";
             try {
               await deleteDomain(id);
               showToast({
-                text: `Dominio "${domain}" y sus usuarios asociados han sido eliminados.`,
+                text:
+                  userCount > 0
+                    ? `Dominio "${domain}" eliminado. Se ${userCount === 1 ? "eliminó 1 cuenta" : `eliminaron ${userCount} cuentas`} de usuario asociada${userCount === 1 ? "" : "s"}.`
+                    : `Dominio "${domain}" eliminado correctamente.`,
                 icon: "success",
               });
               domainsLoaded = false;
@@ -1729,7 +1750,11 @@ import "../../styles/grid-principal/benefit-card.css";
           console.error("Error al cargar empresas:", e);
         }
 
-        const result: any = await showCreateDomainModal(companies);
+        const existingDomainList = allDomains.map((x: any) =>
+          String(x.domain || "").toLowerCase(),
+        );
+
+        const result: any = await showCreateDomainModal(companies, existingDomainList);
         if (result) {
           addDomainBtn.disabled = true;
           addDomainBtn.innerHTML =
@@ -1849,7 +1874,7 @@ import "../../styles/grid-principal/benefit-card.css";
                   <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                 </svg>
               </button>
-              <button class="btn-icon btn-delete-sector" data-id="${s.id}" data-name="${s.name}" title="Eliminar sector">
+              <button class="btn-icon btn-delete-sector" data-id="${s.id}" data-name="${s.name}" data-company-count="${s.company_count || 0}" title="Eliminar sector">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <polyline points="3 6 5 6 21 6"></polyline>
                   <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
@@ -1869,7 +1894,11 @@ import "../../styles/grid-principal/benefit-card.css";
         btn.addEventListener("click", async () => {
           const id = parseInt(btn.getAttribute("data-id") as string);
           const name = btn.getAttribute("data-name") as string;
-          const result = await showEditSectorModal({ id, name });
+          const otherSectorNames = allSectors
+            .filter((x: any) => x.id !== id)
+            .map((x: any) => String(x.name || "").toLowerCase());
+
+          const result = await showEditSectorModal({ id, name }, otherSectorNames);
           if (result) {
             btn.classList.add("loading");
             try {
@@ -1897,10 +1926,15 @@ import "../../styles/grid-principal/benefit-card.css";
         btn.addEventListener("click", async () => {
           const id = parseInt(btn.getAttribute("data-id") as string);
           const name = btn.getAttribute("data-name");
+          const companyCount = parseInt(btn.getAttribute("data-company-count") || "0", 10);
+          const companiesLine =
+            companyCount > 0
+              ? `Las ${companyCount} empresa${companyCount === 1 ? "" : "s"} asociada${companyCount === 1 ? "" : "s"} quedarán sin sector asignado.`
+              : "No hay empresas asociadas a este sector.";
 
           const confirmed = await showConfirm({
             title: "¿Eliminar sector?",
-            text: `¿Deseas eliminar el sector "${name}"? Al hacerlo, las empresas asociadas a este sector quedarán sin sector asignado.`,
+            text: `¿Deseas eliminar el sector "${name}"? ${companiesLine}`,
             confirmButtonText: "Sí, eliminar",
             cancelButtonText: "Cancelar",
           });
@@ -1911,7 +1945,10 @@ import "../../styles/grid-principal/benefit-card.css";
             try {
               await deleteSector(id);
               showToast({
-                text: `Sector "${name}" eliminado correctamente.`,
+                text:
+                  companyCount > 0
+                    ? `Sector "${name}" eliminado. ${companyCount === 1 ? "La empresa asociada quedó" : `Las ${companyCount} empresas asociadas quedaron`} sin sector.`
+                    : `Sector "${name}" eliminado correctamente.`,
                 icon: "success",
               });
               sectoresLoaded = false;
@@ -1938,7 +1975,11 @@ import "../../styles/grid-principal/benefit-card.css";
     const addSectorBtn = document.getElementById("add-sector-btn") as HTMLButtonElement;
     if (addSectorBtn) {
       addSectorBtn.addEventListener("click", async () => {
-        const result = await showCreateSectorModal();
+        const existingSectorNames = allSectors.map((x: any) =>
+          String(x.name || "").toLowerCase(),
+        );
+
+        const result = await showCreateSectorModal(existingSectorNames);
         if (result) {
           addSectorBtn.disabled = true;
           try {
@@ -2044,7 +2085,7 @@ import "../../styles/grid-principal/benefit-card.css";
               <button class="btn-icon btn-edit-empresa" data-id="${e.id}" title="Editar empresa">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
               </button>
-              <button class="btn-icon btn-delete-empresa" data-id="${e.id}" data-name="${(e.name || "").replace(/"/g, "&quot;")}" title="Eliminar empresa">
+              <button class="btn-icon btn-delete-empresa" data-id="${e.id}" data-name="${(e.name || "").replace(/"/g, "&quot;")}" data-coupon-count="${e.coupon_count || 0}" data-domain-count="${e.domain_count || 0}" data-user-count="${e.user_count || 0}" title="Eliminar empresa">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
               </button>
             </div>
@@ -2070,9 +2111,28 @@ import "../../styles/grid-principal/benefit-card.css";
           const btn = el as HTMLButtonElement;
           const id = parseInt(btn.getAttribute("data-id")!);
           const name = btn.getAttribute("data-name");
+          const couponCount = parseInt(btn.getAttribute("data-coupon-count") || "0", 10);
+          const domainCount = parseInt(btn.getAttribute("data-domain-count") || "0", 10);
+          const userCount = parseInt(btn.getAttribute("data-user-count") || "0", 10);
+          const lines: string[] = [];
+          lines.push(
+            couponCount > 0
+              ? `Se eliminarán sus ${couponCount} cupón${couponCount === 1 ? "" : "es"}.`
+              : "No tiene cupones.",
+          );
+          lines.push(
+            domainCount > 0
+              ? `Los ${domainCount} dominio${domainCount === 1 ? "" : "s"} asociado${domainCount === 1 ? "" : "s"} quedarán sin empresa y deberás asignarles otra.`
+              : "No tiene dominios asociados.",
+          );
+          lines.push(
+            userCount > 0
+              ? `Los ${userCount} usuario${userCount === 1 ? "" : "s"} de esta empresa quedarán sin empresa asignada.`
+              : "No tiene usuarios asignados.",
+          );
           const ok = await showConfirm({
             title: "¿Eliminar empresa?",
-            text: `¿Deseas eliminar la empresa "${name}"? También se eliminarán sus cupones asociados.`,
+            text: `¿Deseas eliminar la empresa "${name}"? ${lines.join(" ")} Esta acción no se puede deshacer.`,
             confirmButtonText: "Sí, eliminar",
             cancelButtonText: "Cancelar",
           });
@@ -2207,9 +2267,14 @@ import "../../styles/grid-principal/benefit-card.css";
       };
       reader.readAsDataURL(file);
       if (emDropInner) {
+        const safeName = file.name
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;");
         emDropInner.innerHTML = `
           <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-          <span style="color:#10b981;font-weight:600;">${file.name}</span>
+          <span style="color:#10b981;font-weight:600;" title="${safeName}">${safeName}</span>
           <span class="em-hint-text">${(file.size / 1024).toFixed(1)} KB</span>`;
       }
     }
@@ -2294,6 +2359,19 @@ import "../../styles/grid-principal/benefit-card.css";
       if (!emNameInput?.value.trim()) {
         showToast({
           text: "El nombre de la empresa es obligatorio.",
+          icon: "error",
+        });
+        return;
+      }
+      const empresaName = emNameInput.value.trim();
+      const duplicated = allEmpresas.find(
+        (x: any) =>
+          x.id !== editingEmpresaId &&
+          (x.name || "").toLowerCase() === empresaName.toLowerCase(),
+      );
+      if (duplicated) {
+        showToast({
+          text: `Ya existe una empresa llamada "${empresaName}". Elige un nombre diferente.`,
           icon: "error",
         });
         return;
@@ -2685,6 +2763,21 @@ import "../../styles/grid-principal/benefit-card.css";
       }
       if (!cmCompanyId?.value) {
         showToast({ text: "Debes seleccionar una empresa.", icon: "error" });
+        return;
+      }
+      const couponTitle = cmTitleInput.value.trim();
+      const couponCompanyId = parseInt(cmCompanyId.value);
+      const duplicatedCoupon = allCupons.find(
+        (x: any) =>
+          x.id !== editingCouponId &&
+          x.company_id === couponCompanyId &&
+          (x.title || "").toLowerCase() === couponTitle.toLowerCase(),
+      );
+      if (duplicatedCoupon) {
+        showToast({
+          text: `Ya existe un cupón con el título "${couponTitle}" para esta empresa. Si quieres modificarlo, edítalo en su lugar.`,
+          icon: "error",
+        });
         return;
       }
 
@@ -3799,6 +3892,9 @@ import "../../styles/grid-principal/benefit-card.css";
     border-radius: 0px;
     background: #f8fafc;
     cursor: pointer;
+    overflow: hidden;
+    padding: 0 0.75rem;
+    box-sizing: border-box;
     transition:
       border-color 0.2s,
       background 0.2s;
@@ -3816,6 +3912,16 @@ import "../../styles/grid-principal/benefit-card.css";
     pointer-events: none;
     color: #64748b;
     font-size: 0.88rem;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+  }
+  .em-drop-inner span {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-align: center;
   }
   .em-hint-text {
     font-size: 0.75rem;

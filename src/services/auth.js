@@ -120,13 +120,22 @@ export async function deleteAdminUser(userId) {
  * @param {string} password 
  * @param {string} name 
  * @param {string} role 
+ * @param {object} [options] - { mode: 'auto'|'manual', company_id, company_name }
  * @returns {Promise<any>}
  */
-export async function adminCreateUser(email, password, name, role = 'user') {
+export async function adminCreateUser(email, password, name, role = 'user', options = {}) {
   const res = await fetch('/api/admin/users', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email, password, name, role })
+    body: JSON.stringify({
+      email,
+      password,
+      name,
+      role,
+      mode: options.mode || 'auto',
+      company_id: options.company_id ?? null,
+      company_name: options.company_name ?? null
+    })
   });
   const body = await res.json();
   if (!res.ok) throw new Error(body.error || 'Error al crear usuario');
@@ -182,8 +191,9 @@ export async function updateAuthEmail(newEmail) {
  * @param {string} email
  * @param {string} password
  * @param {number|null} companyId
+ * @param {string|null} [companyName] - Nombre de empresa manual (find-or-create en el server)
  */
-export async function adminUpdateUser(userId, name, role, email, password, companyId = null) {
+export async function adminUpdateUser(userId, name, role, email, password, companyId = null, companyName = null) {
   const res = await fetch('/api/admin/users', {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
@@ -193,7 +203,8 @@ export async function adminUpdateUser(userId, name, role, email, password, compa
       role,
       email,
       password,
-      companyId
+      companyId,
+      companyName
     })
   });
   const body = await res.json();

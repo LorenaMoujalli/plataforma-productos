@@ -1,4 +1,5 @@
 import { query } from '../../lib/db.js';
+import { dbErrorResponse } from '../../lib/api-errors.js';
 
 // Auxiliar para validar admin
 async function isAdmin(cookies) {
@@ -13,8 +14,10 @@ async function isAdmin(cookies) {
 export async function GET() {
   try {
     const sectors = await query.all(`
-      SELECT * FROM sectors 
-      ORDER BY CASE WHEN LOWER(name) = 'otro' THEN 1 ELSE 0 END ASC, name ASC
+      SELECT s.*,
+             (SELECT COUNT(*) FROM companies c WHERE c.sector_id = s.id) AS company_count
+      FROM sectors s
+      ORDER BY CASE WHEN LOWER(s.name) = 'otro' THEN 1 ELSE 0 END ASC, s.name ASC
     `);
     return new Response(JSON.stringify({ data: sectors }), { status: 200 });
   } catch (error) {
@@ -35,13 +38,20 @@ export async function POST({ request, cookies }) {
     }
 
     const clean = name.trim();
+
+    const all = await query.all('SELECT id, name FROM sectors');
+    const duplicate = all.find(x => String(x.name || '').toLowerCase() === clean.toLowerCase());
+    if (duplicate) {
+      return new Response(JSON.stringify({ error: `Ya existe un sector llamado "${clean}". Elige un nombre diferente.` }), { status: 409 });
+    }
+
     const res = await query.run('INSERT INTO sectors (name) VALUES (?)', [clean]);
     const newSector = await query.get('SELECT * FROM sectors WHERE id = ?', [res.lastID]);
 
     return new Response(JSON.stringify({ data: newSector }), { status: 201 });
   } catch (error) {
     console.error('Error en POST /api/sectors:', error);
-    return new Response(JSON.stringify({ error: error.message || 'Error interno' }), { status: 500 });
+    return dbErrorResponse(error, 'No se pudo guardar el sector. Intenta de nuevo.');
   }
 }
 
@@ -57,13 +67,20 @@ export async function PUT({ request, cookies }) {
     }
 
     const clean = name.trim();
+
+    const all = await query.all('SELECT id, name FROM sectors');
+    const duplicate = all.find(x => x.id !== id && String(x.name || '').toLowerCase() === clean.toLowerCase());
+    if (duplicate) {
+      return new Response(JSON.stringify({ error: `Ya existe otro sector llamado "${clean}". Elige un nombre diferente.` }), { status: 409 });
+    }
+
     await query.run('UPDATE sectors SET name = ? WHERE id = ?', [clean, id]);
     const updatedSector = await query.get('SELECT * FROM sectors WHERE id = ?', [id]);
 
     return new Response(JSON.stringify({ data: updatedSector }), { status: 200 });
   } catch (error) {
     console.error('Error en PUT /api/sectors:', error);
-    return new Response(JSON.stringify({ error: error.message || 'Error interno' }), { status: 500 });
+    return dbErrorResponse(error, 'No se pudo actualizar el sector. Intenta de nuevo.');
   }
 }
 
@@ -86,14 +103,14 @@ export async function DELETE({ request, cookies }) {
     }
 
     // 1. Desvincular de forma segura las empresas de este sector antes de borrarlo
-    await query.run('UPDATE companies SET sector_id = NULL WHERE sector_id = ?', [sectorId]);
+    const unlinkResult = await query.run('UPDATE companies SET sector_id = NULL WHERE sector_id = ?', [sectorId]);
 
     // 2. Borrar el sector
     await query.run('DELETE FROM sectors WHERE id = ?', [sectorId]);
 
-    return new Response(JSON.stringify({ data: true }), { status: 200 });
+    return new Response(JSON.stringify({ data: true, unlinked_companies: unlinkResult.changes || 0 }), { status: 200 });
   } catch (error) {
     console.error('Error en DELETE /api/sectors:', error);
-    return new Response(JSON.stringify({ error: error.message || 'Error interno' }), { status: 500 });
+    return dbErrorResponse(error, 'No se pudo eliminar el sector. Intenta de nuevo.');
   }
 }

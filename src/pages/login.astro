@@ -572,14 +572,6 @@ import Layout from "../layouts/Layout.astro";
 			document.getElementById("login-password") as HTMLInputElement
 		).value;
 
-		if (!isDomainAllowed(email)) {
-			showToast({
-				text: "Solo se permiten correos de dominios autorizados.",
-				icon: "error",
-			});
-			return;
-		}
-
 		loginSubmit.disabled = true;
 		loginSubmit.innerText = "Ingresando...";
 		try {
